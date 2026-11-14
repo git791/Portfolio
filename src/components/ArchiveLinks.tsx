@@ -92,29 +92,6 @@ export default function ArchiveLinks() {
             </SectionReveal>
           ))}
         </div>
-        <SectionReveal delay={0.6}>
-          <div
-            style={{
-              marginTop: "4rem",
-              padding: "1.5rem",
-              backgroundColor: "var(--color-surface)",
-              border: "1px dashed var(--color-border)",
-              borderRadius: "var(--radius-md)",
-              textAlign: "center",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.8rem",
-                letterSpacing: "0.05em",
-                color: "var(--color-ink-muted)",
-              }}
-            >
-              🚧 This portfolio is currently under construction. More hackathons, experiences, and projects are being added soon—stay tuned!
-            </span>
-          </div>
-        </SectionReveal>
       </div>
     </section>
   );

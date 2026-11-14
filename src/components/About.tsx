@@ -1,16 +1,12 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionReveal from "@/components/ui/SectionReveal";
 import { personalInfo } from "@/lib/data";
-import dynamic from "next/dynamic";
-
-const Hero3D = dynamic(() => import("@/components/canvas/Hero3D"), {
-  ssr: false,
-});
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -225,7 +221,17 @@ export default function About() {
                 </span>
               </div> */}
               <div style={{ position: "absolute", inset: 0 }}>
-                <Hero3D />
+                <Image
+                  src="/images/profile.jpeg"
+                  alt={personalInfo.name}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                    objectPosition: "center 25%",
+                  }}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
               </div>
             </div>
           </SectionReveal>
