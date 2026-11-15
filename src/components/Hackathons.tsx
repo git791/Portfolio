@@ -218,24 +218,54 @@ export default function Hackathons() {
                     {hackathon.date}
                   </span>
 
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.75rem",
-                      letterSpacing: "0.05em",
-                      color:
-                        hackathon.result === "1st Place" ||
-                        hackathon.result === "Winner" ||
-                        hackathon.result === "3rd Place" ||
-                        hackathon.result === "Semi-Finalist" ||
-                        hackathon.result === "Finalist"
-                          ? "var(--color-accent)"
-                          : "var(--color-ink-muted)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {hackathon.result}
-                  </span>
+                  {hackathon.track && (
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "0.75rem",
+                        letterSpacing: "0.05em",
+                        color: "var(--color-ink-muted)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {hackathon.track}
+                    </span>
+                  )}
+
+                  {hackathon.placement ? (
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "0.65rem",
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        padding: "0.2rem 0.5rem",
+                        backgroundColor: "var(--color-ink)",
+                        color: "var(--color-background)",
+                        borderRadius: "var(--radius-sm)",
+                        fontWeight: 600,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {hackathon.placement}
+                    </span>
+                  ) : (hackathon.stage === "semi-finalist" || hackathon.stage === "finalist") ? (
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "0.65rem",
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        padding: "0.2rem 0.5rem",
+                        border: "1px solid var(--color-border)",
+                        borderRadius: "var(--radius-sm)",
+                        color: "var(--color-ink)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {hackathon.stage}
+                    </span>
+                  ) : null}
                 </div>
 
                 <div
