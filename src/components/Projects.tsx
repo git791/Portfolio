@@ -174,7 +174,7 @@ function ProjectCard({
                   color: "var(--color-ink-muted)",
                 }}
               >
-                {project.status === "prototype" ? "Prototype" : project.category}
+                {project.category}
               </span>
             </div>
           )}
@@ -236,7 +236,7 @@ function ProjectCard({
           >
             {project.title}
           </h3>
-          {project.status === "prototype" && (
+          {project.stage === "mvp" && (
             <span
               style={{
                 fontFamily: "var(--font-mono)",
@@ -244,12 +244,12 @@ function ProjectCard({
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 padding: "0.2rem 0.5rem",
-                border: "1px solid var(--color-accent)",
+                border: "1px solid var(--color-border)",
                 borderRadius: "var(--radius-sm)",
-                color: "var(--color-accent)",
+                color: "var(--color-ink-muted)",
               }}
             >
-              Prototype
+              MVP
             </span>
           )}
         </div>
@@ -300,12 +300,12 @@ function ProjectCard({
 }
 
 export default function Projects() {
-  const featured = projects.filter((p: Project) => p.featured);
+  const featured = projects.filter((p: Project) => p.tier === "editorial");
   const others = projects.filter(
-    (p: Project) => !p.featured && p.status !== "prototype"
+    (p: Project) => p.tier !== "editorial" && p.tier !== "playground"
   );
   const prototypes = projects.filter(
-    (p: Project) => p.status === "prototype"
+    (p: Project) => p.tier === "playground"
   );
 
   return (
