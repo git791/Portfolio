@@ -1,24 +1,34 @@
 import type { Metadata } from "next";
-import { Playfair_Display, JetBrains_Mono, DM_Sans } from "next/font/google";
+import { Barlow_Condensed, IBM_Plex_Sans, IBM_Plex_Sans_Devanagari, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
 import Cursor from "@/components/ui/Cursor";
 
-const playfair = Playfair_Display({
+const display = Barlow_Condensed({
   subsets: ["latin"],
-  variable: "--font-display",
+  weight: ["500", "600", "700"],
+  variable: "--ff-display",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
-  variable: "--font-mono",
+  weight: ["400", "500", "600"],
+  variable: "--ff-body",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const deva = IBM_Plex_Sans_Devanagari({
+  subsets: ["devanagari", "latin"],
+  weight: ["400", "500"],
+  variable: "--ff-deva",
+  display: "swap",
+});
+
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-body",
+  weight: ["400", "500"],
+  variable: "--ff-mono",
   display: "swap",
 });
 
@@ -60,7 +70,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${jetbrains.variable} ${dmSans.variable}`}
+      className={`${display.variable} ${body.variable} ${deva.variable} ${mono.variable}`}
     >
       <body>
         <SmoothScrollProvider>
