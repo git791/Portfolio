@@ -3,7 +3,6 @@ import { Playfair_Display, JetBrains_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
 import Cursor from "@/components/ui/Cursor";
-import Noise from "@/components/ui/Noise";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -66,7 +65,6 @@ export default function RootLayout({
       <body>
         <SmoothScrollProvider>
           <Cursor />
-          <Noise />
           {children}
         </SmoothScrollProvider>
       </body>

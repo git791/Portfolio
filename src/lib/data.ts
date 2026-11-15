@@ -685,7 +685,7 @@ export const certifications = [
 
   {
     id: 7,
-    title: "Solving Problems with Creative and Critical Thinkingt",
+    title: "Solving Problems with Creative and Critical Thinking",
     issuer: "IBM",
     date: "Feb 2026",
     credentialUrl: "https://coursera.org/share/6a0bb911a3edb45576eb22d448149a07",
@@ -1389,13 +1389,3 @@ export const profiles = {
   medium: "https://medium.com/@m.ayaan.a.ahmed",
   hackerearth: "https://www.hackerearth.com/@m.ayaan.a.ahmed", 
 };
-
-export const activities = [
-  {
-    id: 1,
-    name: "Event/Meetup Name",
-    organizer: "Organizer",
-    date: "Month Year",
-    description: "What you did or learned there.",
-  },
-];

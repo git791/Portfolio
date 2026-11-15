@@ -3,12 +3,7 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import dynamic from "next/dynamic";
 import { personalInfo } from "@/lib/data";
-
-const HeroScene = dynamic(() => import("@/components/canvas/HeroScene"), {
-  ssr: false,
-});
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -68,16 +63,6 @@ export default function Hero() {
         overflow: "hidden",
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-        }}
-      >
-        <HeroScene />
-      </div>
-
       <div
         style={{
           position: "absolute",
