@@ -27,7 +27,7 @@ function FlapDigit({
         className="flex flex-col"
         style={{
           transform: `translateY(-${digitNum}em)`,
-          transition: `transform ${400 + delay * 80}ms steps(${Math.max(1, digitNum)}, end)`,
+          transition: `transform ${Math.min(450, 380 + delay * 20)}ms steps(6, end)`,
         }}
       >
         {list.map((d) => (
