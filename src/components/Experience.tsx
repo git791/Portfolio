@@ -1,184 +1,119 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SectionReveal from "@/components/ui/SectionReveal";
+import { useState } from "react";
+import Decode from "@/components/ui/Decode";
 import { experience } from "@/lib/data";
+import type { Experience as ExperienceType } from "@/lib/types";
 
-gsap.registerPlugin(ScrollTrigger);
+const GROUPS: ("Building" | "Leading" | "Earlier")[] = ["Building", "Leading", "Earlier"];
 
-type Experience = (typeof experience)[0];
+function ExperienceRow({ item }: { item: ExperienceType }) {
+  const [expanded, setExpanded] = useState(false);
 
-const typeColors: Record<string, string> = {
-  "Full-time": "var(--color-accent)",
-  "Part-time": "var(--color-ink-muted)",
-  "Internship": "var(--color-ink)",
-};
-
-export default function Experience() {
-  const containerRef = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      const rows = gsap.utils.toArray<HTMLElement>(".experience-row");
-      rows.forEach((row, i) => {
-        gsap.fromTo(
-          row,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            delay: i * 0.08,
-            scrollTrigger: {
-              trigger: row,
-              start: "top 88%",
-            },
-          }
-        );
-      });
-    },
-    { scope: containerRef }
-  );
+  // Split description into first sentence and remainder
+  const match = item.description.match(/^([^\.]*\.)(\s+.*)?$/);
+  const firstSentence = match ? match[1] : item.description;
+  const rest = match && match[2] ? match[2].trim() : "";
 
   return (
-    <section
-      id="experience"
-      ref={containerRef}
-      className="section-padding"
-      style={{ borderTop: "1px solid var(--color-border)" }}
-    >
-      <div className="container-main">
-        <SectionReveal>
-          <div style={{ marginBottom: "4rem" }}>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Roles & Responsibilities
-            </div>
-            <h2
-              style={{
-                fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                color: "var(--color-ink)",
-              }}
-            >
-              Experience
-            </h2>
-          </div>
-        </SectionReveal>
+    <div className="py-4 border-b border-[var(--rule)] flex flex-col gap-2">
+      <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2">
+        {/* Left: Role & Org */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+          <span className="font-display font-semibold text-lg uppercase tracking-tight text-[var(--fg)]">
+            {item.role}
+          </span>
+          <span className="text-[var(--muted)] text-sm">
+            · {item.organization}
+          </span>
+        </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {experience.map((item: Experience, i: number) => (
-            <div
-              key={item.id}
-              className="experience-row"
-              style={{
-                opacity: 0,
-                display: "grid",
-                gridTemplateColumns: "1fr 3fr",
-                gap: "3rem",
-                paddingBlock: "2.5rem",
-                borderBottom: "1px solid var(--color-border)",
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.7rem",
-                    letterSpacing: "0.08em",
-                    color: "var(--color-ink-muted)",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  {item.startDate} — {item.endDate}
-                </div>
-                <div
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.65rem",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    padding: "0.2rem 0.6rem",
-                    border: `1px solid ${typeColors[item.type] || "var(--color-border)"}`,
-                    borderRadius: "var(--radius-sm)",
-                    color: typeColors[item.type] || "var(--color-ink-muted)",
-                  }}
-                >
-                  {item.type}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.7rem",
-                    letterSpacing: "0.06em",
-                    color: "var(--color-ink-muted)",
-                    marginTop: "0.5rem",
-                  }}
-                >
-                  {item.location}
-                </div>
-              </div>
-
-              <div>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.3rem",
-                    color: "var(--color-ink)",
-                    fontWeight: 400,
-                    marginBottom: "0.35rem",
-                  }}
-                >
-                  {item.role}
-                </h3>
-                <div
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.95rem",
-                    color: "var(--color-accent)",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  {item.organization}
-                </div>
-                {item.description && (
-                  <p
-                    style={{
-                      fontSize: "0.9rem",
-                      lineHeight: 1.75,
-                      color: "var(--color-ink-muted)",
-                      maxWidth: "600px",
-                    }}
-                  >
-                    {item.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
+        {/* Right: Dates + Location + Type Chip */}
+        <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-wider text-[var(--muted)] shrink-0">
+          <span>{item.location}</span>
+          <span>·</span>
+          <span>
+            {item.startDate} — {item.endDate}
+          </span>
+          <span className="px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)] rounded-[var(--radius)]">
+            {item.type}
+          </span>
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .experience-row {
-            grid-template-columns: 1fr !important;
-            gap: 1rem !important;
-          }
-        }
-      `}</style>
+      {/* Description (first sentence, expandable if longer) */}
+      <div className="text-sm text-[var(--muted)] leading-relaxed max-w-3xl">
+        <p>
+          {firstSentence}
+          {rest && !expanded && (
+            <button
+              onClick={() => setExpanded(true)}
+              className="ml-2 font-mono text-xs uppercase tracking-wider text-[var(--fg)] hover:underline"
+            >
+              [+]
+            </button>
+          )}
+          {rest && expanded && (
+            <>
+              {" "}
+              {rest}
+              <button
+                onClick={() => setExpanded(false)}
+                className="ml-2 font-mono text-xs uppercase tracking-wider text-[var(--fg)] hover:underline"
+              >
+                [-]
+              </button>
+            </>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function Experience() {
+  return (
+    <section id="experience" className="py-24 border-t border-[var(--rule)]">
+      <div className="container-main">
+        {/* Section Header */}
+        <div className="flex items-center gap-4 mb-16">
+          <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+            03 /
+          </span>
+          <Decode
+            text="EXPERIENCE"
+            className="font-display font-bold text-3xl sm:text-4xl uppercase tracking-tight text-[var(--fg)]"
+          />
+        </div>
+
+        {/* Grouped Experience Ledger */}
+        <div className="flex flex-col gap-16">
+          {GROUPS.map((groupName) => {
+            const items = experience.filter((e) => e.group === groupName);
+            if (items.length === 0) return null;
+
+            return (
+              <div key={groupName} className="flex flex-col">
+                <div className="flex items-center gap-4 pb-3 border-b border-[var(--rule)]">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg)] font-semibold">
+                    {groupName}
+                  </span>
+                  <div className="flex-1 h-[1px] bg-[var(--rule)]" />
+                  <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                    {items.length} {items.length === 1 ? "ROLE" : "ROLES"}
+                  </span>
+                </div>
+
+                <div className="flex flex-col">
+                  {items.map((item) => (
+                    <ExperienceRow key={item.id} item={item} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </section>
   );
 }

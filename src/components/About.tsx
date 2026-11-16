@@ -1,283 +1,90 @@
 "use client";
 
-import { useRef } from "react";
-import Image from "next/image";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SectionReveal from "@/components/ui/SectionReveal";
-import { personalInfo } from "@/lib/data";
-
-gsap.registerPlugin(ScrollTrigger);
+import Decode from "@/components/ui/Decode";
+import FlapNumber from "@/components/ui/FlapNumber";
+import commitsJson from "@/data/commits.json";
+import { hackathons, siteStats } from "@/lib/data";
 
 export default function About() {
-  const containerRef = useRef<HTMLElement>(null);
-  const imageLineRef = useRef<HTMLDivElement>(null);
-  const numberRefs = useRef<HTMLSpanElement[]>([]);
-
-  const stats = [
-    { value: 30, suffix: "+", label: "Projects Completed" },
-  ];
-
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        imageLineRef.current,
-        { scaleY: 0, transformOrigin: "top center" },
-        {
-          scaleY: 1,
-          duration: 1.4,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: imageLineRef.current,
-            start: "top 80%",
-          },
-        }
-      );
-
-      numberRefs.current.forEach((el: HTMLSpanElement, i: number) => {
-        if (!el) return;
-        const target = stats[i].value;
-        const counter = { val: 0 };
-        gsap.to(counter, {
-          val: target,
-          duration: 2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-          },
-          onUpdate: () => {
-            el.textContent = Math.round(counter.val).toString();
-          },
-        });
-      });
-    },
-    { scope: containerRef }
-  );
+  const reposStarted2026 =
+    commitsJson.totals.reposStartedByYear["2026" as keyof typeof commitsJson.totals.reposStartedByYear] || 39;
+  const hackathonsCount = hackathons.length;
+  const eventsRun = siteStats.eventsRun;
+  const largestAudience = siteStats.largestAudience;
 
   return (
-    <section
-      id="about"
-      ref={containerRef}
-      className="section-padding"
-      style={{ borderTop: "1px solid var(--color-border)" }}
-    >
+    <section id="about" className="py-24 border-t border-[var(--rule)]">
       <div className="container-main">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "6rem",
-            alignItems: "start",
-          }}
-          className="about-grid"
-        >
-          <div>
-            <SectionReveal>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
-                  marginBottom: "2rem",
-                }}
-              >
-                <div
-                  ref={imageLineRef}
-                  style={{
-                    width: "1px",
-                    height: "48px",
-                    backgroundColor: "var(--color-accent)",
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.75rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "var(--color-accent)",
-                  }}
-                >
-                  About Me
-                </span>
-              </div>
-            </SectionReveal>
-
-            <SectionReveal delay={0.1}>
-              <h2
-                style={{
-                  fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                  marginBottom: "2rem",
-                  color: "var(--color-ink)",
-                }}
-              >
-                Designing with
-                <br />
-                <em style={{ fontStyle: "italic", color: "var(--color-accent)" }}>
-                  intention
-                </em>
-              </h2>
-            </SectionReveal>
-
-            <SectionReveal delay={0.2}>
-              <p
-                style={{
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "var(--color-ink-muted)",
-                  marginBottom: "3rem",
-                }}
-              >
-                {personalInfo.about}
-              </p>
-            </SectionReveal>
-
-            <SectionReveal delay={0.3}>
-              <div style={{ display: "flex", gap: "3rem" }}>
-                {stats.map((stat, i) => (
-                  <div key={stat.label}>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "2.5rem",
-                        color: "var(--color-ink)",
-                        lineHeight: 1,
-                        marginBottom: "0.4rem",
-                      }}
-                    >
-                      <span
-                        ref={(el) => {
-                          if (el) numberRefs.current[i] = el;
-                        }}
-                      >
-                        0
-                      </span>
-                      {stat.suffix}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.7rem",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        color: "var(--color-ink-muted)",
-                      }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </SectionReveal>
-          </div>
-
-          <SectionReveal direction="left" delay={0.2}>
-            <div
-              style={{
-                position: "relative",
-                paddingTop: "120%",
-                backgroundColor: "var(--color-surface)",
-                borderRadius: "var(--radius-lg)",
-                overflow: "hidden",
-              }}
-            >
-              {/* <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  color: "var(--color-ink-muted)",
-                }}
-              >
-                <div
-                  style={{
-                    width: "64px",
-                    height: "64px",
-                    borderRadius: "50%",
-                    border: "1.5px dashed var(--color-border)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.5rem",
-                  }}
-                >
-                  {"↑"}
-                </div>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.7rem",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Your Photo Here
-                </span>
-              </div> */}
-              <div style={{ position: "absolute", inset: 0 }}>
-                <Image
-                  src="/images/profile.jpeg"
-                  alt={personalInfo.name}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "center 25%",
-                  }}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
-          </SectionReveal>
+        {/* Section Header */}
+        <div className="flex items-center gap-4 mb-12">
+          <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+            01 /
+          </span>
+          <Decode
+            text="ABOUT"
+            className="font-display font-bold text-3xl sm:text-4xl uppercase tracking-tight text-[var(--fg)]"
+          />
         </div>
 
-        <SectionReveal delay={0.1}>
-          <div
-            style={{
-              marginTop: "5rem",
-              paddingTop: "3rem",
-              borderTop: "1px solid var(--color-border)",
-              display: "flex",
-              gap: "1rem",
-              alignItems: "center",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "var(--color-ink-muted)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Based in
-            </span>
-            <div
-              style={{
-                flex: 1,
-                height: "1px",
-                backgroundColor: "var(--color-border)",
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "1.1rem",
-                color: "var(--color-ink)",
-              }}
-            >
-              {personalInfo.location}
-            </span>
+        {/* Narrative & Stats Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Narrative (7 cols) */}
+          <div className="lg:col-span-7 flex flex-col gap-6">
+            <p className="text-base sm:text-lg text-[var(--fg)] leading-relaxed font-normal">
+              I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm looking for an internship in backend, cloud, or agentic AI work.{" "}
+              <span className="text-[var(--muted)] text-sm font-mono">// TODO(owner): confirm internship focus.</span>
+            </p>
+
+            {/* Compact Education Line */}
+            <div className="pt-6 border-t border-[var(--rule)] flex flex-col gap-1 font-mono text-xs uppercase tracking-wider">
+              <span className="text-[var(--fg)] font-medium">
+                B.TECH CSE · ALLIANCE UNIVERSITY · 2024–2028
+              </span>
+              <span className="text-[var(--muted)]">
+                Presidency PU College 2022–24 · Iqra International School 2016–22
+              </span>
+            </div>
           </div>
-        </SectionReveal>
+
+          {/* Right Stats (5 cols) */}
+          <div className="lg:col-span-5 grid grid-cols-2 gap-6 p-6 border border-[var(--rule)] bg-[#141512]/40">
+            <div className="flex flex-col gap-1">
+              <div className="font-display text-4xl sm:text-5xl font-bold text-[var(--fg)]">
+                <FlapNumber value={reposStarted2026} />
+              </div>
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                Repos started in 2026
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <div className="font-display text-4xl sm:text-5xl font-bold text-[var(--fg)]">
+                <FlapNumber value={hackathonsCount} />
+              </div>
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                Hackathons since 2025
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <div className="font-display text-4xl sm:text-5xl font-bold text-[var(--fg)]">
+                <FlapNumber value={eventsRun} />
+              </div>
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                Events run
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <div className="font-display text-4xl sm:text-5xl font-bold text-[var(--fg)]">
+                <FlapNumber value={largestAudience} />
+              </div>
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                Largest audience
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

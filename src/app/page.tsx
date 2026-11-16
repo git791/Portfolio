@@ -1,18 +1,18 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Education from "@/components/Education";
-import ArchiveLinks from "@/components/ArchiveLinks";
-import Contact from "@/components/Contact";
+import WorkPreview from "@/components/WorkPreview";
 import Experience from "@/components/Experience";
+import IndexLedger from "@/components/IndexLedger";
+import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
     <main>
       <Hero />
       <About />
+      <WorkPreview />
       <Experience />
-      <Education />
-      <ArchiveLinks />
+      <IndexLedger />
       <Contact />
     </main>
   );
