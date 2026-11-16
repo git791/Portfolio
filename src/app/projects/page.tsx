@@ -4,7 +4,7 @@ import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Projects | Mohammed Ayaan",
-  description: "Ledger of 35 engineering builds, systems, agents, and prototypes.",
+  description: "Ledger of engineering builds, systems, agents, and prototypes.",
 };
 
 export default function ProjectsPage() {

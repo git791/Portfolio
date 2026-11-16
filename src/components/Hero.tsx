@@ -280,7 +280,7 @@ export default function Hero() {
         <div className="w-full max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
-              BUILD LEDGER · 35 REPOSITORIES (OLDEST → NEWEST)
+              BUILD LEDGER · {tileProjects.length} REPOSITORIES (OLDEST → NEWEST)
             </span>
             <Link
               href="/projects"
@@ -291,11 +291,11 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* 7 Columns x 5 Rows Grid */}
+          {/* Grid */}
           <div
             className="grid grid-cols-5 sm:grid-cols-7 gap-2"
             role="region"
-            aria-label="35 Project Tiles"
+            aria-label={`${tileProjects.length} Project Tiles`}
           >
             {tileProjects.map((p, idx) => {
               const hasLive = Boolean(p.liveUrl && p.liveUrl.trim().length > 0);

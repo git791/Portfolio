@@ -5,7 +5,7 @@ export const personalInfo = {
   firstName: "Mohammed Ayaan",
   role: "Agentic AI · Cloud · Backend",
   bio: "AWS Student Builder Group Leader | HackerRank Campus Ambassador | B. Tech CSE @ Alliance University | Building Agentic AI & Cloud Apps | Python • TypeScript • AWS",
-  about: `I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm seeking backend, cloud infrastructure, and agentic AI engineering internship opportunities where I can ship high-impact systems. // TODO(owner): confirm internship focus.`,
+  about: `I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm actively looking for an engineering internship across backend systems, cloud infrastructure, full-stack, or AI apps—ready to dive in, build, and ship real code.`,
   location: "Bengaluru, India",
   email: "m.ayaan.a.ahmed@gmail.com",
   availability: "Open to opportunities",
@@ -274,7 +274,7 @@ export const projects: Project[] = [
     year: "2026",
     description: "Offline developer bridge that lets engineers photograph an error, speak a fix, and generate code patches via an on-device NPU model \u2014 relaying fixes to laptop environments with zero cloud dependence. Built for iQOO City Battles 2026.",
     problem: "Enables engineers to photograph errors and generate code patches offline on an NPU-equipped phone.", // draft
-    tags: ["Android", "NPU", "On-Device AI", "Java", "Python", "Developer Tools", "Offline AI"],
+    tags: ["Android", "NPU", "On-Device AI", "Java", "Kotlin", "TypeScript", "Developer Tools", "Offline AI"],
     githubUrl: "https://github.com/git791/RelayPatch",
     tier: "archive",
     stage: "mvp",
@@ -500,22 +500,6 @@ export const projects: Project[] = [
     team: [],
   },
   {
-    id: 30,
-    slug: "ai-dropout-prediction-system",
-    title: "AI Dropout Prediction System",
-    category: "Machine Learning",
-    year: "2025",
-    description: "Smart India Hackathon prototype that predicts student dropout risk using AI and pairs at-risk students with a counselling system to intervene early.",
-    problem: "Predicts student dropout risk using AI to connect at-risk students with targeted counselling.", // draft
-    tags: ["Python", "Machine Learning", "FastAPI", "Education Tech", "Predictive Analytics"],
-    image: "/images/projects/dropout.png",
-    githubUrl: "https://github.com/git791/AI-based-drop-out-prediction-and-counselling-system",
-    tier: "archive",
-    stage: "mvp",
-    role: "Lead",
-    team: [], // TODO(owner): confirm teammates (SIH team)
-  },
-  {
     id: 31,
     slug: "evoljewels-kiosk",
     title: "EvolJewels Kiosk",
@@ -536,7 +520,7 @@ export const projects: Project[] = [
     slug: "t-rex-runner",
     title: "T-Rex Runner",
     category: "Game Development",
-    year: "2024", // TODO(owner): verify, repo not seen
+    year: "2024",
     description: "A browser-based recreation of the Google Chrome offline T-Rex game built with p5.js. Features a persistent score system and collision detection.",
     problem: "Browser recreation of the offline Chrome runner game built with p5.js.", // draft
     tags: ["p5.js", "JavaScript", "HTML Canvas", "Game Dev"],
@@ -599,7 +583,7 @@ export const skills: SkillGroup[] = [
   {
     category: "Daily drivers",
     items: [
-      { name: "Python", repos: 24, projects: ["bizboost-ai", "calm-aid", "brain-dump", "vaneloop", "netramitra", "terrapulse", "steward", "footy-mind", "relaypatch", "puente", "neighbournode", "talentdna", "chronosdag", "stochastix", "green-ai-orchestrator", "customer-churn-bi-ml-dashboard", "ai-dropout-prediction-system"] },
+      { name: "Python", repos: 24, projects: ["bizboost-ai", "calm-aid", "brain-dump", "vaneloop", "netramitra", "terrapulse", "steward", "footy-mind", "relaypatch", "puente", "neighbournode", "talentdna", "chronosdag", "stochastix", "green-ai-orchestrator", "customer-churn-bi-ml-dashboard"] },
       { name: "TypeScript", repos: 19, projects: ["ongod", "steward", "footy-mind", "p2p-autopay", "pulse", "aegis-vault", "ordivanta", "the-ombuds-network", "tellus-ignota", "promptflow"] },
       { name: "JavaScript", repos: 35, projects: ["kaankhol", "couch-rivals", "tracksentinel-ai", "neon-snake-and-beats", "evoljewels-kiosk", "t-rex-runner", "plinko"] },
       { name: "HTML & CSS", repos: 46, projects: ["evoljewels-kiosk", "t-rex-runner", "plinko"] },
@@ -607,7 +591,7 @@ export const skills: SkillGroup[] = [
       { name: "Next.js", repos: 11, projects: ["bizboost-ai", "netramitra", "chainguard-ai", "access-agent", "ongod", "footy-mind", "pulse", "ordivanta", "the-ombuds-network", "promptflow"] },
       { name: "React 19", repos: 13, projects: ["bizboost-ai", "brain-dump", "kaankhol", "access-agent", "footy-mind", "couch-rivals", "aegis-vault"] },
       { name: "Tailwind CSS v4", repos: 10, projects: ["access-agent", "ongod", "promptflow"] },
-      { name: "FastAPI", repos: 11, projects: ["calm-aid", "brain-dump", "netramitra", "jansetu", "terrapulse", "steward", "footy-mind", "talentdna", "ordivanta", "ai-dropout-prediction-system"] },
+      { name: "FastAPI", repos: 11, projects: ["calm-aid", "brain-dump", "netramitra", "jansetu", "terrapulse", "steward", "footy-mind", "talentdna", "ordivanta"] },
       { name: "Docker", repos: 17, projects: ["netramitra", "vaneloop", "access-agent", "ordivanta"] },
       { name: "Gemini API", repos: 17, projects: ["calm-aid", "netramitra", "chainguard-ai", "puente"] },
       { name: "Multi-agent orchestration", repos: 9, projects: ["jansetu", "puente", "neighbournode", "green-ai-orchestrator"] },
@@ -671,7 +655,6 @@ export const skills: SkillGroup[] = [
   },
 ];
 
-// TODO(owner): confirm the five highlighted certificates
 export const certifications: Certification[] = [
   {
     id: 1,
@@ -1088,8 +1071,6 @@ export const education = [
   },
 ];
 
-// TODO(owner): second placement, which event/project/placement?
-// TODO(owner): any final-round entries to mark finalist?
 export const hackathons: Hackathon[] = [
   {
     id: 1,
@@ -1256,7 +1237,7 @@ export const hackathons: Hackathon[] = [
     stage: "participant",
     track: "Developer Tools",
     description: "Built RelayPatch, an on-device NPU developer tool that enables engineers to photograph code errors, speak fixes, and generate code patches entirely offline from their phone to laptop.",
-    tags: ["Android", "NPU", "On-Device AI", "Java", "Python"], // TODO(owner): Java or Kotlin?
+    tags: ["Android", "NPU", "On-Device AI", "Java", "Kotlin", "TypeScript"],
     projectUrl: "https://github.com/git791/RelayPatch",
     urlLabel: "View Project",
   },

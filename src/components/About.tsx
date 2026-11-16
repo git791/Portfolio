@@ -31,8 +31,7 @@ export default function About() {
           {/* Left Narrative (7 cols) */}
           <div className="lg:col-span-7 flex flex-col gap-6">
             <p className="text-base sm:text-lg text-[var(--fg)] leading-relaxed font-normal">
-              I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm looking for an internship in backend, cloud, or agentic AI work.{" "}
-              <span className="text-[var(--muted)] text-sm font-mono">// TODO(owner): confirm internship focus.</span>
+              I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm actively looking for an engineering internship across backend systems, cloud infrastructure, full-stack, or AI apps—ready to dive in, build, and ship real code.
             </p>
 
             {/* Compact Education Line */}

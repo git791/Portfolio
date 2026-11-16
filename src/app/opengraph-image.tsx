@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import commitsJson from "@/data/commits.json";
+import { projects } from "@/lib/data";
 
 export const runtime = "nodejs";
 
@@ -98,8 +99,8 @@ export default async function Image() {
               flexDirection: "column",
             }}
           >
-            <div>MESSY HUMAN INPUT,</div>
-            <div style={{ color: "#FFC400" }}>WORKING AGENTS.</div>
+            <div style={{ display: "flex" }}>MESSY HUMAN INPUT,</div>
+            <div style={{ display: "flex", color: "#FFC400" }}>WORKING AGENTS.</div>
           </div>
         </div>
 
@@ -125,8 +126,10 @@ export default async function Image() {
               letterSpacing: "0.1em",
             }}
           >
-            <div>35 BUILDS · 21 HACKATHONS · COMMITS BACK TO 2019</div>
-            <div style={{ color: "#ECE9DF" }}>mohammedayaan.me</div>
+            <div style={{ display: "flex" }}>
+              {`${projects.length} BUILDS · 21 HACKATHONS · COMMITS BACK TO 2019`}
+            </div>
+            <div style={{ display: "flex", color: "#ECE9DF" }}>mohammedayaan.me</div>
           </div>
 
           {/* SVG Ridgeline Motif */}
