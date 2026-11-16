@@ -127,11 +127,11 @@ export default function Skills() {
                     gap: "0.5rem",
                   }}
                 >
-                  {group.items.map((skill: string, itemIndex: number) => {
+                  {group.items.map((skill, itemIndex: number) => {
                     const currentIndex = baseIndex + itemIndex;
                     return (
                       <div
-                        key={skill}
+                        key={skill.name}
                         ref={(el) => {
                           if (el) skillItemRefs.current[currentIndex] = el;
                         }}
@@ -168,7 +168,7 @@ export default function Skills() {
                             userSelect: "none",
                           }}
                         >
-                          {skill}
+                          {skill.name}{skill.repos ? ` x${skill.repos}` : ""}
                         </span>
                       </div>
                     );

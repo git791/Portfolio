@@ -3,15 +3,9 @@ import { Project, Hackathon, SkillGroup, Experience, Education, Certification } 
 export const personalInfo = {
   name: "Mohammed Ayaan Adil Ahmed",
   firstName: "Mohammed Ayaan",
-  role: "Student",
-  bio: "AWS Student Builder Group Leader | HackerRank Campus Ambassador | B. Tech CSE @ Alliance University | Building Agentic AI & Cloud Apps | Python • JavaScript • Swift • C++ • AWS",
-  about: `Enthusiastic and highly driven Third-Year B.Tech Computer Science Engineering student at Alliance University. I am an active learner dedicated to building a robust technical foundation and exploring how technology can solve real-world problems.
-
-My core understanding is built upon foundational programming concepts in C, C++, Java, and Python. I actively seek out and participate in workshops and hackathons to apply this knowledge and accelerate my development.
-
-I am currently expanding my skills into specialized domains: learning Kotlin and Swift for modern mobile app development, exploring the Unity engine for game creation, and gaining initial exposure to cloud infrastructure concepts via AWS and Azure. My focus is always on translating theoretical knowledge into tangible, real-world solution projects.
-
-I am eager to secure an internship where I can contribute my energy, foundational skills, and dedication to a supportive and innovative environment.`,
+  role: "Agentic AI · Cloud · Backend",
+  bio: "AWS Student Builder Group Leader | HackerRank Campus Ambassador | B. Tech CSE @ Alliance University | Building Agentic AI & Cloud Apps | Python • TypeScript • AWS",
+  about: `I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm looking for an internship in backend, cloud, or agentic AI work. // TODO(owner): confirm internship focus.`,
   location: "Bengaluru, India",
   email: "m.ayaan.a.ahmed@gmail.com",
   availability: "Open to opportunities",
@@ -601,106 +595,87 @@ export const projects: Project[] = [
   },
 ];
 
-export const skills = [
+export const skills: SkillGroup[] = [
   {
-    category: "Languages",
+    category: "Daily drivers",
     items: [
-      "Python",
-      "TypeScript",
-      "JavaScript",
-      "C / C++",
-      "Java",
-      "Swift",
-      "Kotlin",
-      "SQL",
-      "HTML & CSS",
+      { name: "Python", repos: 24, projects: ["bizboost-ai", "calm-aid", "brain-dump", "vaneloop", "netramitra", "terrapulse", "steward", "footy-mind", "relaypatch", "puente", "neighbournode", "talentdna", "chronosdag", "stochastix", "green-ai-orchestrator", "customer-churn-bi-ml-dashboard", "ai-dropout-prediction-system"] },
+      { name: "TypeScript", repos: 19, projects: ["ongod", "steward", "footy-mind", "p2p-autopay", "pulse", "aegis-vault", "ordivanta", "the-ombuds-network", "tellus-ignota", "promptflow"] },
+      { name: "JavaScript", repos: 35, projects: ["kaankhol", "couch-rivals", "tracksentinel-ai", "neon-snake-and-beats", "evoljewels-kiosk", "t-rex-runner", "plinko"] },
+      { name: "HTML & CSS", repos: 46, projects: ["evoljewels-kiosk", "t-rex-runner", "plinko"] },
+      { name: "Node.js", repos: 25, projects: ["p2p-autopay", "the-ombuds-network"] },
+      { name: "Next.js", repos: 11, projects: ["bizboost-ai", "netramitra", "chainguard-ai", "access-agent", "ongod", "footy-mind", "pulse", "ordivanta", "the-ombuds-network", "promptflow"] },
+      { name: "React 19", repos: 13, projects: ["bizboost-ai", "brain-dump", "kaankhol", "access-agent", "footy-mind", "couch-rivals", "aegis-vault"] },
+      { name: "Tailwind CSS v4", repos: 10, projects: ["access-agent", "ongod", "promptflow"] },
+      { name: "FastAPI", repos: 11, projects: ["calm-aid", "brain-dump", "netramitra", "jansetu", "terrapulse", "steward", "footy-mind", "talentdna", "ordivanta", "ai-dropout-prediction-system"] },
+      { name: "Docker", repos: 17, projects: ["netramitra", "vaneloop", "access-agent", "ordivanta"] },
+      { name: "Gemini API", repos: 17, projects: ["calm-aid", "netramitra", "chainguard-ai", "puente"] },
+      { name: "Multi-agent orchestration", repos: 9, projects: ["jansetu", "puente", "neighbournode", "green-ai-orchestrator"] },
+      { name: "Google Cloud Run", repos: 8, projects: ["calm-aid", "puente"] },
+      { name: "Firebase / Firestore", repos: 6, projects: ["chainguard-ai", "puente"] },
+      { name: "PostgreSQL", repos: 7, projects: ["jansetu", "promptflow"] },
+      { name: "SQLite", repos: 10, projects: ["kaankhol", "ordivanta"] },
+      { name: "Redis", repos: 5, projects: ["vaneloop"] },
+      { name: "Server-Sent Events", repos: 6, projects: ["calm-aid"] },
+      { name: "Recharts", repos: 6, projects: ["vaneloop", "ordivanta"] },
+      { name: "Framer Motion", repos: 7, projects: ["ongod"] },
+      { name: "HTML5 Canvas", repos: 7, projects: ["neon-snake-and-beats", "t-rex-runner", "plinko"] },
+      { name: "LangChain", repos: 5, projects: ["brain-dump"] },
+      { name: "Pydantic", repos: 9, projects: ["calm-aid", "vaneloop", "ordivanta"] },
+      { name: "Zod", repos: 5, projects: ["access-agent", "promptflow"] },
+      { name: "Vitest / pytest", projects: ["kaankhol", "ordivanta", "vaneloop", "access-agent", "footy-mind"], note: "tests in several repos, no count" },
+      { name: "Git & GitHub", note: "no count" },
     ],
   },
   {
-    category: "Frontend & 3D",
+    category: "Used in projects",
     items: [
-      "Next.js (App Router)",
-      "React 19",
-      "Tailwind CSS v4",
-      "Three.js & R3F",
-      "GSAP",
-      "Framer Motion",
-      "Recharts",
-      "Phaser.js",
-      "HTML5 Canvas",
-      "WebAudio API",
+      { name: "AWS (Lambda, Bedrock, Nova, DynamoDB, API Gateway, SAM)", projects: ["bizboost-ai", "neighbournode", "couch-rivals"], note: "BizBoost AI, NeighborNode, Couch Rivals; Amplify and ECS used for deployment" },
+      { name: "Three.js and R3F", projects: ["footy-mind", "pulse", "tracksentinel-ai"], note: "Footy Mind, Pulse, TrackSentinel" },
+      { name: "Cloudflare Workers, Hono, D1", projects: ["kaankhol", "tellus-ignota", "ordivanta"], note: "KaanKhol, Tellus Ignota, Ordivanta" },
+      { name: "Vertex AI", projects: ["chainguard-ai", "jansetu", "puente"], note: "ChainGuard AI, JanSetu, Puente" },
+      { name: "Google ADK", projects: ["green-ai-orchestrator", "puente"], note: "Green AI Orchestrator, Puente" },
+      { name: "MCP and Slack Bolt", projects: ["steward"], note: "Steward" },
+      { name: "Playwright", projects: ["access-agent", "chainguard-ai"], note: "AccessAgent, ChainGuard AI" },
+      { name: "axe-core", projects: ["access-agent"], note: "AccessAgent" },
+      { name: "Inngest and Vercel Sandbox", projects: ["access-agent"], note: "AccessAgent" },
+      { name: "Strands Agents SDK", projects: ["neighbournode"], note: "NeighborNode" },
+      { name: "IBM Docling", projects: ["footy-mind", "tracksentinel-ai"], note: "Footy Mind, TrackSentinel" },
+      { name: "Langflow", projects: ["tracksentinel-ai"], note: "TrackSentinel" },
+      { name: "FAISS and sentence-transformers", projects: ["talentdna"], note: "TalentDNA" },
+      { name: "Cassandra (AstraDB) and quantile regression", projects: ["vaneloop"], note: "VaneLoop" },
+      { name: "scikit-learn", projects: ["vaneloop", "customer-churn-bi-ml-dashboard"], note: "VaneLoop, Customer Churn" },
+      { name: "MATLAB deep learning", projects: ["netramitra"], note: "NetraMitra" },
+      { name: "PuLP / HiGHS", projects: ["ordivanta"], note: "Ordivanta" },
+      { name: "GSAP", projects: ["kaankhol"], note: "KaanKhol" },
+      { name: "Prisma", projects: ["promptflow"], note: "PromptFlow" },
+      { name: "Phaser and Reddit Devvit", projects: ["tellus-ignota"], note: "Tellus Ignota" },
+      { name: "WebAudio", projects: ["kaankhol", "tracksentinel-ai", "neon-snake-and-beats"], note: "KaanKhol, TrackSentinel, Neon Snake & Beats" },
+      { name: "Streamlit", projects: ["brain-dump", "green-ai-orchestrator"], note: "Brain Dump, Green AI Orchestrator" },
+      { name: "Power BI and DAX", projects: ["customer-churn-bi-ml-dashboard"], note: "Customer Churn BI & ML Dashboard" },
+      { name: "Figma", note: "FigBuild and wireframes" },
+      { name: "SQL and Linux/Bash", note: "small repos" },
     ],
   },
   {
-    category: "Backend & Systems",
+    category: "Coursework & learning",
+    caption: "University curriculum, a summer course, and hackathon entries",
     items: [
-      "FastAPI",
-      "Node.js",
-      "Hono (Edge)",
-      "Prisma ORM",
-      "Slack Bolt",
-      "WebSockets",
-      "Server-Sent Events",
-      "Playwright",
-      "REST APIs",
-      "Docker",
-    ],
-  },
-  {
-    category: "Cloud & Infrastructure",
-    items: [
-      "AWS (Lambda, Bedrock, DynamoDB, ECS, API Gateway, SAM, Amplify)",
-      "Google Cloud (Cloud Run, Vertex AI, Firestore)",
-      "Cloudflare Workers & D1",
-      "Vercel",
-      "Render",
-      "Supabase",
-    ],
-  },
-  {
-    category: "Agentic AI & ML",
-    items: [
-      "Multi-Agent Orchestration",
-      "Google Gemini & ADK",
-      "Amazon Bedrock Nova",
-      "Model Context Protocol (MCP)",
-      "Vector Search & ChromaDB",
-      "LangChain",
-      "Scikit-learn",
-      "MATLAB Deep Learning",
-      "Quantile Regression",
-    ],
-  },
-  {
-    category: "Databases & Storage",
-    items: [
-      "PostgreSQL",
-      "Amazon DynamoDB",
-      "Apache Cassandra (AstraDB)",
-      "Redis (Upstash)",
-      "Firebase Firestore",
-      "Cloudflare D1 (SQLite)",
-      "SQLite",
-    ],
-  },
-  {
-    category: "Specialized & Tools",
-    items: [
-      "Git & GitHub",
-      "Figma",
-      "Power BI & DAX",
-      "Operations Research (PuLP / HiGHS)",
-      "Reddit Devvit",
-      "axe-core (Accessibility)",
-      "Unity",
-      "Linux / Bash",
+      { name: "C", note: "curriculum" },
+      { name: "C++", note: "curriculum" },
+      { name: "Java", note: "curriculum" },
+      { name: "Swift", note: "summer course" },
+      { name: "Kotlin", projects: ["relaypatch"], note: "learning; Android app in RelayPatch" },
+      { name: "Unity", note: "Battle of Bytes entry, 3rd place" },
     ],
   },
 ];
 
-export const certifications = [
+// TODO(owner): confirm the five highlighted certificates
+export const certifications: Certification[] = [
   {
     id: 1,
+    highlight: true,
     title: "Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate",
     issuer: "Oracle",
     date: "Oct 2025",
@@ -711,6 +686,7 @@ export const certifications = [
 
   {
     id: 16,
+    highlight: true,
     title: "AWS Cloud Practitioner Essentials",
     issuer: "Amazon Web Services",
     date: "Jun 2025",
@@ -721,6 +697,7 @@ export const certifications = [
 
   {
     id: 2,
+    highlight: true,
     title: "Probability & Statistics for Machine Learning & Data Science",
     issuer: "DeepLearning.AI",
     date: "Mar 2026",
@@ -741,6 +718,7 @@ export const certifications = [
 
   {
     id: 4,
+    highlight: true,
     title: "Gen AI Academy - AI/ML Track",
     issuer: "Google & Hack2Skill",
     date: "Dec 2025",
@@ -1059,6 +1037,7 @@ export const certifications = [
 
   {
     id: 37,
+    highlight: true,
     title: "5-Day AI Agents Intensive Course with Google",
     issuer: "Google & Kaggle",
     date: "Nov 2025",
@@ -1352,9 +1331,10 @@ export const hackathons: Hackathon[] = [
   },
 ];
 
-export const experience = [
+export const experience: Experience[] = [
   {
     id: 1,
+    group: "Leading",
     role: "Vice Chair",
     organization: "IEEE Student Branch — Alliance University",
     type: "Part-time",
@@ -1365,6 +1345,7 @@ export const experience = [
   },
   {
     id: 2,
+    group: "Leading",
     role: "Campus Crew",
     organization: "HackerRank",
     type: "Part-time",
@@ -1375,6 +1356,7 @@ export const experience = [
   },
   {
     id: 3,
+    group: "Leading",
     role: "President",
     organization: "Hack Club — Alliance University",
     type: "Part-time",
@@ -1385,6 +1367,7 @@ export const experience = [
   },
   {
     id: 4,
+    group: "Leading",
     role: "AWS Student Builder Group Leader",
     organization: "Amazon Web Services (AWS)",
     type: "Full-time",
@@ -1395,6 +1378,7 @@ export const experience = [
   },
   {
     id: 5,
+    group: "Earlier",
     role: "Campus Ambassador",
     organization: "HackerRank",
     type: "Part-time",
@@ -1405,6 +1389,7 @@ export const experience = [
   },
   {
     id: 6,
+    group: "Leading",
     role: "Industry & Outreach Co-Lead",
     organization: "SIG FutureTech & GenAI — Alliance University",
     type: "Part-time",
@@ -1415,6 +1400,7 @@ export const experience = [
   },
   {
     id: 7,
+    group: "Leading",
     role: "IIC Student Co-ordinator",
     organization: "Alliance University",
     type: "Part-time",
@@ -1425,6 +1411,7 @@ export const experience = [
   },
   {
     id: 8,
+    group: "Building",
     role: "Senior Backend Developer",
     organization: "STARDY AI",
     type: "Part-time",
@@ -1435,6 +1422,7 @@ export const experience = [
   },
   {
     id: 9,
+    group: "Earlier",
     role: "Intern — Centre of Excellence for Nature-Based Solutions",
     organization: "Alliance University",
     type: "Internship",
@@ -1445,6 +1433,7 @@ export const experience = [
   },
   {
     id: 10,
+    group: "Earlier",
     role: "Student Intern",
     organization: "1M1B (1 Million for 1 Billion)",
     type: "Internship",
@@ -1464,3 +1453,4 @@ export const profiles = {
   medium: "https://medium.com/@m.ayaan.a.ahmed",
   hackerearth: "https://www.hackerearth.com/@m.ayaan.a.ahmed", 
 };
+export const siteStats = { eventsRun: 3, largestAudience: "250+" };
