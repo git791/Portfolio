@@ -145,7 +145,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
   {
     id: 8,
@@ -182,7 +182,7 @@ export const projects: Project[] = [
     tier: "secondary",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammate names
+    team: [],
   },
   {
     id: 10,
@@ -197,7 +197,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
   {
     id: 11,
@@ -309,7 +309,7 @@ export const projects: Project[] = [
     tier: "secondary",
     stage: "mvp",
     role: "Contributor",
-    team: ["Wania Qamar", "Syed Aatira Zafar Andrabi"],
+    team: ["Wania Qamar", "Syeda Aatira Zafar Andrabi"],
   },
   {
     id: 18,
@@ -324,7 +324,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
   {
     id: 19,
@@ -575,7 +575,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
 ];
 
