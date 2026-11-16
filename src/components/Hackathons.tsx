@@ -1,328 +1,181 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SectionReveal from "@/components/ui/SectionReveal";
+import Decode from "@/components/ui/Decode";
 import { hackathons } from "@/lib/data";
+import type { Hackathon } from "@/lib/types";
 
-gsap.registerPlugin(ScrollTrigger);
+function HackathonChip({ item }: { item: Hackathon }) {
+  if (item.placement) {
+    return (
+      <span className="font-mono text-xs uppercase px-2 py-0.5 bg-[var(--fg)] text-[var(--bg)] font-semibold">
+        {item.placement}
+      </span>
+    );
+  }
 
-type Hackathon = (typeof hackathons)[0];
+  if (item.stage === "finalist" || item.stage === "semi-finalist") {
+    return (
+      <span className="font-mono text-xs uppercase px-2 py-0.5 border border-[var(--rule)] text-[var(--fg)]">
+        {item.stage.toUpperCase()}
+      </span>
+    );
+  }
 
-function ProjectLink({ url, label }: { url: string; label: string }) {
-  return React.createElement(
-    "a",
-    {
-      href: url,
-      target: "_blank",
-      rel: "noopener noreferrer",
-      style: {
-        flexShrink: 0,
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.7rem",
-        letterSpacing: "0.1em",
-        textTransform: "uppercase" as const,
-        color: "var(--color-accent)",
-        borderBottom: "1px solid var(--color-accent)",
-        paddingBottom: "2px",
-        whiteSpace: "nowrap",
-      },
-    },
-    `${label} ↗`
-  );
+  return null;
 }
 
 export default function Hackathons() {
-  const containerRef = useRef<HTMLElement>(null);
-  const [activeId, setActiveId] = useState<number | null>(null);
-
-  useGSAP(
-    () => {
-      const rows = gsap.utils.toArray<HTMLElement>(".hackathon-row");
-      rows.forEach((row, i) => {
-        gsap.fromTo(
-          row,
-          { opacity: 0, x: -30 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            delay: i * 0.1,
-            scrollTrigger: {
-              trigger: row,
-              start: "top 88%",
-            },
-          }
-        );
-      });
-    },
-    { scope: containerRef }
+  // Notable hackathons (with placement or finalist/semi-finalist stage)
+  const notableHackathons = hackathons.filter(
+    (h) => Boolean(h.placement) || h.stage === "finalist" || h.stage === "semi-finalist"
   );
 
-  const handleRowEnter = (id: number, el: HTMLElement) => {
-    setActiveId(id);
-    gsap.to(el, { paddingLeft: "1.5rem", duration: 0.3, ease: "power3.out" });
-  };
-
-  const handleRowLeave = (id: number, el: HTMLElement) => {
-    setActiveId(null);
-    gsap.to(el, { paddingLeft: "0rem", duration: 0.3, ease: "power3.out" });
-  };
+  // Parse approximate date for sorting newest first
+  const sortedHackathons = [...hackathons].sort((a, b) => {
+    // Reverse id order if date strings vary, or string compare
+    return b.id - a.id;
+  });
 
   return (
-    <section
-      id="hackathons"
-      ref={containerRef}
-      className="section-padding"
-      style={{ borderTop: "1px solid var(--color-border)" }}
-    >
+    <section className="py-24 border-t border-[var(--rule)] min-h-screen">
       <div className="container-main">
-        <SectionReveal>
-          <div style={{ marginBottom: "4rem" }}>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Competitions & Events
-            </div>
-            <h2
-              style={{
-                fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                color: "var(--color-ink)",
-              }}
-            >
-              Hackathons
-            </h2>
-          </div>
-        </SectionReveal>
-
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "2fr 1fr 1fr 0.5fr",
-              gap: "1rem",
-              paddingBottom: "0.75rem",
-              borderBottom: "1px solid var(--color-border)",
-              marginBottom: "0.5rem",
-            }}
-            className="hackathon-table-header"
-          >
-            {["Event", "Organizer", "Date", "Result"].map((col: string) => (
-              <span
-                key={col}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "var(--color-ink-muted)",
-                }}
-              >
-                {col}
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
+          <div>
+            <div className="flex items-center gap-4 mb-3">
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+                INDEX /
               </span>
-            ))}
+              <Decode
+                text="HACKATHONS"
+                className="font-display font-bold text-4xl sm:text-5xl uppercase tracking-tight text-[var(--fg)]"
+              />
+            </div>
+            <p className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              {hackathons.length} COMPETITIVE BUILDS SINCE 2025 · RAPID PROTOTYPING
+            </p>
           </div>
+        </div>
 
-          {hackathons.map((hackathon: Hackathon) => (
-            <div key={hackathon.id}>
-              <div
-                className="hackathon-row"
-                style={{ opacity: 0 }}
-                onMouseEnter={(e) =>
-                  handleRowEnter(hackathon.id, e.currentTarget)
-                }
-                onMouseLeave={(e) =>
-                  handleRowLeave(hackathon.id, e.currentTarget)
-                }
-              >
+        {/* Notable Highlights Strip */}
+        {notableHackathons.length > 0 && (
+          <div className="mb-20">
+            <div className="pb-3 border-b border-[var(--rule)] mb-6 flex items-center justify-between">
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg)] font-semibold">
+                HIGHLIGHTS &amp; RECOGNITION
+              </span>
+              <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                {notableHackathons.length} ENTRIES
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {notableHackathons.map((item) => (
                 <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "2fr 1fr 1fr 0.5fr",
-                    gap: "1rem",
-                    paddingBlock: "1.5rem",
-                    borderBottom: "1px solid var(--color-border)",
-                    alignItems: "center",
-                  }}
-                  className="hackathon-table-header"
+                  key={item.id}
+                  className="p-6 border border-[var(--rule)] bg-[#141512]/40 flex flex-col justify-between gap-4"
                 >
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "1.1rem",
-                        color: "var(--color-ink)",
-                        fontWeight: 400,
-                        marginBottom: "0.25rem",
-                      }}
-                    >
-                      {hackathon.name}
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                        {item.date} · {item.organizer}
+                      </span>
+                      <HackathonChip item={item} />
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "0.35rem",
-                        marginTop: "0.5rem",
-                      }}
-                    >
-                      {hackathon.tags.map((tag: string) => (
-                        <span
-                          key={tag}
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "0.6rem",
-                            letterSpacing: "0.08em",
-                            textTransform: "uppercase",
-                            padding: "0.2rem 0.5rem",
-                            border: "1px solid var(--color-border)",
-                            borderRadius: "var(--radius-sm)",
-                            color: "var(--color-ink-muted)",
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+
+                    <h3 className="font-display font-semibold text-2xl uppercase tracking-tight text-[var(--fg)]">
+                      {item.name}
+                    </h3>
+
+                    {item.track && (
+                      <span className="font-mono text-xs text-[var(--muted)]">
+                        Track: {item.track}
+                      </span>
+                    )}
+
+                    <p className="text-sm text-[var(--muted)] leading-relaxed">
+                      {item.description}
+                    </p>
                   </div>
 
-                  <span
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "0.9rem",
-                      color: "var(--color-ink-muted)",
-                    }}
-                  >
-                    {hackathon.organizer}
-                  </span>
+                  {item.projectUrl && (
+                    <div className="pt-4 border-t border-[var(--rule)]">
+                      <a
+                        href={item.projectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor="Visit"
+                        className="font-mono text-xs uppercase tracking-wider text-[var(--fg)] hover:underline inline-flex items-center gap-1.5"
+                      >
+                        <span>{item.urlLabel || "View Project"}</span>
+                        <span>↗</span>
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.8rem",
-                      letterSpacing: "0.05em",
-                      color: "var(--color-ink-muted)",
-                    }}
-                  >
-                    {hackathon.date}
-                  </span>
+        {/* Complete Hackathons Ledger */}
+        <div className="flex flex-col">
+          <div className="pb-3 border-b border-[var(--rule)] flex items-center justify-between">
+            <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg)] font-semibold">
+              COMPLETE LEDGER
+            </span>
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              {sortedHackathons.length} TOTAL
+            </span>
+          </div>
 
-                  {hackathon.track && (
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.75rem",
-                        letterSpacing: "0.05em",
-                        color: "var(--color-ink-muted)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {hackathon.track}
+          <div className="flex flex-col border-t border-[var(--rule)]">
+            {sortedHackathons.map((item) => (
+              <div
+                key={item.id}
+                className="py-4 px-2 sm:px-4 border-b border-[var(--rule)] transition-colors hover:bg-[var(--rule)]/20 flex flex-col lg:flex-row lg:items-center justify-between gap-3"
+              >
+                {/* Left: Date + Name + Organizer */}
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
+                  <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)] w-24 shrink-0">
+                    {item.date}
+                  </span>
+                  <span className="font-display font-semibold text-xl uppercase tracking-tight text-[var(--fg)]">
+                    {item.name}
+                  </span>
+                  <span className="text-sm text-[var(--muted)]">
+                    · {item.organizer}
+                  </span>
+                </div>
+
+                {/* Right: Track + Chip + Link */}
+                <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-wider shrink-0 flex-wrap">
+                  {item.track && (
+                    <span className="text-[var(--muted)]">
+                      {item.track}
                     </span>
                   )}
 
-                  {hackathon.placement ? (
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.65rem",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        padding: "0.2rem 0.5rem",
-                        backgroundColor: "var(--color-ink)",
-                        color: "var(--color-background)",
-                        borderRadius: "var(--radius-sm)",
-                        fontWeight: 600,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {hackathon.placement}
-                    </span>
-                  ) : (hackathon.stage === "semi-finalist" || hackathon.stage === "finalist") ? (
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.65rem",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                        padding: "0.2rem 0.5rem",
-                        border: "1px solid var(--color-border)",
-                        borderRadius: "var(--radius-sm)",
-                        color: "var(--color-ink)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {hackathon.stage}
-                    </span>
-                  ) : null}
-                </div>
+                  <HackathonChip item={item} />
 
-                <div
-                  style={{
-                    maxHeight: activeId === hackathon.id ? "200px" : "0px",
-                    overflow: "hidden",
-                    transition: "max-height 0.4s var(--ease-out-expo)",
-                  }}
-                >
-                  <div
-                    style={{
-                      paddingBlock: "1.25rem",
-                      paddingLeft: "0.5rem",
-                      borderBottom: "1px solid var(--color-border)",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-end",
-                      gap: "2rem",
-                    }}
-                    className="hackathon-expand"
-                  >
-                    <p
-                      style={{
-                        fontSize: "0.9rem",
-                        lineHeight: 1.7,
-                        color: "var(--color-ink-muted)",
-                        maxWidth: "640px",
-                        margin: 0,
-                      }}
+                  {item.projectUrl && (
+                    <a
+                      href={item.projectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-cursor="Visit"
+                      className="text-[var(--fg)] hover:underline inline-flex items-center gap-1"
                     >
-                      {hackathon.description}
-                    </p>
-                    {hackathon.projectUrl && (
-                      <ProjectLink 
-                        url={hackathon.projectUrl} 
-                        label={"urlLabel" in hackathon && hackathon.urlLabel ? hackathon.urlLabel as string : "View Project"} 
-                      />
-                    )}
-                  </div>
+                      <span>{item.urlLabel || "Project"}</span>
+                      <span>↗</span>
+                    </a>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .hackathon-table-header {
-            grid-template-columns: 1fr 1fr !important;
-            gap: 0.5rem !important;
-          }
-          .hackathon-expand {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

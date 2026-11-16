@@ -1,475 +1,154 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
-import SectionReveal from "@/components/ui/SectionReveal";
+import { useMemo, useState } from "react";
+import Decode from "@/components/ui/Decode";
+import ProjectRow from "@/components/ui/ProjectRow";
 import { projects } from "@/lib/data";
+import commitsJson from "@/data/commits.json";
 
-gsap.registerPlugin(ScrollTrigger);
-
-type Project = (typeof projects)[0];
-
-function GithubLink({ url }: { url: string }) {
-  return React.createElement(
-    "a",
-    {
-      href: url,
-      target: "_blank",
-      rel: "noopener noreferrer",
-      style: {
-        padding: "0.5rem 1rem",
-        backgroundColor: "rgba(245,242,238,0.95)",
-        borderRadius: "var(--radius-sm)",
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.7rem",
-        letterSpacing: "0.08em",
-        textTransform: "uppercase" as const,
-        color: "var(--color-ink)",
-      },
-    },
-    "GitHub"
-  );
-}
-
-function LiveLink({ url }: { url: string }) {
-  return React.createElement(
-    "a",
-    {
-      href: url,
-      target: "_blank",
-      rel: "noopener noreferrer",
-      style: {
-        padding: "0.5rem 1rem",
-        backgroundColor: "var(--color-accent)",
-        borderRadius: "var(--radius-sm)",
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.7rem",
-        letterSpacing: "0.08em",
-        textTransform: "uppercase" as const,
-        color: "#fff",
-      },
-    },
-    "Live ↗"
-  );
-}
-
-function FigmaLink({ url }: { url: string }) {
-  return React.createElement(
-    "a",
-    {
-      href: url,
-      target: "_blank",
-      rel: "noopener noreferrer",
-      style: {
-        padding: "0.5rem 1rem",
-        backgroundColor: "rgba(245,242,238,0.95)",
-        borderRadius: "var(--radius-sm)",
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.7rem",
-        letterSpacing: "0.08em",
-        textTransform: "uppercase" as const,
-        color: "var(--color-ink)",
-      },
-    },
-    "Figma ↗"
-  );
-}
-
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const [hovered, setHovered] = useState(false);
-
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 85%",
-          },
-          delay: (index % 3) * 0.15,
-        }
-      );
-    },
-    { scope: cardRef }
-  );
-
-  const handleMouseEnter = () => {
-    setHovered(true);
-    gsap.to(imageRef.current, {
-      scale: 1.05,
-      duration: 0.6,
-      ease: "power3.out",
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setHovered(false);
-    gsap.to(imageRef.current, {
-      scale: 1,
-      duration: 0.6,
-      ease: "power3.out",
-    });
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ opacity: 0 }}
-    >
-      <div
-        style={{
-          overflow: "hidden",
-          borderRadius: "var(--radius-lg)",
-          backgroundColor: "var(--color-surface)",
-          marginBottom: "1.25rem",
-          position: "relative",
-          paddingTop: "62%",
-        }}
-      >
-        <div ref={imageRef} style={{ position: "absolute", inset: 0 }}>
-          {project.image ? (
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              style={{ objectFit: "cover" }}
-            />
-          ) : (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background:
-                  "linear-gradient(135deg, var(--color-surface) 0%, var(--color-border) 100%)",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.7rem",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "var(--color-ink-muted)",
-                }}
-              >
-                {project.category}
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "var(--color-ink)",
-            opacity: hovered ? 0.35 : 0,
-            transition: "opacity 0.4s ease",
-            borderRadius: "var(--radius-lg)",
-            zIndex: 1,
-          }}
-        />
-
-        <div
-          style={{
-            position: "absolute",
-            top: "1rem",
-            right: "1rem",
-            display: "flex",
-            gap: "0.5rem",
-            zIndex: 2,
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? "translateY(0)" : "translateY(-8px)",
-            transition: "opacity 0.3s ease, transform 0.3s ease",
-          }}
-        >
-          {"figmaUrl" in project && project.figmaUrl && (
-            <FigmaLink url={project.figmaUrl as string} />
-          )}
-          {"githubUrl" in project && project.githubUrl && (
-            <GithubLink url={project.githubUrl as string} />
-          )}
-          {project.liveUrl && (
-            <LiveLink url={project.liveUrl} />
-          )}
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "0.5rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-          <h3
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.25rem",
-              color: "var(--color-ink)",
-              fontWeight: 400,
-            }}
-          >
-            {project.title}
-          </h3>
-          {project.stage === "mvp" && (
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.6rem",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                padding: "0.2rem 0.5rem",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-sm)",
-                color: "var(--color-ink-muted)",
-              }}
-            >
-              MVP
-            </span>
-          )}
-        </div>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.7rem",
-            color: "var(--color-ink-muted)",
-            letterSpacing: "0.08em",
-          }}
-        >
-          {project.year}
-        </span>
-      </div>
-
-      <p
-        style={{
-          fontSize: "0.9rem",
-          color: "var(--color-ink-muted)",
-          lineHeight: 1.6,
-          marginBottom: "1rem",
-        }}
-      >
-        {project.description}
-      </p>
-
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
-        {project.tags.map((tag: string) => (
-          <span
-            key={tag}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              padding: "0.3rem 0.7rem",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid var(--color-border)",
-              color: "var(--color-ink-muted)",
-            }}
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
+type TabType = "ALL" | "EDITORIAL" | "SYSTEMS" | "PLAYGROUND";
 
 export default function Projects() {
-  const featured = projects.filter((p: Project) => p.tier === "editorial");
-  const others = projects.filter(
-    (p: Project) => p.tier !== "editorial" && p.tier !== "playground"
-  );
-  const prototypes = projects.filter(
-    (p: Project) => p.tier === "playground"
-  );
+  const [activeTab, setActiveTab] = useState<TabType>("ALL");
+  const [filterQuery, setFilterQuery] = useState("");
+
+  // Build first-commit date map from commits.json
+  const reposFirstDate = useMemo(() => {
+    const map: Record<string, string> = {};
+    commitsJson.repos.forEach((r) => {
+      map[r.name.toLowerCase()] = r.first;
+    });
+    return map;
+  }, []);
+
+  // Filter and sort projects
+  const filteredProjects = useMemo(() => {
+    let list = [...projects];
+
+    // Filter by tab
+    if (activeTab === "EDITORIAL") {
+      list = list.filter((p) => p.tier === "editorial");
+    } else if (activeTab === "SYSTEMS") {
+      list = list.filter((p) => p.tier === "depth" || p.tier === "secondary");
+    } else if (activeTab === "PLAYGROUND") {
+      list = list.filter((p) => p.tier === "playground");
+    }
+
+    // Filter by text query (tags, title, problem, category)
+    if (filterQuery.trim()) {
+      const q = filterQuery.toLowerCase().trim();
+      list = list.filter((p) => {
+        const matchesTag = p.tags.some((t) => t.toLowerCase().includes(q));
+        const matchesTitle = p.title.toLowerCase().includes(q);
+        const matchesProblem = p.problem ? p.problem.toLowerCase().includes(q) : false;
+        const matchesCategory = p.category.toLowerCase().includes(q);
+        return matchesTag || matchesTitle || matchesProblem || matchesCategory;
+      });
+    }
+
+    // Sort by year desc, then repo first-commit date desc
+    list.sort((a, b) => {
+      const yearDiff = parseInt(b.year, 10) - parseInt(a.year, 10);
+      if (yearDiff !== 0) return yearDiff;
+
+      const repoA = a.githubUrl.split("/").pop()?.toLowerCase() || "";
+      const repoB = b.githubUrl.split("/").pop()?.toLowerCase() || "";
+      const dateA = a.repoFacts?.first || reposFirstDate[repoA] || `${a.year}-01-01`;
+      const dateB = b.repoFacts?.first || reposFirstDate[repoB] || `${b.year}-01-01`;
+
+      return dateB.localeCompare(dateA);
+    });
+
+    return list;
+  }, [activeTab, filterQuery, reposFirstDate]);
+
+  const tabs: { id: TabType; label: string; count: number }[] = [
+    { id: "ALL", label: "ALL", count: projects.length },
+    {
+      id: "EDITORIAL",
+      label: "EDITORIAL",
+      count: projects.filter((p) => p.tier === "editorial").length,
+    },
+    {
+      id: "SYSTEMS",
+      label: "SYSTEMS",
+      count: projects.filter((p) => p.tier === "depth" || p.tier === "secondary").length,
+    },
+    {
+      id: "PLAYGROUND",
+      label: "PLAYGROUND",
+      count: projects.filter((p) => p.tier === "playground").length,
+    },
+  ];
 
   return (
-    <section
-      id="projects"
-      className="section-padding"
-      style={{ borderTop: "1px solid var(--color-border)" }}
-    >
+    <section className="py-24 border-t border-[var(--rule)] min-h-screen">
       <div className="container-main">
-        <SectionReveal>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              marginBottom: "4rem",
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "var(--color-accent)",
-                  marginBottom: "0.75rem",
-                }}
-              >
-                Selected Work
-              </div>
-              <h2
-                style={{
-                  fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                  color: "var(--color-ink)",
-                }}
-              >
-                Projects
-              </h2>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="flex items-center gap-4 mb-3">
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+                INDEX /
+              </span>
+              <Decode
+                text="PROJECTS"
+                className="font-display font-bold text-4xl sm:text-5xl uppercase tracking-tight text-[var(--fg)]"
+              />
             </div>
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
-                color: "var(--color-ink-muted)",
-                letterSpacing: "0.08em",
-              }}
-            >
-              {projects.length} total
-            </span>
+            <p className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              {projects.length} TOTAL BUILDS · SIGNAL TO STRUCTURE
+            </p>
           </div>
-        </SectionReveal>
 
-        {/* Featured Projects */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "2.5rem",
-            marginBottom: "5rem",
-          }}
-          className="projects-grid"
-        >
-          {featured.map((project: Project, i: number) => (
-            <ProjectCard key={project.id} project={project} index={i} />
-          ))}
+          {/* Text filter by tag */}
+          <div className="w-full md:w-72">
+            <input
+              type="text"
+              value={filterQuery}
+              onChange={(e) => setFilterQuery(e.target.value)}
+              placeholder="Filter by tag (e.g. AWS, Python)..."
+              aria-label="Filter projects by tag"
+              className="w-full bg-transparent border border-[var(--rule)] px-3 py-2 font-mono text-xs text-[var(--fg)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[var(--fg)] transition-colors"
+            />
+          </div>
         </div>
 
-        {/* Other Projects */}
-        {others.length > 0 && (
-          <>
-            <SectionReveal>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1.5rem",
-                  marginBottom: "2rem",
-                }}
+        {/* Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 border-b border-[var(--rule)]">
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`font-mono text-xs uppercase tracking-wider px-3 py-1.5 border transition-colors flex items-center gap-2 shrink-0 ${
+                  isActive
+                    ? "bg-[var(--fg)] text-[var(--bg)] border-[var(--fg)] font-semibold"
+                    : "bg-transparent text-[var(--muted)] border-transparent hover:text-[var(--fg)] hover:border-[var(--rule)]"
+                }`}
               >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.75rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "var(--color-ink-muted)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Other Projects
+                <span>{tab.label}</span>
+                <span className={`text-[10px] ${isActive ? "opacity-80" : "opacity-60"}`}>
+                  ({tab.count})
                 </span>
-                <div
-                  style={{
-                    flex: 1,
-                    height: "1px",
-                    backgroundColor: "var(--color-border)",
-                  }}
-                />
-              </div>
-            </SectionReveal>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "2rem",
-                marginBottom: "5rem",
-              }}
-              className="projects-grid"
-            >
-              {others.map((project: Project, i: number) => (
-                <ProjectCard key={project.id} project={project} index={i} />
-              ))}
-            </div>
-          </>
-        )}
+              </button>
+            );
+          })}
+        </div>
 
-        {/* Prototype Stage */}
-        {prototypes.length > 0 && (
-          <>
-            <SectionReveal>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1.5rem",
-                  marginBottom: "2rem",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.75rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "var(--color-ink-muted)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Prototype Stage
-                </span>
-                <div
-                  style={{
-                    flex: 1,
-                    height: "1px",
-                    backgroundColor: "var(--color-border)",
-                  }}
-                />
-              </div>
-            </SectionReveal>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: "2rem",
-              }}
-              className="projects-grid"
-            >
-              {prototypes.map((project: Project, i: number) => (
-                <ProjectCard key={project.id} project={project} index={i} />
-              ))}
+        {/* Projects Ledger */}
+        <div className="flex flex-col border-t border-[var(--rule)]">
+          {filteredProjects.length > 0 ? (
+            filteredProjects.map((project, idx) => (
+              <ProjectRow key={project.id} project={project} index={idx} />
+            ))
+          ) : (
+            <div className="py-16 text-center font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              No projects match the current filter.
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );

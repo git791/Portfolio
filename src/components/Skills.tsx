@@ -1,314 +1,138 @@
 "use client";
 
-import { useRef } from "react";
-import React from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SectionReveal from "@/components/ui/SectionReveal";
-import { skills, profiles } from "@/lib/data";
+import { useState } from "react";
+import Link from "next/link";
+import Decode from "@/components/ui/Decode";
+import { skills, projects } from "@/lib/data";
+import type { SkillItem } from "@/lib/types";
 
-gsap.registerPlugin(ScrollTrigger);
+function getProjectTitle(slug: string) {
+  const p = projects.find((proj) => proj.slug === slug);
+  return p ? p.title : slug;
+}
 
-type SkillGroup = (typeof skills)[0];
-
-export default function Skills() {
-  const containerRef = useRef<HTMLElement>(null);
-  const skillItemRefs = useRef<HTMLDivElement[]>([]);
-
-  useGSAP(
-    () => {
-      skillItemRefs.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(
-          el,
-          { opacity: 0, scale: 0.85 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.5,
-            ease: "back.out(1.4)",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 88%",
-            },
-            delay: (i % 8) * 0.06,
-          }
-        );
-      });
-    },
-    { scope: containerRef }
-  );
+function SkillRow({ item }: { item: SkillItem }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasProjects = Boolean(item.projects && item.projects.length > 0);
 
   return (
-    <section
-      id="skills"
-      ref={containerRef}
-      className="section-padding"
-      style={{ borderTop: "1px solid var(--color-border)" }}
-    >
-      <div className="container-main">
-        <SectionReveal>
-          <div style={{ marginBottom: "4rem" }}>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              What I Work With
-            </div>
-            <h2
-              style={{
-                fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                color: "var(--color-ink)",
-              }}
-            >
-              Skills
-            </h2>
-          </div>
-        </SectionReveal>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "4rem",
-          }}
-          className="skills-grid"
-        >
-          {skills.map((group: SkillGroup, groupIndex: number) => {
-            const baseIndex = skills
-              .slice(0, groupIndex)
-              .reduce((acc, g) => acc + g.items.length, 0);
-
-            return (
-              <div key={group.category}>
-                <SectionReveal delay={0.1}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      marginBottom: "1.75rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "6px",
-                        height: "6px",
-                        borderRadius: "50%",
-                        backgroundColor: "var(--color-accent)",
-                        flexShrink: 0,
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.75rem",
-                        letterSpacing: "0.15em",
-                        textTransform: "uppercase",
-                        color: "var(--color-ink-muted)",
-                      }}
-                    >
-                      {group.category}
-                    </span>
-                  </div>
-                </SectionReveal>
-
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "0.5rem",
-                  }}
-                >
-                  {group.items.map((skill, itemIndex: number) => {
-                    const currentIndex = baseIndex + itemIndex;
-                    return (
-                      <div
-                        key={skill.name}
-                        ref={(el) => {
-                          if (el) skillItemRefs.current[currentIndex] = el;
-                        }}
-                        style={{ opacity: 0 }}
-                        onMouseEnter={(e) => {
-                          gsap.to(e.currentTarget, {
-                            backgroundColor: "var(--color-ink)",
-                            color: "var(--color-background)",
-                            borderColor: "var(--color-ink)",
-                            duration: 0.2,
-                            ease: "power2.out",
-                          });
-                        }}
-                        onMouseLeave={(e) => {
-                          gsap.to(e.currentTarget, {
-                            backgroundColor: "transparent",
-                            color: "var(--color-ink-muted)",
-                            borderColor: "var(--color-border)",
-                            duration: 0.2,
-                            ease: "power2.out",
-                          });
-                        }}
-                      >
-                        <span
-                          style={{
-                            display: "block",
-                            fontFamily: "var(--font-body)",
-                            fontSize: "0.875rem",
-                            color: "var(--color-ink-muted)",
-                            padding: "0.5rem 1rem",
-                            border: "1px solid var(--color-border)",
-                            borderRadius: "var(--radius-sm)",
-                            userSelect: "none",
-                          }}
-                        >
-                          {skill.name}{skill.repos ? ` x${skill.repos}` : ""}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+    <div className="py-3 px-2 sm:px-4 border-b border-[var(--rule)] transition-colors hover:bg-[var(--rule)]/20">
+      <div
+        className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
+          hasProjects ? "cursor-pointer" : ""
+        }`}
+        onClick={() => hasProjects && setExpanded(!expanded)}
+        onKeyDown={(e) => {
+          if (hasProjects && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            setExpanded(!expanded);
+          }
+        }}
+        tabIndex={hasProjects ? 0 : undefined}
+        role={hasProjects ? "button" : undefined}
+        aria-expanded={hasProjects ? expanded : undefined}
+      >
+        <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
+          <span className="font-display font-medium text-lg uppercase tracking-tight text-[var(--fg)]">
+            {item.name}
+          </span>
+          {item.note && (
+            <span className="font-mono text-xs text-[var(--muted)]">
+              — {item.note}
+            </span>
+          )}
         </div>
 
-        <SectionReveal delay={0.2}>
-          <div
-            style={{
-              marginTop: "5rem",
-              padding: "2.5rem",
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--radius-lg)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "2rem",
-            }}
-            className="skills-footer"
-          >
-            <div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "1.5rem",
-                  color: "var(--color-ink)",
-                  marginBottom: "0.4rem",
-                }}
-              >
-                Always learning.
-              </div>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  color: "var(--color-ink-muted)",
-                  margin: 0,
-                }}
-              >
-                Currently deep-diving into AWS architecture, exploring Azure,
-                and actively building for hackathons while seeking internship
-                opportunities.
-              </p>
-            </div>
-            <div
-              style={{
-                flexShrink: 0,
-                width: "48px",
-                height: "48px",
-                borderRadius: "50%",
-                border: "1.5px solid var(--color-border)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.25rem",
-              }}
-            >
-              {"↗"}
-            </div>
-          </div>
-        </SectionReveal>
+        <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-wider shrink-0">
+          {item.repos !== undefined ? (
+            <span className="px-2 py-0.5 border border-[var(--rule)] text-[var(--fg)] bg-[#141512]/60">
+              x {item.repos}
+            </span>
+          ) : null}
 
-        <SectionReveal delay={0.1}>
-          <div
-            style={{
-              marginTop: "3rem",
-              paddingTop: "2rem",
-              borderTop: "1px solid var(--color-border)",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "var(--color-ink-muted)",
-                marginBottom: "1rem",
-              }}
-            >
-              Find Me On
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-              {Object.entries(profiles).map(([platform, url]) =>
-                url ? (
-                  React.createElement(
-                    "a",
-                    {
-                      key: platform,
-                      href: url,
-                      target: "_blank",
-                      rel: "noopener noreferrer",
-                      style: {
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.75rem",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase" as const,
-                        padding: "0.5rem 1rem",
-                        border: "1px solid var(--color-border)",
-                        borderRadius: "var(--radius-sm)",
-                        color: "var(--color-ink-muted)",
-                      },
-                      onMouseEnter: (e: MouseEvent) => {
-                        gsap.to(e.currentTarget as HTMLElement, {
-                          color: "var(--color-ink)",
-                          borderColor: "var(--color-ink)",
-                          duration: 0.2,
-                        });
-                      },
-                      onMouseLeave: (e: MouseEvent) => {
-                        gsap.to(e.currentTarget as HTMLElement, {
-                          color: "var(--color-ink-muted)",
-                          borderColor: "var(--color-border)",
-                          duration: 0.2,
-                        });
-                      },
-                    },
-                    `${platform} ↗`
-                  )
-                ) : null
-              )}
-            </div>
-          </div>
-        </SectionReveal>
+          {hasProjects && (
+            <span className="text-[var(--muted)] text-[10px]">
+              {expanded ? "▲ HIDE" : `▼ ${item.projects!.length} BUILDS`}
+            </span>
+          )}
+        </div>
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .skills-grid {
-            grid-template-columns: 1fr !important;
-            gap: 3rem !important;
-          }
-          .skills-footer {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-          }
-        }
-      `}</style>
+      {/* Expanded Linked Projects */}
+      {hasProjects && expanded && (
+        <div className="mt-3 pt-3 border-t border-[var(--rule)] flex flex-wrap gap-2">
+          {item.projects!.map((slug) => (
+            <Link
+              key={slug}
+              href={`/projects/${slug}`}
+              data-cursor="Open"
+              className="font-mono text-xs px-2.5 py-1 border border-[var(--rule)] text-[var(--muted)] hover:text-[var(--fg)] hover:border-[var(--fg)] transition-colors inline-flex items-center gap-1.5"
+            >
+              <span>{getProjectTitle(slug)}</span>
+              <span className="text-[10px]">↗</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Skills() {
+  const totalSkills = skills.reduce((acc, g) => acc + g.items.length, 0);
+
+  return (
+    <section className="py-24 border-t border-[var(--rule)] min-h-screen">
+      <div className="container-main">
+        {/* Verification Note */}
+        <div className="mb-4">
+          <p className="font-mono text-xs text-[var(--muted)] uppercase tracking-wider">
+            Counts = repos using the skill (verified against git history, 2026-11-15).
+          </p>
+        </div>
+
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-16">
+          <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+            INDEX /
+          </span>
+          <Decode
+            text="SKILLS"
+            className="font-display font-bold text-4xl sm:text-5xl uppercase tracking-tight text-[var(--fg)]"
+          />
+        </div>
+
+        {/* 3 Skill Groups */}
+        <div className="flex flex-col gap-16">
+          {skills.map((group) => (
+            <div key={group.category} className="flex flex-col">
+              {/* Category Header */}
+              <div className="flex flex-col gap-1 pb-3 border-b border-[var(--rule)]">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg)] font-semibold">
+                    {group.category}
+                  </span>
+                  <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+                    {group.items.length} ENTRIES
+                  </span>
+                </div>
+                {group.caption && (
+                  <p className="font-mono text-xs text-[var(--muted)]">
+                    {group.caption}
+                  </p>
+                )}
+              </div>
+
+              {/* Items Ledger */}
+              <div className="flex flex-col">
+                {group.items.map((item) => (
+                  <SkillRow key={item.name} item={item} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

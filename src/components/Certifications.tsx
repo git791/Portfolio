@@ -1,302 +1,162 @@
 "use client";
 
-import React, { useRef } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
-import SectionReveal from "@/components/ui/SectionReveal";
+import { useMemo, useState } from "react";
+import Decode from "@/components/ui/Decode";
 import { certifications } from "@/lib/data";
+import type { Certification } from "@/lib/types";
 
-gsap.registerPlugin(ScrollTrigger);
-
-type Cert = (typeof certifications)[0];
-
-const categories = ["Industry", "Competition", "Courses", "Coursera"];
-
-function CredentialLink({ url }: { url: string }) {
-  return React.createElement(
-    "a",
-    {
-      href: url,
-      target: "_blank",
-      rel: "noopener noreferrer",
-      style: {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.7rem",
-        letterSpacing: "0.1em",
-        textTransform: "uppercase" as const,
-        color: "var(--color-accent)",
-        borderBottom: "1px solid var(--color-accent)",
-        paddingBottom: "2px",
-      },
-    },
-    "View Credential ↗"
-  );
+function getMonogram(issuer: string) {
+  const cleaned = issuer.replace(/[^\w\s&]/g, "");
+  const words = cleaned.split(/[\s&]+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
+  return words.map((w) => w[0]).join("").slice(0, 3).toUpperCase();
 }
 
-function CertCard({ cert, index, baseIndex }: { cert: Cert; index: number; baseIndex: number }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      if (!cardRef.current) return;
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: (index % 3) * 0.12,
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 88%",
-          },
-        }
-      );
-    },
-    { scope: cardRef }
-  );
+function CertRow({ cert }: { cert: Certification }) {
+  const monogram = getMonogram(cert.issuer);
 
   return (
-    <div
-      ref={cardRef}
-      style={{ opacity: 0 }}
-      onMouseEnter={(e) => {
-        gsap.to(e.currentTarget, { y: -4, duration: 0.3, ease: "power2.out" });
-      }}
-      onMouseLeave={(e) => {
-        gsap.to(e.currentTarget, { y: 0, duration: 0.3, ease: "power2.out" });
-      }}
-    >
-      <div
-        style={{
-          border: "1px solid var(--color-border)",
-          borderRadius: "var(--radius-lg)",
-          overflow: "hidden",
-          backgroundColor: "var(--color-surface)",
-        }}
-      >
+    <div className="py-4 px-2 sm:px-4 border-b border-[var(--rule)] transition-colors hover:bg-[var(--rule)]/20 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      {/* Left: Monogram + Title + Issuer */}
+      <div className="flex items-start sm:items-center gap-3">
         <div
-          style={{
-            position: "relative",
-            paddingTop: "52%",
-            backgroundColor: "var(--color-background)",
-            borderBottom: "1px solid var(--color-border)",
-          }}
+          aria-hidden="true"
+          className="w-9 h-9 border border-[var(--rule)] bg-[#141512]/60 flex items-center justify-center font-mono text-xs text-[var(--muted)] shrink-0 select-none"
         >
-          {cert.image ? (
-            <Image
-              src={cert.image}
-              alt={cert.title}
-              fill
-              style={{ objectFit: "contain", padding: "1.5rem" }}
-            />
-          ) : (
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "50%",
-                  border: "1.5px solid var(--color-border)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "var(--font-display)",
-                  fontSize: "1.5rem",
-                  color: "var(--color-ink-muted)",
-                }}
-              >
-                {"✦"}
-              </div>
-            </div>
-          )}
+          {monogram}
         </div>
 
-        <div style={{ padding: "1.5rem" }}>
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.65rem",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--color-accent)",
-              marginBottom: "0.5rem",
-            }}
-          >
-            {cert.issuer}
-          </div>
-          <h3
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.1rem",
-              color: "var(--color-ink)",
-              fontWeight: 400,
-              lineHeight: 1.3,
-              marginBottom: "0.75rem",
-            }}
-          >
+        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+          <span className="font-display font-semibold text-lg uppercase tracking-tight text-[var(--fg)]">
             {cert.title}
-          </h3>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-              gap: "1rem",
-            }}
-          >
-            {cert.date && (
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.7rem",
-                  letterSpacing: "0.08em",
-                  color: "var(--color-ink-muted)",
-                }}
-              >
-                {cert.date}
-              </span>
-            )}
-            {cert.credentialUrl && (
-              <CredentialLink url={cert.credentialUrl} />
-            )}
-          </div>
+          </span>
+          <span className="text-sm text-[var(--muted)]">
+            · {cert.issuer}
+          </span>
         </div>
+      </div>
+
+      {/* Right: Date + Category + Credential Link */}
+      <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-wider shrink-0 flex-wrap">
+        <span className="text-[var(--muted)]">
+          {cert.date}
+        </span>
+
+        {cert.category && (
+          <span className="px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)]">
+            {cert.category}
+          </span>
+        )}
+
+        {cert.credentialUrl && (
+          <a
+            href={cert.credentialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="Visit"
+            className="text-[var(--fg)] underline hover:text-white transition-colors inline-flex items-center gap-1 font-semibold"
+          >
+            <span>VIEW</span>
+            <span>↗</span>
+          </a>
+        )}
       </div>
     </div>
   );
 }
 
+const CATEGORIES = ["ALL", "Industry", "Competition", "Courses", "Coursera"];
+
 export default function Certifications() {
-  const containerRef = useRef<HTMLElement>(null);
+  const [activeCategory, setActiveCategory] = useState("ALL");
+
+  const highlights = useMemo(
+    () => certifications.filter((c) => Boolean(c.highlight)),
+    []
+  );
+
+  const filteredAll = useMemo(() => {
+    if (activeCategory === "ALL") return certifications;
+    return certifications.filter((c) => c.category === activeCategory);
+  }, [activeCategory]);
 
   return (
-    <section
-      id="certifications"
-      ref={containerRef}
-      className="section-padding"
-      style={{ borderTop: "1px solid var(--color-border)" }}
-    >
+    <section className="py-24 border-t border-[var(--rule)] min-h-screen">
       <div className="container-main">
-        <SectionReveal>
-          <div style={{ marginBottom: "4rem" }}>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Credentials
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
+          <div>
+            <div className="flex items-center gap-4 mb-3">
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+                INDEX /
+              </span>
+              <Decode
+                text="CERTIFICATIONS"
+                className="font-display font-bold text-4xl sm:text-5xl uppercase tracking-tight text-[var(--fg)]"
+              />
             </div>
-            <h2
-              style={{
-                fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                color: "var(--color-ink)",
-              }}
-            >
-              Certifications
-            </h2>
+            <p className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              {certifications.length} VERIFIED CREDENTIALS · INDUSTRY &amp; CURRICULUM
+            </p>
           </div>
-        </SectionReveal>
+        </div>
 
-        {categories.map((category) => {
-          const filtered = certifications.filter(
-            (c: Cert) => "category" in c && c.category === category
-          );
-          if (filtered.length === 0) return null;
+        {/* Highlights Section */}
+        <div className="mb-16">
+          <div className="pb-3 border-b border-[var(--rule)] flex items-center justify-between">
+            <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg)] font-semibold">
+              FEATURED CREDENTIALS
+            </span>
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              {highlights.length} HIGHLIGHTED
+            </span>
+          </div>
 
-          return (
-            <div key={category} style={{ marginBottom: "5rem" }}>
-              <SectionReveal>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1.5rem",
-                    marginBottom: "2rem",
-                  }}
+          <div className="flex flex-col border-t border-[var(--rule)]">
+            {highlights.map((cert) => (
+              <CertRow key={cert.id} cert={cert} />
+            ))}
+          </div>
+        </div>
+
+        {/* Collapsed <details> List */}
+        <details className="group border border-[var(--rule)] p-6 bg-[#141512]/30">
+          <summary className="font-mono text-xs uppercase tracking-widest text-[var(--fg)] cursor-pointer flex items-center justify-between select-none">
+            <span className="font-semibold">
+              ALL {certifications.length} CERTIFICATES
+            </span>
+            <span className="font-mono text-xs text-[var(--muted)] group-open:rotate-180 transition-transform">
+              ▼
+            </span>
+          </summary>
+
+          <div className="mt-6 pt-6 border-t border-[var(--rule)]">
+            {/* Category Filter Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 border-b border-[var(--rule)]">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`font-mono text-xs uppercase tracking-wider px-3 py-1 border transition-colors shrink-0 ${
+                    activeCategory === cat
+                      ? "bg-[var(--fg)] text-[var(--bg)] border-[var(--fg)] font-semibold"
+                      : "bg-transparent text-[var(--muted)] border-transparent hover:text-[var(--fg)] hover:border-[var(--rule)]"
+                  }`}
                 >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.75rem",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: "var(--color-ink-muted)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {category}
-                  </span>
-                  <div
-                    style={{
-                      flex: 1,
-                      height: "1px",
-                      backgroundColor: "var(--color-border)",
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.7rem",
-                      color: "var(--color-ink-muted)",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    {filtered.length}
-                  </span>
-                </div>
-              </SectionReveal>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: "2rem",
-                }}
-                className="certs-grid"
-              >
-                {filtered.map((cert: Cert, i: number) => (
-                  <CertCard
-                    key={cert.id}
-                    cert={cert}
-                    index={i}
-                    baseIndex={i}
-                  />
-                ))}
-              </div>
+                  {cat}
+                </button>
+              ))}
             </div>
-          );
-        })}
-      </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .certs-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
-          }
-        }
-      `}</style>
+            {/* Filtered Ledger */}
+            <div className="flex flex-col border-t border-[var(--rule)]">
+              {filteredAll.map((cert) => (
+                <CertRow key={cert.id} cert={cert} />
+              ))}
+            </div>
+          </div>
+        </details>
+      </div>
     </section>
   );
 }
