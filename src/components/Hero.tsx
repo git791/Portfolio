@@ -1,192 +1,352 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { personalInfo } from "@/lib/data";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import commitsJson from "@/data/commits.json";
+import { hackathons, siteStats } from "@/lib/data";
+import {
+  getYearlyCommitRows,
+  getSortedProjectsForTiles,
+  peakLabels,
+} from "@/lib/commitData";
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Dynamic import for R3F Canvas with ssr: false
+const CommitRidge = dynamic(() => import("@/components/canvas/CommitRidge"), {
+  ssr: false,
+});
+
+function isWebGLAvailable(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
+
+// Static SVG Ridgeline for Fallback (mobile, reduced motion, or WebGL failure)
+function StaticSvgRidge({ rows }: { rows: ReturnType<typeof getYearlyCommitRows> }) {
+  const width = 800;
+  const height = 260;
+  const nMax = 31;
+  const hMax = 44;
+
+  return (
+    <div className="w-full max-w-4xl mx-auto my-8 overflow-hidden select-none" aria-hidden="true">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-auto"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        {rows.map((row, rIdx) => {
+          const baseY = 60 + rIdx * 24;
+          const points = row.values.map((v, i) => {
+            const x = 30 + (i / 52) * (width - 60);
+            const h = v > 0 ? hMax * Math.sqrt(v / nMax) : 0;
+            const y = baseY - h;
+            return { x, y };
+          });
+
+          const polylinePts = points.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+          const polygonPts = `${points[0].x},${baseY} ` + polylinePts + ` ${points[points.length - 1].x},${baseY}`;
+
+          const isCurrentYear = row.year === 2026;
+          const strokeColor = isCurrentYear
+            ? "#ECE9DF"
+            : row.totalCommits === 0
+            ? "#252722"
+            : "#555750";
+
+          return (
+            <g key={row.year}>
+              {/* Occlusion fill */}
+              <polygon points={polygonPts} fill="#0D0E0B" />
+              {/* Ridge line */}
+              <polyline
+                points={polylinePts}
+                fill="none"
+                stroke={strokeColor}
+                strokeWidth={isCurrentYear ? "1.5" : "1"}
+              />
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const subRef = useRef<HTMLParagraphElement>(null);
-  const roleRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
+  const heroSectionRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const peakLabelsRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline({ delay: 0.3 });
+  const [useFallback, setUseFallback] = useState(false);
+  const [tickerIndex, setTickerIndex] = useState(0);
 
-      tl.fromTo(
-        lineRef.current,
-        { scaleX: 0, transformOrigin: "left center" },
-        { scaleX: 1, duration: 1.2, ease: "power4.out" }
-      )
-        .fromTo(
-          roleRef.current,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-          "-=0.6"
-        )
-        .fromTo(
-          headingRef.current,
-          { opacity: 0, y: 60 },
-          { opacity: 1, y: 0, duration: 1.2, ease: "power4.out" },
-          "-=0.4"
-        )
-        .fromTo(
-          subRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
-          "-=0.6"
-        )
-        .fromTo(
-          scrollRef.current,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.8, ease: "power2.out" },
-          "-=0.2"
-        );
-    },
-    { scope: containerRef }
-  );
+  // Height factor ref shared with R3F CommitRidge scene (lerps 1 -> 0 during scrub)
+  const heightFactorRef = useRef(1);
+
+  const rows = useMemo(() => getYearlyCommitRows(), []);
+  const tileProjects = useMemo(() => getSortedProjectsForTiles(), []);
+
+  // Numbers computed from data
+  const reposStarted2026 =
+    commitsJson.totals.reposStartedByYear["2026" as keyof typeof commitsJson.totals.reposStartedByYear] || 39;
+  const hackathonsCount = hackathons.length;
+  const eventsRun = siteStats.eventsRun;
+  const largestAudience = siteStats.largestAudience;
+
+  // Detect fallback condition: mobile (< 1024px), reduced motion, or WebGL unavailable
+  useEffect(() => {
+    const isMobile = window.innerWidth < 1024;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const webglSupported = isWebGLAvailable();
+
+    if (isMobile || prefersReducedMotion || !webglSupported) {
+      setUseFallback(true);
+    }
+  }, []);
+
+  // Decoded Hindi ticker (cycles "बोल के बेचो" and "कान खोल" every 3s)
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const timer = setInterval(() => {
+      setTickerIndex((prev) => (prev === 0 ? 1 : 0));
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // GSAP ScrollTrigger Scrub (Desktop only with motion allowed)
+  useEffect(() => {
+    if (useFallback || !containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top top",
+        end: "+=100%",
+        pin: true,
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const progress = self.progress;
+
+          // 0 to 0.5 progress: ridge heights lerp to 0
+          if (progress <= 0.5) {
+            heightFactorRef.current = Math.max(0, 1 - progress * 2);
+          } else {
+            heightFactorRef.current = 0;
+          }
+
+          // Peak labels fade out early (0 to 0.25)
+          if (peakLabelsRef.current) {
+            const labelOpacity = Math.max(0, 1 - progress * 4);
+            peakLabelsRef.current.style.opacity = String(labelOpacity);
+          }
+
+          // 0.4 to 1 progress: DOM grid steps in with steps(6)
+          if (gridRef.current) {
+            if (progress >= 0.4) {
+              const gridProgress = (progress - 0.4) / 0.6;
+              const steppedProgress = Math.floor(gridProgress * 6) / 6;
+              gridRef.current.style.opacity = String(steppedProgress);
+              gridRef.current.style.pointerEvents = steppedProgress > 0.5 ? "auto" : "none";
+            } else {
+              gridRef.current.style.opacity = "0";
+              gridRef.current.style.pointerEvents = "none";
+            }
+          }
+        },
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [useFallback]);
 
   return (
     <section
       id="hero"
       ref={containerRef}
-      style={{
-        position: "relative",
-        height: "100vh",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        overflow: "hidden",
-      }}
+      className={`relative w-full bg-[var(--bg)] text-[var(--fg)] ${
+        useFallback ? "min-h-screen py-16" : "h-screen overflow-hidden"
+      }`}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(to right, rgba(245,242,238,0.92) 45%, rgba(245,242,238,0.2) 100%)",
-          zIndex: 1,
-        }}
-      />
+      {/* 3D Canvas Ridge or Static Fallback */}
+      {!useFallback ? (
+        <>
+          <CommitRidge heightFactorRef={heightFactorRef} containerRef={containerRef} />
 
-      <div
-        className="container-main"
-        style={{ position: "relative", zIndex: 2 }}
-      >
-        <div style={{ maxWidth: "680px" }}>
+          {/* Peak labels overlay (desktop only) */}
           <div
-            ref={lineRef}
-            style={{
-              width: "48px",
-              height: "1.5px",
-              backgroundColor: "var(--color-accent)",
-              marginBottom: "1.5rem",
-            }}
-          />
-
-          <div
-            ref={roleRef}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.8rem",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "var(--color-accent)",
-              marginBottom: "1.25rem",
-              opacity: 0,
-            }}
+            ref={peakLabelsRef}
+            className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-200 select-none hidden lg:block"
+            aria-hidden="true"
           >
-            {personalInfo.role}
+            {peakLabels.map((lbl) => (
+              <div
+                key={lbl.id}
+                className="absolute font-mono text-[11px] tracking-wider uppercase text-[var(--muted)] border-b border-[var(--rule)] pb-0.5"
+                style={{
+                  left: `${lbl.xPercent}%`,
+                  top: `${lbl.yPercent}%`,
+                }}
+              >
+                {lbl.text}
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
+
+      {/* Hero Copy Overlay */}
+      <div
+        ref={heroSectionRef}
+        className="relative z-20 container-main flex flex-col justify-between h-full pt-10 pb-8 pointer-events-none"
+      >
+        {/* Top Header Block */}
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+                BENGALURU · B.TECH CSE 2028
+              </span>
+              {/* Optional Devanagari Ticker */}
+              <span
+                lang="hi"
+                className="font-mono text-xs tracking-wider text-[var(--fg)] border-l border-[var(--rule)] pl-3 transition-none"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
+                {tickerIndex === 0 ? "बोल के बेचो" : "कान खोल"}
+              </span>
+            </div>
+
+            {/* Availability */}
+            <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--muted)] border border-[var(--rule)] px-2.5 py-1 rounded-[var(--radius)]">
+              OPEN TO INTERNSHIPS
+            </span>
           </div>
 
-          <h1
-            ref={headingRef}
-            style={{
-              fontSize: "clamp(3.5rem, 8vw, 7rem)",
-              lineHeight: 1,
-              letterSpacing: "-0.03em",
-              color: "var(--color-ink)",
-              marginBottom: "1.75rem",
-              opacity: 0,
-            }}
-          >
-            {personalInfo.name}
-          </h1>
+          <p className="font-display font-semibold text-sm tracking-wider text-[var(--muted)] uppercase mb-2">
+            MOHAMMED AYAAN ADIL AHMED
+          </p>
 
-          <p
-            ref={subRef}
-            style={{
-              fontSize: "clamp(1rem, 1.5vw, 1.2rem)",
-              lineHeight: 1.6,
-              color: "var(--color-ink-muted)",
-              maxWidth: "480px",
-              opacity: 0,
-            }}
-          >
-            {personalInfo.bio}
+          <h1 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl tracking-tight uppercase leading-[0.9] text-[var(--fg)] max-w-4xl">
+            MESSY HUMAN INPUT,
+            <br />
+            WORKING AGENTS.
+          </h1>
+        </div>
+
+        {/* Fallback Static SVG Ridge in document flow for mobile / reduced motion */}
+        {useFallback && (
+          <div className="my-8 pointer-events-auto">
+            <StaticSvgRidge rows={rows} />
+          </div>
+        )}
+
+        {/* Bottom Subline */}
+        <div className="pt-4 border-t border-[var(--rule)] max-w-3xl pointer-events-auto">
+          <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed">
+            Building since 2019. {reposStarted2026} repos started in 2026 · {hackathonsCount} hackathons since 2025 ·{" "}
+            {eventsRun} events run, largest {largestAudience}.
           </p>
         </div>
       </div>
 
+      {/* 35 Project Tiles Grid */}
+      {/* On desktop: steps in over canvas as pinned scroll proceeds */}
+      {/* On mobile / fallback: rendered directly below the hero */}
       <div
-        ref={scrollRef}
-        style={{
-          position: "absolute",
-          bottom: "2.5rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "0.5rem",
-          zIndex: 2,
-          opacity: 0,
-        }}
+        ref={gridRef}
+        className={`${
+          useFallback
+            ? "relative z-20 container-main mt-12 mb-16 opacity-100"
+            : "absolute inset-0 z-30 flex items-center justify-center p-8 bg-[var(--bg)]/90 opacity-0 pointer-events-none"
+        }`}
       >
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.7rem",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: "var(--color-ink-muted)",
-          }}
-        >
-          Scroll
-        </span>
-        <div
-          style={{
-            width: "1px",
-            height: "48px",
-            backgroundColor: "var(--color-border)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
+        <div className="w-full max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
+              BUILD LEDGER · 35 REPOSITORIES (OLDEST → NEWEST)
+            </span>
+            <Link
+              href="/projects"
+              className="font-mono text-xs uppercase tracking-wider text-[var(--fg)] hover:underline"
+              data-cursor="Open"
+            >
+              FULL LEDGER →
+            </Link>
+          </div>
+
+          {/* 7 Columns x 5 Rows Grid */}
           <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "40%",
-              backgroundColor: "var(--color-accent)",
-              animation: "scrollLine 1.8s ease-in-out infinite",
-            }}
-          />
+            className="grid grid-cols-5 sm:grid-cols-7 gap-2"
+            role="region"
+            aria-label="35 Project Tiles"
+          >
+            {tileProjects.map((p, idx) => {
+              const hasLive = Boolean(p.liveUrl && p.liveUrl.trim().length > 0);
+
+              return (
+                <Link
+                  key={p.id}
+                  href={`/projects/${p.slug}`}
+                  data-cursor={p.title}
+                  aria-label={p.title}
+                  className={`aspect-square p-2 border flex flex-col justify-between transition-colors focus-visible:outline-2 focus-visible:outline-[var(--fg)] ${
+                    hasLive
+                      ? "bg-[var(--signal)] text-[var(--bg)] border-[var(--signal)] font-medium"
+                      : "bg-transparent text-[var(--fg)] border-[var(--rule)] hover:border-[var(--fg)]"
+                  }`}
+                >
+                  <span className="font-mono text-[9px] uppercase tracking-wider opacity-60">
+                    {(idx + 1).toString().padStart(2, "0")}
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-tight truncate leading-tight">
+                    {p.title}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      <style>{`
-        @keyframes scrollLine {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(280%); }
-        }
-      `}</style>
+      {/* Screen Reader Commit Summary Table */}
+      <div className="sr-only">
+        <table>
+          <caption>Weekly commit history summary from 2019 to 2026</caption>
+          <thead>
+            <tr>
+              <th scope="col">Year</th>
+              <th scope="col">Commits</th>
+              <th scope="col">Active Weeks</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.year}>
+                <td>{r.year}</td>
+                <td>{r.totalCommits}</td>
+                <td>{r.values.filter((v) => v > 0).length}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
