@@ -35,32 +35,34 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mohammed Ayaan Portfolio",
+  metadataBase: new URL("https://mohammedayaan.me"),
+  title: "Mohammed Ayaan: agentic AI & cloud builder, Bengaluru",
   description:
-    "Portfolio of Mohammed Ayaan, a student and developer crafting thoughtful digital experiences.",
-  keywords: ["UI/UX", "Designer", "Developer", "Portfolio", "Frontend", "Cloud", "Agentic AI"],
-  authors: [{ name: "Mohammed Ayaan" }],
+    "Third-year CSE student in Bengaluru building agentic AI and cloud apps. Projects, hackathons, and a commit history back to 2019.",
+  keywords: [
+    "Agentic AI",
+    "Cloud",
+    "AWS",
+    "Backend",
+    "Python",
+    "TypeScript",
+    "Portfolio",
+  ],
+  authors: [{ name: "Mohammed Ayaan Adil Ahmed" }],
   openGraph: {
-    title: "Mohammed Ayaan Portfolio",
+    title: "Mohammed Ayaan: agentic AI & cloud builder, Bengaluru",
     description:
-      "Portfolio of Mohammed Ayaan, a student and developer crafting thoughtful digital experiences.",
+      "Third-year CSE student in Bengaluru building agentic AI and cloud apps. Projects, hackathons, and a commit history back to 2019.",
+    url: "https://mohammedayaan.me",
+    siteName: "Mohammed Ayaan Portfolio",
+    locale: "en_US",
     type: "website",
-    url: "https://yourwebsite.com",
-    images: [
-      {
-        url: "https://yourwebsite.com/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Mohammed Ayaan Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohammed Ayaan Portfolio",
+    title: "Mohammed Ayaan: agentic AI & cloud builder, Bengaluru",
     description:
-      "Portfolio of Mohammed Ayaan, a student and developer crafting thoughtful digital experiences.",
-    images: ["https://yourwebsite.com/og-image.jpg"],
+      "Third-year CSE student in Bengaluru building agentic AI and cloud apps. Projects, hackathons, and a commit history back to 2019.",
   },
 };
 
@@ -75,11 +77,23 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable} ${deva.variable} ${mono.variable}`}
     >
       <body>
+        {/* Accessible Skip Link */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--fg)] focus:text-[var(--bg)] focus:font-mono focus:text-xs focus:uppercase focus:outline-2 focus:outline-[var(--signal)]"
+        >
+          Skip to content
+        </a>
+
         <SmoothScrollProvider>
           <Cursor />
           <Rail />
           <TopBar />
-          <div className="pt-14 lg:pt-0 lg:pl-[var(--rail-w)] min-h-screen">
+          <div
+            id="main-content"
+            tabIndex={-1}
+            className="pt-14 lg:pt-0 lg:pl-[var(--rail-w)] min-h-screen focus:outline-none"
+          >
             {children}
           </div>
         </SmoothScrollProvider>
