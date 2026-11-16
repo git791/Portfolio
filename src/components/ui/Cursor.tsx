@@ -1,146 +1,131 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 export default function Cursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const followerRef = useRef<HTMLDivElement>(null);
-  const isHoveringRef = useRef(false);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const [active, setActive] = useState(false);
+  const [label, setLabel] = useState("");
 
   useEffect(() => {
+    // Only enable if pointer is fine and reduced motion is not preferred
+    const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!hasFinePointer || prefersReducedMotion) {
+      return;
+    }
+
+    setActive(true);
+    document.documentElement.classList.add("has-custom-cursor");
+
     const cursor = cursorRef.current;
-    const follower = followerRef.current;
-    if (!cursor || !follower) return;
+    if (!cursor) return;
 
-    let mouseX = 0;
-    let mouseY = 0;
+    // Start hidden until first pointermove
+    gsap.set(cursor, { opacity: 0, xPercent: -50, yPercent: -50 });
 
-    gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-    gsap.set(follower, { xPercent: -50, yPercent: -50 });
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.18, ease: "power2.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.18, ease: "power2.out" });
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+    let hasMoved = false;
 
-      gsap.to(cursor, {
-        x: mouseX,
-        y: mouseY,
-        duration: 0.1,
-        ease: "power3.out",
-      });
-
-      gsap.to(follower, {
-        x: mouseX,
-        y: mouseY,
-        duration: 0.35,
-        ease: "power3.out",
-      });
+    const onPointerMove = (e: PointerEvent) => {
+      if (!hasMoved) {
+        hasMoved = true;
+        gsap.set(cursor, { opacity: 1 });
+      }
+      xTo(e.clientX);
+      yTo(e.clientY);
     };
 
-    const onMouseEnterLink = () => {
-      isHoveringRef.current = true;
-      gsap.to(cursor, {
-        scale: 0,
-        duration: 0.3,
-        ease: "power3.out",
-      });
-      gsap.to(follower, {
-        scale: 2.5,
-        borderColor: "var(--color-accent)",
-        duration: 0.3,
-        ease: "power3.out",
-      });
+    const onPointerOver = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      const cursorTarget = target?.closest("[data-cursor]") as HTMLElement | null;
+      if (cursorTarget) {
+        const text = cursorTarget.getAttribute("data-cursor") || "";
+        setLabel(text);
+      }
     };
 
-    const onMouseLeaveLink = () => {
-      isHoveringRef.current = false;
-      gsap.to(cursor, {
-        scale: 1,
-        duration: 0.3,
-        ease: "power3.out",
-      });
-      gsap.to(follower, {
-        scale: 1,
-        borderColor: "var(--color-ink)",
-        duration: 0.3,
-        ease: "power3.out",
-      });
+    const onPointerOut = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      const cursorTarget = target?.closest("[data-cursor]") as HTMLElement | null;
+      if (cursorTarget) {
+        // If related target is not inside the same cursorTarget, clear
+        const related = e.relatedTarget as HTMLElement | null;
+        if (!related || !cursorTarget.contains(related)) {
+          setLabel("");
+        }
+      }
     };
 
-    const onMouseLeaveWindow = () => {
-      gsap.to([cursor, follower], {
-        opacity: 0,
-        duration: 0.3,
-      });
+    const onPointerLeave = () => {
+      gsap.to(cursor, { opacity: 0, duration: 0.15 });
     };
 
-    const onMouseEnterWindow = () => {
-      gsap.to([cursor, follower], {
-        opacity: 1,
-        duration: 0.3,
-      });
+    const onPointerEnter = () => {
+      if (hasMoved) {
+        gsap.to(cursor, { opacity: 1, duration: 0.15 });
+      }
     };
 
-    window.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseleave", onMouseLeaveWindow);
-    document.addEventListener("mouseenter", onMouseEnterWindow);
-
-    const addLinkListeners = () => {
-      const interactables = document.querySelectorAll(
-        "a, button, [data-cursor-hover]"
-      );
-      interactables.forEach((el) => {
-        el.addEventListener("mouseenter", onMouseEnterLink);
-        el.addEventListener("mouseleave", onMouseLeaveLink);
-      });
-    };
-
-    addLinkListeners();
-
-    const observer = new MutationObserver(addLinkListeners);
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerover", onPointerOver);
+    document.addEventListener("pointerout", onPointerOut);
+    document.documentElement.addEventListener("pointerleave", onPointerLeave);
+    document.documentElement.addEventListener("pointerenter", onPointerEnter);
 
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseleave", onMouseLeaveWindow);
-      document.removeEventListener("mouseenter", onMouseEnterWindow);
-      observer.disconnect();
+      document.documentElement.classList.remove("has-custom-cursor");
+      window.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerover", onPointerOver);
+      document.removeEventListener("pointerout", onPointerOut);
+      document.documentElement.removeEventListener("pointerleave", onPointerLeave);
+      document.documentElement.removeEventListener("pointerenter", onPointerEnter);
     };
   }, []);
 
+  if (!active) return null;
+
   return (
-    <>
-      <div
-        ref={cursorRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "8px",
-          height: "8px",
-          borderRadius: "50%",
-          backgroundColor: "var(--color-accent)",
-          pointerEvents: "none",
-          zIndex: 99999,
-          mixBlendMode: "multiply",
-        }}
-      />
-      <div
-        ref={followerRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "36px",
-          height: "36px",
-          borderRadius: "50%",
-          border: "1.5px solid var(--color-ink)",
-          pointerEvents: "none",
-          zIndex: 99998,
-          mixBlendMode: "multiply",
-        }}
-      />
-    </>
+    <div
+      ref={cursorRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "10px",
+        height: "10px",
+        backgroundColor: "#ffffff",
+        mixBlendMode: "difference",
+        pointerEvents: "none",
+        zIndex: 99999,
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      {label && (
+        <span
+          ref={labelRef}
+          style={{
+            position: "absolute",
+            left: "16px",
+            fontFamily: "var(--font-mono)",
+            fontSize: "11px",
+            lineHeight: 1,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#ffffff",
+            whiteSpace: "nowrap",
+            userSelect: "none",
+          }}
+        >
+          {label}
+        </span>
+      )}
+    </div>
   );
 }

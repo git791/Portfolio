@@ -244,7 +244,6 @@ export default function Contact() {
                   marginTop: "1rem",
                   background: "none",
                   border: "none",
-                  cursor: "none",
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.7rem",
                   letterSpacing: "0.1em",

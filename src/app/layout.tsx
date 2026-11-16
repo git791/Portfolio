@@ -3,6 +3,8 @@ import { Barlow_Condensed, IBM_Plex_Sans, IBM_Plex_Sans_Devanagari, IBM_Plex_Mon
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
 import Cursor from "@/components/ui/Cursor";
+import Rail from "@/components/Rail";
+import TopBar from "@/components/TopBar";
 
 const display = Barlow_Condensed({
   subsets: ["latin"],
@@ -75,7 +77,11 @@ export default function RootLayout({
       <body>
         <SmoothScrollProvider>
           <Cursor />
-          {children}
+          <Rail />
+          <TopBar />
+          <div className="pt-14 lg:pt-0 lg:pl-[var(--rail-w)] min-h-screen">
+            {children}
+          </div>
         </SmoothScrollProvider>
       </body>
     </html>

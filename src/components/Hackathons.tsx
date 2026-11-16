@@ -153,7 +153,6 @@ export default function Hackathons() {
                     paddingBlock: "1.5rem",
                     borderBottom: "1px solid var(--color-border)",
                     alignItems: "center",
-                    cursor: "none",
                   }}
                   className="hackathon-table-header"
                 >

@@ -66,7 +66,6 @@ export default function ArchiveLinks() {
                     alignItems: "center",
                     justifyContent: "space-between",
                     transition: "all 0.3s ease",
-                    cursor: "none",
                   }}
                   onMouseEnter={(e) => {
                     gsap.to(e.currentTarget, {

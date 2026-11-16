@@ -32,7 +32,7 @@ export const projects: Project[] = [
     tier: "editorial",
     stage: "mvp",
     role: "Lead",
-    team: [],
+    team: ["Bibi Sufiya Shariff"],
     repoFacts: {
       commits: 8,
       first: "2026-03-05",
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     tier: "secondary",
     stage: "mvp",
     role: "Lead",
-    team: [],
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 3,
@@ -71,7 +71,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates (Ryzen Renegades team)
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 4,
@@ -212,7 +212,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
   {
     id: 12,
@@ -227,7 +227,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
   {
     id: 13,
@@ -264,7 +264,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 15,
@@ -279,7 +279,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Bibi Sufiya Shariff", "Mohith"],
   },
   {
     id: 16,
@@ -294,7 +294,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: [],
   },
   {
     id: 17,
@@ -309,7 +309,7 @@ export const projects: Project[] = [
     tier: "secondary",
     stage: "mvp",
     role: "Contributor",
-    team: ["Wania Qamar", "Syed Aatira"], // TODO(owner): confirm teammate names
+    team: ["Wania Qamar", "Syed Aatira Zafar Andrabi"],
   },
   {
     id: 18,
@@ -339,7 +339,7 @@ export const projects: Project[] = [
     tier: "depth",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammate names
+    team: ["Desai SriKoundinya", "Likhith Ram", "Yashwanth R"],
   },
   {
     id: 20,
@@ -354,7 +354,7 @@ export const projects: Project[] = [
     tier: "depth",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammate names
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 21,
@@ -369,7 +369,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 22,
@@ -384,7 +384,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Desai SriKoundinya", "Likhith Ram", "Yashwanth R"],
   },
   {
     id: 23,
@@ -399,7 +399,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 24,
@@ -414,7 +414,7 @@ export const projects: Project[] = [
     tier: "depth",
     stage: "mvp",
     role: "Lead",
-    team: ["Amiya", "Krrish", "Kushal"],
+    team: ["Amiya Ranjan Patra", "Kushal R", "Krrish Sharma"],
   },
   {
     id: 25,
@@ -451,7 +451,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 27,
@@ -467,7 +467,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Bibi Sufiya Shariff"],
   },
   {
     id: 28,
@@ -529,7 +529,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Desai Sri Koundinya", "Yashwanth R"],
   },
   {
     id: 32,
@@ -576,7 +576,7 @@ export const projects: Project[] = [
     tier: "archive",
     stage: "mvp",
     role: "Lead",
-    team: [], // TODO(owner): confirm teammates if any
+    team: ["Asmae Serji"],
   },
   {
     id: 35,

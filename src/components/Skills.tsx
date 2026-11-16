@@ -164,7 +164,6 @@ export default function Skills() {
                             padding: "0.5rem 1rem",
                             border: "1px solid var(--color-border)",
                             borderRadius: "var(--radius-sm)",
-                            cursor: "none",
                             userSelect: "none",
                           }}
                         >
