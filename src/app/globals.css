@@ -1,24 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --bg: #0D0E0B;
-  --fg: #ECE9DF;
-  --muted: #8B8A80;
-  --rule: #3A3C36;
-  --signal: #FFC400;
-  --radius: 2px;
+  /* Palette Tokens */
+  --night: #0B0D0C;
+  --chalk: #F2EFE6;
+  --newsprint: #E8E1CF;
+  --red: #D62A1F;
+  --turf: #0F3D26;
+  --amber: #FFB000;
+
+  /* Muted & Rule Tokens */
+  --muted-dark: #8B8A80;
+  --muted-light: #5E5A4E;
+  --muted-turf: #A3C9B0;
+  --rule-dark: #2A2D2A;
+  --rule-light: #C9C1AC;
+  --rule-turf: #1E5C3C;
+
+  /* Default Active Surface Tokens (defaults to night) */
+  --bg: var(--night);
+  --fg: var(--chalk);
+  --muted: var(--muted-dark);
+  --rule: var(--rule-dark);
+
+  /* Layout */
   --rail-w: 72px;
 }
 
 @theme {
+  --color-night: var(--night);
+  --color-chalk: var(--chalk);
+  --color-newsprint: var(--newsprint);
+  --color-red: var(--red);
+  --color-turf: var(--turf);
+  --color-amber: var(--amber);
+  --color-muted-dark: var(--muted-dark);
+  --color-muted-light: var(--muted-light);
+  --color-rule-dark: var(--rule-dark);
+  --color-rule-light: var(--rule-light);
+
   --color-bg: var(--bg);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-rule: var(--rule);
-  --color-signal: var(--signal);
-  --font-display: var(--ff-display), "Arial Narrow", sans-serif;
-  --font-body: var(--ff-body), var(--ff-deva), system-ui, sans-serif;
+
+  --font-display: var(--ff-display), sans-serif;
+  --font-stencil: var(--ff-stencil), sans-serif;
+  --font-body: var(--ff-body), var(--ff-deva), serif;
+  --font-deva: var(--ff-deva), serif;
+  --font-dot: var(--ff-dot), monospace;
   --font-mono: var(--ff-mono), ui-monospace, monospace;
 }
 
@@ -30,44 +60,31 @@
   }
 
   html {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--font-body);
+    background-color: var(--night);
+    color: var(--chalk);
+    font-family: var(--ff-body), var(--ff-deva), serif;
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    color-scheme: dark;
   }
 
   body {
     min-height: 100vh;
     overflow-x: hidden;
-    background: var(--bg);
-    color: var(--fg);
+    background-color: inherit;
+    color: inherit;
   }
 
   ::selection {
-    background: var(--fg);
-    color: var(--bg);
-  }
-
-  html.has-custom-cursor,
-  html.has-custom-cursor body,
-  html.has-custom-cursor a,
-  html.has-custom-cursor button,
-  html.has-custom-cursor [role="button"] {
-    cursor: none !important;
-  }
-
-  html.has-custom-cursor input,
-  html.has-custom-cursor textarea,
-  html.has-custom-cursor select {
-    cursor: auto !important;
+    background: var(--chalk);
+    color: var(--night);
   }
 
   :focus-visible {
-    outline: 2px solid var(--fg);
+    outline: 2px solid currentColor;
     outline-offset: 3px;
   }
 
@@ -80,45 +97,29 @@
     }
   }
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--bg);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--rule);
-    border-radius: var(--radius);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--muted);
-  }
-
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
+    font-family: var(--ff-display), sans-serif;
     text-transform: uppercase;
-    letter-spacing: 0.01em;
-    line-height: 0.95;
-    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    font-weight: 700;
   }
 
   p {
+    font-family: var(--ff-body), var(--ff-deva), serif;
+    font-size: 1.0625rem;
     line-height: 1.6;
-    color: var(--fg);
   }
 
   label, .label, [data-label] {
-    font-family: var(--font-mono);
+    font-family: var(--ff-mono), ui-monospace, monospace;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   :lang(hi), [lang="hi"], span[lang="hi"] {
-    font-family: var(--ff-deva), var(--font-body);
+    font-family: var(--ff-deva), var(--ff-body), serif;
   }
 
   a {
@@ -132,53 +133,136 @@
   }
 }
 
+/* Surfaces */
+.surface-night {
+  background-color: var(--night);
+  color: var(--chalk);
+  --bg: var(--night);
+  --fg: var(--chalk);
+  --muted: var(--muted-dark);
+  --rule: var(--rule-dark);
+  color-scheme: dark;
+}
+
+.surface-night ::selection {
+  background: var(--chalk);
+  color: var(--night);
+}
+
+.surface-newsprint {
+  background-color: var(--newsprint);
+  color: var(--night);
+  --bg: var(--newsprint);
+  --fg: var(--night);
+  --muted: var(--muted-light);
+  --rule: var(--rule-light);
+  color-scheme: light;
+}
+
+.surface-newsprint ::selection {
+  background: var(--night);
+  color: var(--chalk);
+}
+
+.surface-turf {
+  background-color: var(--turf);
+  color: var(--chalk);
+  --bg: var(--turf);
+  --fg: var(--chalk);
+  --muted: var(--muted-turf);
+  --rule: var(--rule-turf);
+  color-scheme: dark;
+}
+
+.surface-turf ::selection {
+  background: var(--chalk);
+  color: var(--turf);
+}
+
+.surface-red {
+  background-color: var(--red);
+  color: var(--chalk);
+  --bg: var(--red);
+  --fg: var(--chalk);
+  --muted: var(--chalk);
+  --rule: #8A1710;
+  color-scheme: dark;
+}
+
+.surface-red ::selection {
+  background: var(--night);
+  color: var(--chalk);
+}
+
+/* Typography Scale Utilities */
+.text-display-xl {
+  font-family: var(--ff-display), sans-serif;
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.text-display-l {
+  font-family: var(--ff-display), sans-serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.text-display-m {
+  font-family: var(--ff-display), sans-serif;
+  font-size: 2rem;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.text-body {
+  font-family: var(--ff-body), var(--ff-deva), serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.text-caption {
+  font-family: var(--ff-body), var(--ff-deva), serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.text-label {
+  font-family: var(--ff-mono), ui-monospace, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.font-stencil {
+  font-family: var(--ff-stencil), sans-serif;
+}
+
+.font-dot {
+  font-family: var(--ff-dot), monospace;
+}
+
 @layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
   .container-main {
     width: 100%;
     max-width: 1400px;
     margin-inline: auto;
     padding-inline: 1.5rem;
-  }
-
-  .section-padding {
-    padding-block: 6rem;
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .will-change-transform {
-    will-change: transform;
-  }
-}
-
-@media (max-width: 768px) {
-  .desktop-nav {
-    display: none;
-  }
-  .about-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
-  }
-  .projects-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-  .skills-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
-  }
-  .education-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-  .certs-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem !important;
-  }
-  .contact-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
   }
 }

@@ -1,26 +1,50 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, IBM_Plex_Sans, IBM_Plex_Sans_Devanagari, IBM_Plex_Mono } from "next/font/google";
+import {
+  Big_Shoulders,
+  Big_Shoulders_Stencil,
+  Newsreader,
+  Noto_Serif_Devanagari,
+  Doto,
+  IBM_Plex_Mono,
+} from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
 
-const display = Barlow_Condensed({
+const display = Big_Shoulders({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["700", "800", "900"],
   variable: "--ff-display",
   display: "swap",
+  adjustFontFallback: false,
 });
 
-const body = IBM_Plex_Sans({
+const stencil = Big_Shoulders_Stencil({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["700", "800", "900"],
+  variable: "--ff-stencil",
+  display: "swap",
+  adjustFontFallback: false,
+});
+
+const body = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
   variable: "--ff-body",
   display: "swap",
 });
 
-const deva = IBM_Plex_Sans_Devanagari({
+const deva = Noto_Serif_Devanagari({
   subsets: ["devanagari", "latin"],
   weight: ["400", "500"],
   variable: "--ff-deva",
+  display: "swap",
+});
+
+const dot = Doto({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--ff-dot",
   display: "swap",
 });
 
@@ -71,13 +95,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${deva.variable} ${mono.variable}`}
+      className={`${display.variable} ${stencil.variable} ${body.variable} ${deva.variable} ${dot.variable} ${mono.variable}`}
     >
       <body>
-        {/* Accessible Skip Link */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--fg)] focus:text-[var(--bg)] focus:font-mono focus:text-xs focus:uppercase focus:outline-2 focus:outline-[var(--signal)]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--chalk)] focus:text-[var(--night)] focus:font-mono focus:text-xs focus:uppercase focus:outline-2 focus:outline-current"
         >
           Skip to content
         </a>
