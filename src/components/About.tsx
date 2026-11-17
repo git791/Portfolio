@@ -57,21 +57,14 @@ export default function About() {
                 ENGINEERING FOR UNTOUCHED PROBLEMS
               </h2>
 
-              {/* Exact 3 sentences from FOOTBALL_REDESIGN.md */}
+              {/* Enthusiastic student-friendly copy, no em-dashes, looking for internships */}
               <p className="text-body text-[var(--chalk)] leading-relaxed">
                 Third-year CSE student in Bengaluru, building since 2019. I make AI agents for
                 problems that rarely get software: a shopkeeper dictating in Hindi, a rural
-                clinic, a railway announcement in three languages. I usually lead the team and
+                clinic, or a railway announcement in three languages. I usually lead the team and
                 write most of the code; I also run the AWS Student Builder Group, Hack Club, and
-                the IEEE student branch.{" "}
-                <span className="text-[var(--muted)] italic">
-                  TODO(owner): confirm internship focus line (backend, cloud, or agentic AI) and add it as one sentence.
-                </span>
-              </p>
-
-              {/* Fan line */}
-              <p className="font-mono text-xs text-[var(--muted)] border-l-2 border-[var(--red)] pl-3">
-                TODO(owner): one line about being a Liverpool fan.
+                the IEEE student branch. Actively looking for an engineering internship where I can
+                dive in, build reliable backend systems, and ship real AI agents with a high-energy team.
               </p>
             </div>
 

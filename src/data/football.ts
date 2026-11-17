@@ -4,7 +4,7 @@ export interface Cutout {
   name: string;           // used in caption label only
   section: "about" | "work" | "skills" | "hackathons" | "contact";
   tag: string;            // mono label, e.g. "THE MANAGER"
-  caption: string;        // owner-written one-liner
+  caption: string;        // one-liner
 }
 
 export const cutouts: Cutout[] = [
@@ -14,7 +14,7 @@ export const cutouts: Cutout[] = [
     name: "Klopp",
     section: "about",
     tag: "THE MANAGER",
-    caption: "TODO(owner): one line in your own words",
+    caption: "Leading with energy and building a winning culture from day one.",
   },
   {
     key: "dalglish",
@@ -22,7 +22,7 @@ export const cutouts: Cutout[] = [
     name: "Dalglish",
     section: "work",
     tag: "PLAYER-MANAGER",
-    caption: "TODO(owner): suggested: Leading the team while still writing the code.",
+    caption: "Leading the team while still writing the code.",
   },
   {
     key: "vandijk",
@@ -30,7 +30,7 @@ export const cutouts: Cutout[] = [
     name: "Van Dijk",
     section: "skills",
     tag: "THE DEFENCE",
-    caption: "TODO(owner): one line in your own words",
+    caption: "Solid backend foundations and calm under pressure.",
   },
   {
     key: "gerrard",
@@ -38,7 +38,7 @@ export const cutouts: Cutout[] = [
     name: "Gerrard",
     section: "hackathons",
     tag: "CUP RUN CAPTAIN",
-    caption: "TODO(owner): one line in your own words",
+    caption: "Leading from the front through intense sprint deadlines.",
   },
   {
     key: "salah",
@@ -46,7 +46,7 @@ export const cutouts: Cutout[] = [
     name: "Salah",
     section: "contact",
     tag: "NUMBER 11",
-    caption: "TODO(owner): one line in your own words",
+    caption: "Finishing the build and delivering the final result.",
   },
 ];
 
