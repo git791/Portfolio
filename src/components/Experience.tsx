@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Decode from "@/components/ui/Decode";
 import { experience } from "@/lib/data";
 import type { Experience as ExperienceType } from "@/lib/types";
@@ -8,19 +7,12 @@ import type { Experience as ExperienceType } from "@/lib/types";
 const GROUPS: ("Building" | "Leading" | "Earlier")[] = ["Building", "Leading", "Earlier"];
 
 function ExperienceRow({ item }: { item: ExperienceType }) {
-  const [expanded, setExpanded] = useState(false);
-
-  // Split description into first sentence and remainder
-  const match = item.description.match(/^([^\.]*\.)(\s+.*)?$/);
-  const firstSentence = match ? match[1] : item.description;
-  const rest = match && match[2] ? match[2].trim() : "";
-
   return (
-    <div className="py-4 border-b border-[var(--rule)] flex flex-col gap-2">
-      <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2">
+    <details className="group py-3 border-b border-[var(--rule)] transition-colors hover:bg-[var(--rule)]/10">
+      <summary className="flex flex-col md:flex-row md:items-baseline justify-between gap-2 cursor-pointer list-none select-none focus-visible:outline-2 focus-visible:outline-[var(--fg)]">
         {/* Left: Role & Org */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-          <span className="font-display font-semibold text-lg uppercase tracking-tight text-[var(--fg)]">
+        <div className="flex items-baseline gap-2 sm:gap-3">
+          <span className="font-display font-semibold text-base sm:text-lg uppercase tracking-tight text-[var(--fg)] group-hover:text-white">
             {item.role}
           </span>
           <span className="text-[var(--muted)] text-sm">
@@ -28,46 +20,25 @@ function ExperienceRow({ item }: { item: ExperienceType }) {
           </span>
         </div>
 
-        {/* Right: Dates + Location + Type Chip */}
+        {/* Right: Dates + Location + Type Chip + Indicator */}
         <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-wider text-[var(--muted)] shrink-0">
-          <span>{item.location}</span>
-          <span>·</span>
-          <span>
-            {item.startDate} — {item.endDate}
-          </span>
-          <span className="px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)] rounded-[var(--radius)]">
+          <span>{item.startDate} — {item.endDate}</span>
+          <span className="hidden sm:inline">·</span>
+          <span className="hidden sm:inline">{item.location}</span>
+          <span className="px-1.5 py-0.5 border border-[var(--rule)] text-[10px] text-[var(--muted)] rounded-[var(--radius)]">
             {item.type}
           </span>
+          <span className="text-[10px] text-[var(--muted)] group-open:rotate-180 transition-transform inline-block select-none" aria-hidden="true">
+            ▼
+          </span>
         </div>
-      </div>
+      </summary>
 
-      {/* Description (first sentence, expandable if longer) */}
-      <div className="text-sm text-[var(--muted)] leading-relaxed max-w-3xl">
-        <p>
-          {firstSentence}
-          {rest && !expanded && (
-            <button
-              onClick={() => setExpanded(true)}
-              className="ml-2 font-mono text-xs uppercase tracking-wider text-[var(--fg)] hover:underline"
-            >
-              [+]
-            </button>
-          )}
-          {rest && expanded && (
-            <>
-              {" "}
-              {rest}
-              <button
-                onClick={() => setExpanded(false)}
-                className="ml-2 font-mono text-xs uppercase tracking-wider text-[var(--fg)] hover:underline"
-              >
-                [-]
-              </button>
-            </>
-          )}
-        </p>
+      {/* Description inside closed <details> */}
+      <div className="pt-3 pb-1 text-sm text-[var(--muted)] leading-relaxed max-w-3xl">
+        <p>{item.description}</p>
       </div>
-    </div>
+    </details>
   );
 }
 
