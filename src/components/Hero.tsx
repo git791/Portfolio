@@ -144,9 +144,6 @@ export default function Hero() {
               BENGALURU · B.TECH CSE 2028
             </span>
             <div className="flex items-center gap-4">
-              <span className="hidden md:inline font-mono text-[11px] text-[var(--muted)]" lang="hi">
-                बोल के बेचो · कान खोल
-              </span>
               <span className="border border-[var(--chalk)] px-2.5 py-0.5 text-[10px] text-[var(--chalk)] tracking-widest font-semibold">
                 OPEN TO INTERNSHIPS
               </span>
