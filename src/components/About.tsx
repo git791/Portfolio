@@ -12,7 +12,7 @@ export default function About() {
   const kloppCutout = cutouts.find((c) => c.key === "klopp");
 
   return (
-    <section id="about" className="surface-night py-20 px-6 lg:px-12 border-b border-[var(--rule)]">
+    <section id="about" className="relative z-20 surface-night py-20 px-6 lg:px-12 border-b border-[var(--rule)]">
       <div className="max-w-6xl mx-auto space-y-12">
         {/* Section mono tag */}
         <div className="flex items-center justify-between border-b border-[var(--rule)] pb-4 font-mono text-xs uppercase tracking-wider">

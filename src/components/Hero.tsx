@@ -93,17 +93,18 @@ export default function Hero() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Desktop ScrollTrigger pin across 300vh
+  // Desktop ScrollTrigger pin across ~250vh (no child inner spacer mismatch)
   useEffect(() => {
-    if (isReducedMotion || !containerRef.current || !pinWrapperRef.current) {
+    if (isReducedMotion || !containerRef.current) {
       return;
     }
 
     const trigger = ScrollTrigger.create({
       trigger: containerRef.current,
       start: "top top",
-      end: "+=300%",
-      pin: pinWrapperRef.current,
+      end: "+=220%",
+      pin: true,
+      pinSpacing: true,
       scrub: 0.1,
       onUpdate: (self) => {
         setScrollProgress(self.progress);
@@ -129,12 +130,11 @@ export default function Hero() {
       ref={containerRef}
       id="hero"
       onPointerMove={handlePointerMove}
-      className="relative surface-night w-full"
-      style={{ height: isReducedMotion ? "auto" : "300vh" }}
+      className="relative surface-night w-full h-screen overflow-hidden flex flex-col justify-between select-none"
     >
       <div
         ref={pinWrapperRef}
-        className="relative w-full h-screen overflow-hidden flex flex-col justify-between"
+        className="relative w-full h-full overflow-hidden flex flex-col justify-between"
       >
         {/* TOP 38% VIEWPORT: TEXT BLOCK (NO CANVAS OVERLAP) */}
         <div className="h-[38vh] w-full px-6 lg:px-12 pt-6 lg:pt-8 flex flex-col justify-between border-b border-[var(--rule)] z-10 surface-night">

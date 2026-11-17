@@ -13,10 +13,12 @@ import {
   CommitWeekInfo,
   buildMosaicDataTexture,
 } from "./mosaicData";
+import commitsJson from "@/data/commits.json";
 
 interface MosaicSceneProps {
   beatProgress: number; // 0..1 across the 300vh scroll
   pointerPos: { x: number; y: number };
+  isPointerOver: boolean;
   onHoverCommit?: (info: CommitWeekInfo | null, screenPos: { x: number; y: number } | null) => void;
 }
 
@@ -141,6 +143,7 @@ void main() {
 function StandMesh({
   beatProgress,
   pointerPos,
+  isPointerOver,
   onHoverCommit,
 }: MosaicSceneProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -258,15 +261,21 @@ function StandMesh({
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
     camera.lookAt(0, 0.4, -6.0);
 
-    // Commit terrace hover check during Beat C (progress 0.60..0.88)
-    if (onHoverCommit && commitGrid && beatProgress >= 0.58 && beatProgress <= 0.88) {
+    // Commit terrace hover check during Beat C only when pointer is actively over canvas
+    if (
+      onHoverCommit &&
+      commitGrid &&
+      isPointerOver &&
+      beatProgress >= 0.60 &&
+      beatProgress <= 0.88
+    ) {
       const mouse = new THREE.Vector2(pointerPos.x, -pointerPos.y);
       raycaster.setFromCamera(mouse, camera);
 
       // Check commit terrace cards (rows 0..7, cols 33..85)
       let foundInfo: CommitWeekInfo | null = null;
       let screenPos: { x: number; y: number } | null = null;
-      let minRayDist = 0.25;
+      let minRayDist = 0.07; // tight radius: requires hovering directly on a card
 
       for (let r = 0; r < COMMIT_ROWS; r++) {
         for (let c = 0; c < COMMIT_COLS; c++) {
@@ -275,17 +284,20 @@ function StandMesh({
           const dist = raycaster.ray.distanceToPoint(pos);
 
           if (dist < minRayDist) {
-            minRayDist = dist;
-            foundInfo = commitGrid[r][c];
+            const candidate = commitGrid[r][c];
+            if (candidate && candidate.commits > 0) {
+              minRayDist = dist;
+              foundInfo = candidate;
 
-            // Project 3D pos to 2D screen coordinate
-            const projected = pos.clone().project(camera);
-            const halfW = gl.domElement.clientWidth / 2;
-            const halfH = gl.domElement.clientHeight / 2;
-            screenPos = {
-              x: projected.x * halfW + halfW,
-              y: -projected.y * halfH + halfH,
-            };
+              // Project 3D pos to 2D screen coordinate
+              const projected = pos.clone().project(camera);
+              const halfW = gl.domElement.clientWidth / 2;
+              const halfH = gl.domElement.clientHeight / 2;
+              screenPos = {
+                x: projected.x * halfW + halfW,
+                y: -projected.y * halfH + halfH,
+              };
+            }
           }
         }
       }
@@ -327,9 +339,26 @@ export default function MosaicStand({
 }) {
   const [hoveredCommit, setHoveredCommit] = useState<CommitWeekInfo | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
+  const [isPointerOver, setIsPointerOver] = useState(false);
+
+  // Clear any active tooltip immediately when scrolling between beats
+  useEffect(() => {
+    setHoveredCommit(null);
+    setTooltipPos(null);
+  }, [beatProgress]);
+
+  const totals = commitsJson.totals.byYear as Record<string, number>;
 
   return (
-    <div className="relative w-full h-full select-none">
+    <div
+      onPointerEnter={() => setIsPointerOver(true)}
+      onPointerLeave={() => {
+        setIsPointerOver(false);
+        setHoveredCommit(null);
+        setTooltipPos(null);
+      }}
+      className="relative w-full h-full select-none"
+    >
       <Canvas
         dpr={[1, 1.5]}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
@@ -340,6 +369,7 @@ export default function MosaicStand({
         <StandMesh
           beatProgress={beatProgress}
           pointerPos={pointerPos}
+          isPointerOver={isPointerOver}
           onHoverCommit={(info, pos) => {
             setHoveredCommit(info);
             setTooltipPos(pos);
@@ -347,14 +377,14 @@ export default function MosaicStand({
         />
       </Canvas>
 
-      {/* DOM Tooltip for commit cards */}
-      {hoveredCommit && tooltipPos && (
+      {/* DOM Tooltip for commit cards (only active in Beat C when actively hovering on a populated card) */}
+      {hoveredCommit && tooltipPos && hoveredCommit.commits > 0 && (
         <div
           style={{
             left: `${tooltipPos.x}px`,
             top: `${Math.max(10, tooltipPos.y - 48)}px`,
           }}
-          className="pointer-events-none absolute -translate-x-1/2 z-30 surface-night border border-[var(--chalk)] px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-[var(--chalk)] whitespace-nowrap"
+          className="pointer-events-none absolute -translate-x-1/2 z-30 surface-night border border-[var(--chalk)] px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-[var(--chalk)] whitespace-nowrap shadow-none"
         >
           <span>
             {hoveredCommit.dateStr} · {hoveredCommit.commits} COMMITS · {hoveredCommit.topRepo}
@@ -362,16 +392,37 @@ export default function MosaicStand({
         </div>
       )}
 
-      {/* Year labels for commit terrace (DOM text, positioned left of band during Beat C) */}
-      {beatProgress >= 0.58 && beatProgress <= 0.88 && (
-        <div className="pointer-events-none absolute left-4 lg:left-12 bottom-8 z-20 flex flex-col-reverse gap-1 font-mono text-[11px] text-[var(--muted)] uppercase">
+      {/* Year axis labels for commit terrace (DOM text, positioned left of band during Beat C) */}
+      {beatProgress >= 0.60 && beatProgress <= 0.88 && (
+        <div className="pointer-events-none absolute left-4 lg:left-12 bottom-8 z-20 flex flex-col-reverse gap-0.5 font-mono text-[10px] text-[var(--muted-dark)] uppercase">
+          <span className="text-[9px] text-[var(--red)] font-bold mb-1">YEARS</span>
           {YEARS.map((y) => (
-            <span key={y} className="tracking-widest">
-              {y}
+            <span key={y} className="tracking-widest flex items-center gap-1.5">
+              <span>{y}</span>
+              <span className="text-[var(--rule-dark)]">─</span>
             </span>
           ))}
         </div>
       )}
+
+      {/* Visually hidden accessible commits table for screen readers (Section 5.4) */}
+      <table className="sr-only">
+        <caption>Annual git commit totals from 2019 to 2026</caption>
+        <thead>
+          <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Commits</th>
+          </tr>
+        </thead>
+        <tbody>
+          {YEARS.map((y) => (
+            <tr key={y}>
+              <th scope="row">{y}</th>
+              <td>{totals[String(y)] || 0}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
