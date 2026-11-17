@@ -91,6 +91,67 @@ function StaticSvgRidge({ rows }: { rows: ReturnType<typeof getYearlyCommitRows>
   );
 }
 
+function ProjectTileItem({ project: p, index: idx }: { project: ReturnType<typeof getSortedProjectsForTiles>[number]; index: number }) {
+  const [imgError, setImgError] = useState(false);
+  const hasImage = Boolean(p.image && p.image.trim().length > 0) && !imgError;
+
+  return (
+    <Link
+      href={`/projects/${p.slug}`}
+      data-cursor={p.title}
+      aria-label={p.title}
+      className="group relative aspect-square border border-[var(--rule)] hover:border-[var(--fg)] bg-[#141512] overflow-hidden flex flex-col justify-between p-2 sm:p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-[var(--fg)]"
+    >
+      {hasImage ? (
+        <>
+          {/* Project Image (Grayscale with hover reveal) */}
+          <Image
+            src={p.image!}
+            alt={p.title}
+            fill
+            className="object-cover filter grayscale contrast-105 group-hover:grayscale-0 transition-all duration-300 opacity-80 group-hover:opacity-100"
+            sizes="(max-width: 640px) 25vw, (max-width: 1024px) 16vw, 12vw"
+            onError={() => setImgError(true)}
+          />
+          {/* Dark overlay for contrast */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E0B]/90 via-transparent to-[#0D0E0B]/40 pointer-events-none" />
+
+          {/* Top Index Badge */}
+          <span className="relative z-10 font-mono text-[9px] uppercase tracking-wider text-[var(--fg)] bg-[var(--bg)]/80 px-1 py-0.5 rounded-[var(--radius)] w-fit border border-[var(--rule)]">
+            {(idx + 1).toString().padStart(2, "0")}
+          </span>
+
+          {/* Bottom Title (Wrapped, No Ellipsis) */}
+          <span className="relative z-10 font-display font-bold text-[11px] sm:text-xs uppercase tracking-tight text-[var(--fg)] leading-tight break-words whitespace-normal drop-shadow-sm">
+            {p.title}
+          </span>
+        </>
+      ) : (
+        <>
+          {/* Flat Tile with Large Display Type */}
+          <div className="flex items-center justify-between w-full">
+            <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-[var(--muted)]">
+              {(idx + 1).toString().padStart(2, "0")}
+            </span>
+            {p.liveUrl && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--signal)]" title="Live Deployment" />
+            )}
+          </div>
+
+          {/* Large Type Title (Wrapped, No Ellipsis) */}
+          <span className="font-display font-bold text-xs sm:text-sm lg:text-base uppercase tracking-tight text-[var(--fg)] leading-tight break-words whitespace-normal my-auto">
+            {p.title}
+          </span>
+
+          <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--muted)] truncate">
+            {p.category.split("/")[0]?.trim() || p.year}
+          </span>
+        </>
+      )}
+    </Link>
+  );
+}
+
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const heroSectionRef = useRef<HTMLDivElement>(null);
@@ -302,65 +363,9 @@ export default function Hero() {
             role="region"
             aria-label={`${tileProjects.length} Project Tiles`}
           >
-            {tileProjects.map((p, idx) => {
-              const hasImage = Boolean(p.image && p.image.trim().length > 0);
-
-              return (
-                <Link
-                  key={p.id}
-                  href={`/projects/${p.slug}`}
-                  data-cursor={p.title}
-                  aria-label={p.title}
-                  className="group relative aspect-square border border-[var(--rule)] hover:border-[var(--fg)] bg-[#141512] overflow-hidden flex flex-col justify-between p-2 sm:p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-[var(--fg)]"
-                >
-                  {hasImage ? (
-                    <>
-                      {/* Project Image (Grayscale with hover reveal) */}
-                      <Image
-                        src={p.image!}
-                        alt={p.title}
-                        fill
-                        className="object-cover filter grayscale contrast-105 group-hover:grayscale-0 transition-all duration-300 opacity-80 group-hover:opacity-100"
-                        sizes="(max-width: 640px) 25vw, (max-width: 1024px) 16vw, 12vw"
-                      />
-                      {/* Dark overlay for contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E0B]/90 via-transparent to-[#0D0E0B]/40 pointer-events-none" />
-
-                      {/* Top Index Badge */}
-                      <span className="relative z-10 font-mono text-[9px] uppercase tracking-wider text-[var(--fg)] bg-[var(--bg)]/80 px-1 py-0.5 rounded-[var(--radius)] w-fit border border-[var(--rule)]">
-                        {(idx + 1).toString().padStart(2, "0")}
-                      </span>
-
-                      {/* Bottom Title (Wrapped, No Ellipsis) */}
-                      <span className="relative z-10 font-display font-bold text-[11px] sm:text-xs uppercase tracking-tight text-[var(--fg)] leading-tight break-words whitespace-normal drop-shadow-sm">
-                        {p.title}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      {/* Flat Tile with Large Display Type */}
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-[var(--muted)]">
-                          {(idx + 1).toString().padStart(2, "0")}
-                        </span>
-                        {p.liveUrl && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--signal)]" title="Live Deployment" />
-                        )}
-                      </div>
-
-                      {/* Large Type Title (Wrapped, No Ellipsis) */}
-                      <span className="font-display font-bold text-xs sm:text-sm lg:text-base uppercase tracking-tight text-[var(--fg)] leading-tight break-words whitespace-normal my-auto">
-                        {p.title}
-                      </span>
-
-                      <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--muted)] truncate">
-                        {p.category.split("/")[0]?.trim() || p.year}
-                      </span>
-                    </>
-                  )}
-                </Link>
-              );
-            })}
+            {tileProjects.map((p, idx) => (
+              <ProjectTileItem key={p.id} project={p} index={idx} />
+            ))}
           </div>
         </div>
       </div>
