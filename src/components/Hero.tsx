@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -270,7 +271,7 @@ export default function Hero() {
         )}
       </div>
 
-      {/* 35 Project Tiles Grid */}
+      {/* 34 Project Tiles Grid */}
       {/* On desktop: steps in over canvas as pinned scroll proceeds */}
       {/* On mobile / fallback: rendered directly below the hero */}
       <div
@@ -278,11 +279,11 @@ export default function Hero() {
         className={`${
           useFallback
             ? "relative z-20 container-main mt-12 mb-16 opacity-100"
-            : "absolute inset-0 z-30 flex items-center justify-center p-8 bg-[var(--bg)]/90 opacity-0 pointer-events-none"
+            : "absolute inset-0 z-30 flex items-center justify-center bg-[var(--bg)] opacity-0 pointer-events-none py-6"
         }`}
       >
-        <div className="w-full max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
+        <div className="w-full container-main mx-auto">
+          <div className="flex items-center justify-between mb-4 border-b border-[var(--rule)] pb-2">
             <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)]">
               BUILD LEDGER · {tileProjects.length} REPOSITORIES (OLDEST → NEWEST)
             </span>
@@ -295,14 +296,14 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Grid */}
+          {/* Grid aligned to content column */}
           <div
-            className="grid grid-cols-5 sm:grid-cols-7 gap-2"
+            className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-7 gap-2 sm:gap-3"
             role="region"
             aria-label={`${tileProjects.length} Project Tiles`}
           >
             {tileProjects.map((p, idx) => {
-              const hasLive = Boolean(p.liveUrl && p.liveUrl.trim().length > 0);
+              const hasImage = Boolean(p.image && p.image.trim().length > 0);
 
               return (
                 <Link
@@ -310,18 +311,53 @@ export default function Hero() {
                   href={`/projects/${p.slug}`}
                   data-cursor={p.title}
                   aria-label={p.title}
-                  className={`aspect-square p-2 border flex flex-col justify-between transition-colors focus-visible:outline-2 focus-visible:outline-[var(--fg)] ${
-                    hasLive
-                      ? "bg-[var(--signal)] text-[var(--bg)] border-[var(--signal)] font-medium"
-                      : "bg-transparent text-[var(--fg)] border-[var(--rule)] hover:border-[var(--fg)]"
-                  }`}
+                  className="group relative aspect-square border border-[var(--rule)] hover:border-[var(--fg)] bg-[#141512] overflow-hidden flex flex-col justify-between p-2 sm:p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-[var(--fg)]"
                 >
-                  <span className="font-mono text-[9px] uppercase tracking-wider opacity-60">
-                    {(idx + 1).toString().padStart(2, "0")}
-                  </span>
-                  <span className="font-mono text-[10px] uppercase tracking-tight truncate leading-tight">
-                    {p.title}
-                  </span>
+                  {hasImage ? (
+                    <>
+                      {/* Project Image (Grayscale with hover reveal) */}
+                      <Image
+                        src={p.image!}
+                        alt={p.title}
+                        fill
+                        className="object-cover filter grayscale contrast-105 group-hover:grayscale-0 transition-all duration-300 opacity-80 group-hover:opacity-100"
+                        sizes="(max-width: 640px) 25vw, (max-width: 1024px) 16vw, 12vw"
+                      />
+                      {/* Dark overlay for contrast */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E0B]/90 via-transparent to-[#0D0E0B]/40 pointer-events-none" />
+
+                      {/* Top Index Badge */}
+                      <span className="relative z-10 font-mono text-[9px] uppercase tracking-wider text-[var(--fg)] bg-[var(--bg)]/80 px-1 py-0.5 rounded-[var(--radius)] w-fit border border-[var(--rule)]">
+                        {(idx + 1).toString().padStart(2, "0")}
+                      </span>
+
+                      {/* Bottom Title (Wrapped, No Ellipsis) */}
+                      <span className="relative z-10 font-display font-bold text-[11px] sm:text-xs uppercase tracking-tight text-[var(--fg)] leading-tight break-words whitespace-normal drop-shadow-sm">
+                        {p.title}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {/* Flat Tile with Large Display Type */}
+                      <div className="flex items-center justify-between w-full">
+                        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-wider text-[var(--muted)]">
+                          {(idx + 1).toString().padStart(2, "0")}
+                        </span>
+                        {p.liveUrl && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--signal)]" title="Live Deployment" />
+                        )}
+                      </div>
+
+                      {/* Large Type Title (Wrapped, No Ellipsis) */}
+                      <span className="font-display font-bold text-xs sm:text-sm lg:text-base uppercase tracking-tight text-[var(--fg)] leading-tight break-words whitespace-normal my-auto">
+                        {p.title}
+                      </span>
+
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--muted)] truncate">
+                        {p.category.split("/")[0]?.trim() || p.year}
+                      </span>
+                    </>
+                  )}
                 </Link>
               );
             })}
