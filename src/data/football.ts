@@ -51,4 +51,4 @@ export const cutouts: Cutout[] = [
 ];
 
 export const fanNote = "Unofficial fan tribute. Not affiliated with or endorsed by Liverpool FC.";
-export const crestSrc = "/assets/football/crest.svg";
+export const crestSrc = "/assets/football/crest.png";
