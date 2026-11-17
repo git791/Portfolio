@@ -114,13 +114,17 @@ export async function buildMosaicDataTexture(): Promise<{
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, COLS, ROWS);
       ctx.fillStyle = "#FFFFFF";
-      // Render "MOHAMMED AYAAN" across two centered stadium lines
+      // Counter the 2.4x 3D terrace arc expansion so letters are bold, condensed, and naturally proportioned
+      ctx.save();
+      ctx.scale(0.44, 1.0);
+      const scaledCenter = (COLS / 2) / 0.44;
       ctx.font = "900 13px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("MOHAMMED", COLS / 2, 13);
+      ctx.fillText("MOHAMMED", scaledCenter, 14);
       ctx.font = "900 15px sans-serif";
-      ctx.fillText("AYAAN", COLS / 2, 27);
+      ctx.fillText("AYAAN", scaledCenter, 27);
+      ctx.restore();
       const imgData = ctx.getImageData(0, 0, COLS, ROWS);
       for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
@@ -158,9 +162,10 @@ export async function buildMosaicDataTexture(): Promise<{
       if (ctx) {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
-        // Draw crest in 28 x 28 box for prominent stadium mosaic presence
-        const sizeBox = 28;
-        ctx.drawImage(img, (COLS - sizeBox) / 2, (ROWS - sizeBox) / 2, sizeBox, sizeBox);
+        // Draw crest with aspect-ratio compensation to counter 2.4x terrace arc stretch
+        const boxHeight = 26;
+        const boxWidth = 14;
+        ctx.drawImage(img, (COLS - boxWidth) / 2, (ROWS - boxHeight) / 2, boxWidth, boxHeight);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
           for (let x = 0; x < COLS; x++) {
@@ -200,10 +205,14 @@ export async function buildMosaicDataTexture(): Promise<{
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "900 18px sans-serif";
+        ctx.save();
+        ctx.scale(0.44, 1.0);
+        const scaledCenter = (COLS / 2) / 0.44;
+        ctx.font = "900 20px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("AY", COLS / 2, ROWS / 2);
+        ctx.fillText("AY", scaledCenter, ROWS / 2);
+        ctx.restore();
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
           for (let x = 0; x < COLS; x++) {
