@@ -9,6 +9,10 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
+import Shell from "@/components/Shell";
+import Cursor from "@/components/ui/Cursor";
+import Tunnel from "@/components/Tunnel";
+import Footer from "@/components/Footer";
 
 const display = Big_Shoulders({
   subsets: ["latin"],
@@ -106,12 +110,16 @@ export default function RootLayout({
         </a>
 
         <SmoothScrollProvider>
+          <Tunnel />
+          <Cursor />
+          <Shell />
           <div
             id="main-content"
             tabIndex={-1}
-            className="min-h-screen focus:outline-none"
+            className="pt-14 lg:pt-0 lg:pl-[72px] min-h-screen focus:outline-none flex flex-col justify-between"
           >
-            {children}
+            <div className="flex-1">{children}</div>
+            <Footer />
           </div>
         </SmoothScrollProvider>
       </body>
