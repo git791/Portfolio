@@ -38,8 +38,8 @@ attribute float aDelay;
 varying vec3 vColor;
 
 vec3 getStateColor(float val) {
-  if (val > 1.5) return uCardRed;
-  if (val > 0.5) return uCardChalk;
+  if (val > 0.75) return uCardRed;
+  if (val > 0.25) return uCardChalk;
   return uCardNight;
 }
 

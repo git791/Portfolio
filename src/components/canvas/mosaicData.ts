@@ -236,13 +236,13 @@ export async function buildMosaicDataTexture(): Promise<{
     }
   }
 
-  // Pack channels: R = idle, G = name, B = crest, A = commits
+  // Pack channels: R = idle, G = name, B = crest, A = commits (normalized 0..255 for WebGL sampling)
   for (let i = 0; i < size; i++) {
     const offset = i * 4;
-    data[offset] = idleState[i];
-    data[offset + 1] = nameState[i];
-    data[offset + 2] = crestState[i];
-    data[offset + 3] = commitState[i];
+    data[offset] = idleState[i] === 1 ? 128 : 0;
+    data[offset + 1] = nameState[i] === 1 ? 128 : 0;
+    data[offset + 2] = crestState[i] === 2 ? 255 : (crestState[i] === 1 ? 128 : 0);
+    data[offset + 3] = commitState[i] === 2 ? 255 : (commitState[i] === 1 ? 128 : 0);
   }
 
   const texture = new THREE.DataTexture(
