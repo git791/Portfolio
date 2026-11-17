@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import Scoreboard from "./ui/Scoreboard";
+import Cutout from "./ui/Cutout";
 import { cutouts } from "@/data/football";
 
 export default function About() {
   const [imgError, setImgError] = useState(false);
-  const [kloppError, setKloppError] = useState(false);
 
   const kloppCutout = cutouts.find((c) => c.key === "klopp");
 
@@ -68,28 +68,17 @@ export default function About() {
               </p>
             </div>
 
-            {/* Klopp cutout tucked in right slot */}
-            {kloppCutout && !kloppError && (
-              <div className="flex items-center gap-4 border border-[var(--rule)] p-3 bg-[#111412] max-w-md">
-                <div className="relative w-16 h-20 shrink-0">
-                  <Image
-                    src={kloppCutout.src}
-                    alt=""
-                    fill
-                    className="object-contain object-bottom"
-                    sizes="80px"
-                    onError={() => setKloppError(true)}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <span className="text-label text-[var(--red)] font-bold">
-                    {kloppCutout.tag}
-                  </span>
-                  <p className="font-mono text-[11px] text-[var(--muted)]">
-                    {kloppCutout.caption}
-                  </p>
-                </div>
-              </div>
+            {/* Klopp cutout stepped reveal in 4 steps with 12px scroll parallax */}
+            {kloppCutout && (
+              <Cutout
+                src={kloppCutout.src}
+                tag={kloppCutout.tag}
+                caption={kloppCutout.caption}
+                width={84}
+                height={108}
+                theme="night"
+                containerClassName="max-w-md"
+              />
             )}
 
             {/* Scoreboard stats component */}

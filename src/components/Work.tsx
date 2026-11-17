@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import PenPicture from "./ui/PenPicture";
 import PassLink from "./ui/PassLink";
+import Cutout from "./ui/Cutout";
 import { projectsByTier } from "@/lib/derive";
 import { cutouts } from "@/data/football";
 import { projects } from "@/lib/data";
 
 export default function Work() {
-  const [dalglishError, setDalglishError] = useState(false);
   const editorialProjects = projectsByTier().editorial.slice(0, 6);
   const dalglishCutout = cutouts.find((c) => c.key === "dalglish");
 
@@ -27,28 +26,17 @@ export default function Work() {
             </h2>
           </div>
 
-          {/* Dalglish cutout side strip: player-manager (does not overlap rows) */}
-          {dalglishCutout && !dalglishError && (
-            <div className="flex items-center gap-3 border border-[var(--rule)] p-2 bg-[#DDD6C3] max-w-sm">
-              <div className="relative w-12 h-14 shrink-0">
-                <Image
-                  src={dalglishCutout.src}
-                  alt=""
-                  fill
-                  className="object-contain object-bottom"
-                  sizes="60px"
-                  onError={() => setDalglishError(true)}
-                />
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono font-bold uppercase text-[var(--red)] tracking-wider">
-                  {dalglishCutout.tag}
-                </span>
-                <p className="font-mono text-[10px] text-[var(--muted)]">
-                  {dalglishCutout.caption}
-                </p>
-              </div>
-            </div>
+          {/* Dalglish cutout stepped reveal in 4 steps with 12px scroll parallax */}
+          {dalglishCutout && (
+            <Cutout
+              src={dalglishCutout.src}
+              tag={dalglishCutout.tag}
+              caption={dalglishCutout.caption}
+              width={64}
+              height={76}
+              theme="newsprint"
+              containerClassName="max-w-sm"
+            />
           )}
         </div>
 

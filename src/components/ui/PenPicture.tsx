@@ -85,39 +85,44 @@ export default function PenPicture({ project }: PenPictureProps) {
           </div>
         </div>
 
-        {/* RIGHT: Team Sheet panel (clip-path reveal, 220ms, or in-flow on mobile) (3 cols) */}
+        {/* RIGHT: Team Sheet panel (clip-path reveal, 220ms, in-flow expand for touch) (3 cols) */}
         <div className="lg:col-span-3">
-          <div className="lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 transition-opacity duration-200 border border-[var(--rule)] p-3 bg-[var(--chalk)] surface-night lg:surface-night text-xs font-mono space-y-2">
-            <div className="flex justify-between items-center border-b border-[var(--rule)] pb-1 text-[var(--chalk)]">
-              <span className="text-[10px] text-[var(--muted)]">TEAM SHEET</span>
-              <span className="text-[10px] text-[var(--red)] font-semibold">
-                {project.team.length > 0 ? `${project.team.length + 1} SQUAD` : "SOLO BUILD"}
+          <details className="group/sheet border border-[var(--rule)] bg-[var(--chalk)] surface-night lg:surface-night text-xs font-mono select-none lg:pointer-events-auto">
+            <summary className="p-2.5 flex justify-between items-center cursor-pointer list-none border-b border-transparent group-open/sheet:border-[var(--rule)] hover:text-[var(--red)] transition-colors">
+              <span className="text-[10px] text-[var(--muted)] font-bold uppercase tracking-wider">
+                TEAM SHEET
               </span>
-            </div>
+              <span className="text-[10px] text-[var(--red)] font-semibold flex items-center gap-1">
+                <span>{project.team.length > 0 ? `${project.team.length + 1} SQUAD` : "SOLO BUILD"}</span>
+                <span className="group-open/sheet:rotate-180 transition-transform duration-200">▾</span>
+              </span>
+            </summary>
 
-            {project.team.length > 0 && (
-              <div className="text-[11px] text-[var(--chalk)]">
-                {personalInfo.firstName} (Lead), {project.team.join(", ")}
+            <div className="p-3 space-y-2 border-t border-[var(--rule)] lg:border-t-0 transition-all duration-[220ms]">
+              {project.team.length > 0 && (
+                <div className="text-[11px] text-[var(--chalk)]">
+                  {personalInfo.firstName} (Lead), {project.team.join(", ")}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-1 pt-1">
+                {project.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-[#1C201D] text-[var(--chalk)] px-1.5 py-0.5 text-[10px]"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
-            )}
 
-            <div className="flex flex-wrap gap-1 pt-1">
-              {project.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-[#1C201D] text-[var(--chalk)] px-1.5 py-0.5 text-[10px]"
-                >
-                  {tag}
-                </span>
-              ))}
+              {project.repoFacts && (
+                <div className="text-[10px] text-[var(--muted)] pt-1 border-t border-[var(--rule)]">
+                  {project.repoFacts.commits} COMMITS · ~{project.repoFacts.approxLoc} LOC
+                </div>
+              )}
             </div>
-
-            {project.repoFacts && (
-              <div className="text-[10px] text-[var(--muted)] pt-1 border-t border-[var(--rule)]">
-                {project.repoFacts.commits} COMMITS · ~{project.repoFacts.approxLoc} LOC
-              </div>
-            )}
-          </div>
+          </details>
         </div>
       </div>
     </div>

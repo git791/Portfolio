@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import PassLink from "@/components/ui/PassLink";
+import Cutout from "@/components/ui/Cutout";
 import { skillGroupsAsSquad } from "@/lib/derive";
 import { cutouts } from "@/data/football";
 
 export default function SkillsPage() {
-  const [vanDijkError, setVanDijkError] = useState(false);
   const squad = skillGroupsAsSquad();
   const vanDijkCutout = cutouts.find((c) => c.key === "vandijk");
 
@@ -29,28 +27,17 @@ export default function SkillsPage() {
             </p>
           </div>
 
-          {/* Van Dijk cutout beside header: The Defence */}
-          {vanDijkCutout && !vanDijkError && (
-            <div className="flex items-center gap-3 border border-[var(--rule-light)] p-2 bg-[#DDD6C3] max-w-sm">
-              <div className="relative w-12 h-14 shrink-0">
-                <Image
-                  src={vanDijkCutout.src}
-                  alt=""
-                  fill
-                  className="object-contain object-bottom"
-                  sizes="60px"
-                  onError={() => setVanDijkError(true)}
-                />
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono font-bold uppercase text-[var(--red)] tracking-wider">
-                  {vanDijkCutout.tag}
-                </span>
-                <p className="font-mono text-[10px] text-[var(--muted-light)]">
-                  {vanDijkCutout.caption}
-                </p>
-              </div>
-            </div>
+          {/* Van Dijk cutout stepped reveal in 4 steps with 12px scroll parallax */}
+          {vanDijkCutout && (
+            <Cutout
+              src={vanDijkCutout.src}
+              tag={vanDijkCutout.tag}
+              caption={vanDijkCutout.caption}
+              width={64}
+              height={76}
+              theme="newsprint"
+              containerClassName="max-w-sm"
+            />
           )}
         </div>
 

@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import PassLink from "./ui/PassLink";
+import Cutout from "./ui/Cutout";
 import { hackathons } from "@/lib/data";
 import { cupSteps } from "@/lib/derive";
 import { cutouts } from "@/data/football";
 
 export default function FixturesTeaser() {
-  const [gerrardError, setGerrardError] = useState(false);
   const latestFixtures = hackathons.slice(0, 4);
   const gerrardCutout = cutouts.find((c) => c.key === "gerrard");
 
@@ -26,28 +25,17 @@ export default function FixturesTeaser() {
             </h2>
           </div>
 
-          {/* Gerrard cutout beside header */}
-          {gerrardCutout && !gerrardError && (
-            <div className="flex items-center gap-3 border border-[var(--rule)] p-2 bg-[#14482E] max-w-sm">
-              <div className="relative w-12 h-14 shrink-0">
-                <Image
-                  src={gerrardCutout.src}
-                  alt=""
-                  fill
-                  className="object-contain object-bottom"
-                  sizes="60px"
-                  onError={() => setGerrardError(true)}
-                />
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono font-bold uppercase text-[var(--chalk)] tracking-wider">
-                  {gerrardCutout.tag}
-                </span>
-                <p className="font-mono text-[10px] text-[var(--muted)]">
-                  {gerrardCutout.caption}
-                </p>
-              </div>
-            </div>
+          {/* Gerrard cutout stepped reveal in 4 steps with 12px scroll parallax */}
+          {gerrardCutout && (
+            <Cutout
+              src={gerrardCutout.src}
+              tag={gerrardCutout.tag}
+              caption={gerrardCutout.caption}
+              width={64}
+              height={76}
+              theme="turf"
+              containerClassName="max-w-sm"
+            />
           )}
         </div>
 

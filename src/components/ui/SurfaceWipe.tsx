@@ -27,10 +27,20 @@ export default function SurfaceWipe({
     // Under reduced motion: no wipes, plain cuts
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion || !containerRef.current) {
+      if (containerRef.current) {
+        containerRef.current.style.clipPath = "none";
+      }
       return;
     }
 
     const el = containerRef.current;
+    const rect = el.getBoundingClientRect();
+
+    // If section is already within viewport on initial load or page refresh, never clip it out
+    if (!scrub && rect.top < window.innerHeight * 0.9) {
+      el.style.clipPath = "none";
+      return;
+    }
 
     // Initial clip state
     const initialClip = direction === "bottom-to-top"
@@ -70,9 +80,17 @@ export default function SurfaceWipe({
             clipPath: finalClip,
             duration: 0.65,
             ease: "power2.out",
+            onComplete: () => {
+              el.style.clipPath = "none";
+            },
           });
         },
       });
+
+      // Guard check: if already active after trigger creation, restore immediately
+      if (st.isActive || st.progress > 0) {
+        el.style.clipPath = "none";
+      }
     }
 
     return () => {

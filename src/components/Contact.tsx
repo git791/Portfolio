@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Cutout from "./ui/Cutout";
 import { personalInfo } from "@/lib/data";
 import { cutouts } from "@/data/football";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
-  const [salahError, setSalahError] = useState(false);
   const salahCutout = cutouts.find((c) => c.key === "salah");
 
   const copyEmail = () => {
@@ -104,7 +104,7 @@ export default function Contact() {
 
           {/* RIGHT: Salah cutout beside ticket stub (5 cols) */}
           <div className="lg:col-span-5 flex flex-col items-center lg:items-end space-y-4">
-            {salahCutout && !salahError && (
+            {salahCutout && (
               <div className="relative">
                 {/* Flat offset night rectangle behind Salah to guarantee kit contrast against solid red */}
                 <div
@@ -112,27 +112,16 @@ export default function Contact() {
                   className="absolute inset-0 translate-x-3 translate-y-3 bg-[#0B0D0C] border border-[#2A2D2A]"
                 />
 
-                {/* Cutout container */}
-                <div className="relative w-48 h-64 sm:w-56 sm:h-72 border border-[var(--chalk)] bg-[#111412] p-2 flex items-end justify-center">
-                  <Image
-                    src={salahCutout.src}
-                    alt=""
-                    fill
-                    className="object-contain object-bottom p-2"
-                    sizes="220px"
-                    onError={() => setSalahError(true)}
-                  />
-                </div>
-
-                {/* Night caption block below cutout (small text on night block) */}
-                <div className="relative mt-2 p-2 surface-night border border-[var(--chalk)] text-[var(--chalk)] font-mono text-center">
-                  <span className="text-[10px] text-[var(--red)] font-bold tracking-wider block">
-                    {salahCutout.tag}
-                  </span>
-                  <span className="text-[11px] text-[var(--muted-dark)] block">
-                    {salahCutout.caption}
-                  </span>
-                </div>
+                <Cutout
+                  src={salahCutout.src}
+                  tag={salahCutout.tag}
+                  caption={salahCutout.caption}
+                  width={200}
+                  height={260}
+                  orientation="column"
+                  theme="red"
+                  containerClassName="relative max-w-xs"
+                />
               </div>
             )}
           </div>
