@@ -102,16 +102,18 @@ export default function ProjectRow({
         aria-label={`${project.title} - ${project.category}`}
       >
         {/* Left: Index + Title + Problem */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 min-w-0 flex-1 pr-4">
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)] w-6 shrink-0">
-            {indexStr}
-          </span>
+        <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 min-w-0 flex-1 pr-4">
+          <div className="flex items-baseline gap-3 shrink-0">
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--muted)] w-6 shrink-0">
+              {indexStr}
+            </span>
 
-          <span className="font-display font-semibold text-lg sm:text-xl tracking-tight uppercase text-[var(--fg)] group-hover:text-white shrink-0">
-            {project.title}
-          </span>
+            <span className="font-display font-semibold text-lg sm:text-xl tracking-tight uppercase text-[var(--fg)] group-hover:text-white shrink-0">
+              {project.title}
+            </span>
+          </div>
 
-          <span className="text-xs sm:text-sm text-[var(--muted)] truncate font-normal leading-normal max-w-xl">
+          <span className="text-xs sm:text-sm text-[var(--muted)] font-normal leading-relaxed break-words whitespace-normal">
             {project.problem}
           </span>
         </div>
