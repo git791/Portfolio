@@ -136,8 +136,8 @@ export default function Hero() {
         ref={pinWrapperRef}
         className="relative w-full h-full overflow-hidden flex flex-col justify-between"
       >
-        {/* TOP 38% VIEWPORT: TEXT BLOCK (NO CANVAS OVERLAP) */}
-        <div className="h-[38vh] w-full px-6 lg:px-12 pt-6 lg:pt-8 flex flex-col justify-between border-b border-[var(--rule)] z-10 surface-night">
+        {/* TOP VIEWPORT: TEXT BLOCK (NO CANVAS OVERLAP - RIGID BOUNDARY) */}
+        <div className="h-[38vh] min-h-[220px] max-h-[360px] w-full px-6 lg:px-12 py-4 lg:py-6 flex flex-col justify-between border-b border-[var(--rule)] z-10 bg-[#0B0D0C] shrink-0">
           {/* Eyebrow & Status row */}
           <div className="flex items-center justify-between font-mono text-xs uppercase tracking-wider">
             <span className="text-[var(--chalk)]">
@@ -154,17 +154,17 @@ export default function Hero() {
           </div>
 
           {/* Heading block */}
-          <div className="my-auto">
-            <div className="font-mono text-xs uppercase tracking-[0.14em] text-[var(--muted)] mb-1">
+          <div className="my-auto py-1">
+            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] mb-1">
               {personalInfo.name}
             </div>
-            <h1 className="text-display-xl text-[var(--chalk)] max-w-5xl leading-[0.92]">
+            <h1 className="text-[clamp(2.4rem,4.8vw,4.5rem)] font-bold text-[var(--chalk)] leading-[0.92] tracking-[0.005em] uppercase">
               MESSY HUMAN INPUT,<br />WORKING AGENTS.
             </h1>
           </div>
 
           {/* Subline dynamically computed from data */}
-          <div className="pb-3 text-caption text-[var(--muted)] font-serif">
+          <div className="pt-1 text-caption text-[var(--muted)] font-serif">
             Building since 2019.{" "}
             <span className="text-[var(--chalk)] font-medium">
               {stats.repos2026} repos started in 2026
@@ -185,8 +185,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* BOTTOM 62% VIEWPORT: 3D MOSAIC STAND OR 2D FALLBACK */}
-        <div className="h-[62vh] w-full relative surface-night">
+        {/* BOTTOM VIEWPORT: 3D MOSAIC STAND OR 2D FALLBACK (SEPARATE CONTAINER) */}
+        <div className="flex-1 w-full min-h-0 relative bg-[#0B0D0C] overflow-hidden">
           {useFallback ? (
             <Mosaic2DFallback
               beatProgress={scrollProgress}

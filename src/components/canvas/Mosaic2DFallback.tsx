@@ -97,18 +97,6 @@ export default function Mosaic2DFallback({
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 select-none">
-      {/* Beat title badge */}
-      <div className="mb-3 font-mono text-[11px] uppercase tracking-wider text-[var(--muted)] flex items-center gap-3">
-        <span>2D MOSAIC STAND</span>
-        <span>·</span>
-        <span className="text-[var(--chalk)]">
-          {currentBeat === 1 && "BEAT A · AYAAN"}
-          {currentBeat === 2 && "BEAT B · CREST (AY)"}
-          {currentBeat === 3 && "BEAT C · COMMIT TERRACE"}
-          {currentBeat === 0 && "STAND IDLE"}
-        </span>
-      </div>
-
       {/* Grid container */}
       <div
         style={{
