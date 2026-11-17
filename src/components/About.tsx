@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import Decode from "@/components/ui/Decode";
 import FlapNumber from "@/components/ui/FlapNumber";
 import commitsJson from "@/data/commits.json";
 import { hackathons, siteStats } from "@/lib/data";
 
 export default function About() {
+  const [imgError, setImgError] = useState(false);
   const reposStarted2026 =
     commitsJson.totals.reposStartedByYear["2026" as keyof typeof commitsJson.totals.reposStartedByYear] || 39;
   const hackathonsCount = hackathons.length;
@@ -28,11 +31,35 @@ export default function About() {
 
         {/* Narrative & Stats Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Narrative (7 cols) */}
+          {/* Left Narrative + Framed Portrait (7 cols) */}
           <div className="lg:col-span-7 flex flex-col gap-6">
-            <p className="text-base sm:text-lg text-[var(--fg)] leading-relaxed font-normal">
-              I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm actively looking for an engineering internship across backend systems, cloud infrastructure, full-stack, or AI apps—ready to dive in, build, and ship real code.
-            </p>
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              {/* Framed Portrait */}
+              <div className="relative w-36 h-44 sm:w-40 sm:h-48 shrink-0 border border-[var(--rule)] bg-[#141512]/60 overflow-hidden flex items-center justify-center group">
+                {!imgError ? (
+                  <Image
+                    src="/images/profile.jpeg"
+                    alt="Mohammed Ayaan portrait"
+                    width={160}
+                    height={192}
+                    className="w-full h-full object-cover filter grayscale contrast-105 group-hover:grayscale-0 transition-all duration-300"
+                    onError={() => setImgError(true)}
+                    priority
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center font-display font-bold text-3xl tracking-widest text-[var(--muted)]">
+                    AY
+                  </div>
+                )}
+              </div>
+
+              {/* Text */}
+              <div className="flex-1 flex flex-col gap-6">
+                <p className="text-base sm:text-lg text-[var(--fg)] leading-relaxed font-normal">
+                  I'm a third-year CSE student at Alliance University in Bengaluru, and I've been building since 2019: first p5.js games, now AI agents for problems that rarely get software, like a shopkeeper dictating in Hindi, a rural clinic without a specialist, or a railway announcement in three languages. Most of it ships under hackathon deadlines on AWS, Google Cloud, and Cloudflare; I usually lead the team and write most of the code, and I work on backend at STARDY AI. I also run the communities I wanted: the AWS Student Builder Group, Hack Club, and the IEEE student branch. I'm actively looking for an engineering internship across backend systems, cloud infrastructure, full-stack, or AI apps—ready to dive in, build, and ship real code.
+                </p>
+              </div>
+            </div>
 
             {/* Compact Education Line */}
             <div className="pt-6 border-t border-[var(--rule)] flex flex-col gap-1 font-mono text-xs uppercase tracking-wider">
