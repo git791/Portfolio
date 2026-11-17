@@ -43,7 +43,7 @@ function SkillRow({ item }: { item: SkillItem }) {
           )}
         </div>
 
-        <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-wider shrink-0">
+        <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-wider shrink-0">
           {item.repos !== undefined ? (
             <span className="px-2 py-0.5 border border-[var(--rule)] text-[var(--fg)] bg-[#141512]/60">
               x {item.repos}
@@ -51,8 +51,8 @@ function SkillRow({ item }: { item: SkillItem }) {
           ) : null}
 
           {hasProjects && (
-            <span className="text-[var(--muted)] text-[10px]">
-              {expanded ? "▲ HIDE" : `▼ ${item.projects!.length} BUILDS`}
+            <span className="text-[var(--muted)] text-[10px] select-none" aria-hidden="true">
+              {expanded ? "▲" : "▼"}
             </span>
           )}
         </div>
