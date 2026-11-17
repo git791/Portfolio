@@ -89,7 +89,7 @@ export const peakLabels = [
   },
   {
     id: "2026-footy",
-    text: "JUN 2026 · Footy Mind",
+    text: "JUN 2026 · FOOTY MIND",
     year: 2026,
     weekIndex: 25,
     xPercent: 49,
@@ -97,7 +97,7 @@ export const peakLabels = [
   },
   {
     id: "2026-access",
-    text: "JUL 2026 · Access-Agent",
+    text: "JUL 2026 · ACCESS-AGENT",
     year: 2026,
     weekIndex: 28,
     xPercent: 55,
@@ -105,7 +105,7 @@ export const peakLabels = [
   },
   {
     id: "2026-ordivanta",
-    text: "OCT 2026 · Ordivanta",
+    text: "OCT 2026 · ORDIVANTA",
     year: 2026,
     weekIndex: 42,
     xPercent: 80,

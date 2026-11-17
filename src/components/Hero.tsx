@@ -181,52 +181,25 @@ export default function Hero() {
       id="hero"
       ref={containerRef}
       className={`relative w-full bg-[var(--bg)] text-[var(--fg)] ${
-        useFallback ? "min-h-screen py-16" : "h-screen overflow-hidden"
+        useFallback ? "min-h-screen py-10 flex flex-col justify-between" : "h-screen overflow-hidden flex flex-col"
       }`}
     >
-      {/* 3D Canvas Ridge or Static Fallback */}
-      {!useFallback ? (
-        <>
-          <CommitRidge heightFactorRef={heightFactorRef} containerRef={containerRef} />
-
-          {/* Peak labels overlay (desktop only) */}
-          <div
-            ref={peakLabelsRef}
-            className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-200 select-none hidden lg:block"
-            aria-hidden="true"
-          >
-            {peakLabels.map((lbl) => (
-              <div
-                key={lbl.id}
-                className="absolute font-mono text-[11px] tracking-wider uppercase text-[var(--muted)] border-b border-[var(--rule)] pb-0.5"
-                style={{
-                  left: `${lbl.xPercent}%`,
-                  top: `${lbl.yPercent}%`,
-                }}
-              >
-                {lbl.text}
-              </div>
-            ))}
-          </div>
-        </>
-      ) : null}
-
-      {/* Hero Copy Overlay */}
+      {/* Top 40% Viewport: All Text Content (No Canvas Overlap) */}
       <div
         ref={heroSectionRef}
-        className="relative z-20 container-main flex flex-col justify-between h-full pt-10 pb-8 pointer-events-none"
+        className="relative z-20 container-main w-full h-[40vh] min-h-[260px] flex flex-col justify-between pt-6 sm:pt-8 pb-3 shrink-0"
       >
         {/* Top Header Block */}
         <div>
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-2 sm:mb-3">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">
+              <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[var(--muted)]">
                 BENGALURU · B.TECH CSE 2028
               </span>
               {/* Optional Devanagari Ticker */}
               <span
                 lang="hi"
-                className="font-mono text-xs tracking-wider text-[var(--fg)] border-l border-[var(--rule)] pl-3 transition-none"
+                className="font-mono text-[10px] sm:text-xs tracking-wider text-[var(--fg)] border-l border-[var(--rule)] pl-3 transition-none"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 {tickerIndex === 0 ? "बोल के बेचो" : "कान खोल"}
@@ -234,36 +207,62 @@ export default function Hero() {
             </div>
 
             {/* Availability */}
-            <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--muted)] border border-[var(--rule)] px-2.5 py-1 rounded-[var(--radius)]">
+            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[var(--muted)] border border-[var(--rule)] px-2.5 py-0.5 rounded-[var(--radius)]">
               OPEN TO INTERNSHIPS
             </span>
           </div>
 
-          <p className="font-display font-semibold text-sm tracking-wider text-[var(--muted)] uppercase mb-2">
+          <p className="font-display font-semibold text-xs sm:text-sm tracking-wider text-[var(--muted)] uppercase mb-1 sm:mb-2">
             MOHAMMED AYAAN ADIL AHMED
           </p>
 
-          <h1 className="font-display font-bold text-5xl sm:text-7xl lg:text-8xl tracking-tight uppercase leading-[0.9] text-[var(--fg)] max-w-4xl">
+          <h1 className="font-display font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight uppercase leading-[0.9] text-[var(--fg)] max-w-4xl">
             MESSY HUMAN INPUT,
             <br />
             WORKING AGENTS.
           </h1>
         </div>
 
-        {/* Fallback Static SVG Ridge in document flow for mobile / reduced motion */}
-        {useFallback && (
-          <div className="my-8 pointer-events-auto">
-            <StaticSvgRidge rows={rows} />
-          </div>
-        )}
-
-        {/* Bottom Subline */}
-        <div className="pt-4 border-t border-[var(--rule)] max-w-3xl pointer-events-auto">
-          <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed">
+        {/* Bottom Subline: Strictly in the top 40% container */}
+        <div className="pt-2 sm:pt-3 border-t border-[var(--rule)] max-w-3xl pointer-events-auto">
+          <p className="text-xs sm:text-sm md:text-base text-[var(--muted)] leading-relaxed">
             Building since 2019. {reposStarted2026} repos started in 2026 · {hackathonsCount} hackathons since 2025 ·{" "}
             {eventsRun} events run, largest {largestAudience}.
           </p>
         </div>
+      </div>
+
+      {/* Bottom 60% Viewport: 3D Canvas Ridge or Static Fallback */}
+      <div className="relative w-full h-[60vh] shrink-0 overflow-hidden">
+        {!useFallback ? (
+          <>
+            <CommitRidge heightFactorRef={heightFactorRef} containerRef={containerRef} />
+
+            {/* Peak labels overlay (tooltips over canvas only, desktop) */}
+            <div
+              ref={peakLabelsRef}
+              className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-200 select-none hidden lg:block"
+              aria-hidden="true"
+            >
+              {peakLabels.map((lbl) => (
+                <div
+                  key={lbl.id}
+                  className="absolute font-mono text-[10px] sm:text-[11px] tracking-wider uppercase text-[var(--muted)] border-b border-[var(--rule)] pb-0.5 bg-[var(--bg)]/80 px-1 backdrop-blur-[2px]"
+                  style={{
+                    left: `${lbl.xPercent}%`,
+                    top: `${lbl.yPercent}%`,
+                  }}
+                >
+                  {lbl.text}
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center pointer-events-auto px-4">
+            <StaticSvgRidge rows={rows} />
+          </div>
+        )}
       </div>
 
       {/* 35 Project Tiles Grid */}
