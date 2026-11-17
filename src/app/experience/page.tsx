@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Experience from "@/components/Experience";
-import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Experience | Mohammed Ayaan",
@@ -9,9 +7,8 @@ export const metadata: Metadata = {
 
 export default function ExperiencePage() {
   return (
-    <main>
-      <Experience />
-      <Contact />
+    <main className="p-8">
+      <h1 className="font-mono text-2xl uppercase tracking-wider">Experience</h1>
     </main>
   );
 }

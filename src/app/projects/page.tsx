@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Projects from "@/components/Projects";
-import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Projects | Mohammed Ayaan",
@@ -9,9 +7,8 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main>
-      <Projects />
-      <Contact />
+    <main className="p-8">
+      <h1 className="font-mono text-2xl uppercase tracking-wider">Projects</h1>
     </main>
   );
 }

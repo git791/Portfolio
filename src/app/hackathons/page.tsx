@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Hackathons from "@/components/Hackathons";
-import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Hackathons | Mohammed Ayaan",
@@ -9,9 +7,8 @@ export const metadata: Metadata = {
 
 export default function HackathonsPage() {
   return (
-    <main>
-      <Hackathons />
-      <Contact />
+    <main className="p-8">
+      <h1 className="font-mono text-2xl uppercase tracking-wider">Hackathons</h1>
     </main>
   );
 }
