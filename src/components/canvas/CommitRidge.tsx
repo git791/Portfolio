@@ -78,18 +78,33 @@ function YearRow({
     }
   });
 
-  const lineColor = isCurrentYear ? "#ECE9DF" : isLineMuted ? "#252722" : "#555750";
+  // Determine visible fill and stroke colors
+  const { fillColor, strokeColor } = useMemo(() => {
+    if (data.year === 2026) {
+      return { fillColor: "#282A24", strokeColor: "#ECE9DF" }; // 2026 row in paper
+    }
+    if (data.totalCommits === 0) {
+      return { fillColor: "#121310", strokeColor: "#3A3C36" }; // flat years muted rule
+    }
+    // Muted tones for active historical years
+    const fills = ["#151613", "#171815", "#191A16", "#141512", "#141512", "#1D1F1A", "#22241E"];
+    const strokes = ["#686A60", "#72746A", "#7C7E74", "#3A3C36", "#3A3C36", "#8B8A80", "#A2A197"];
+    return {
+      fillColor: fills[data.yearIndex] || "#1C1E18",
+      strokeColor: strokes[data.yearIndex] || "#8B8A80",
+    };
+  }, [data]);
 
   return (
     <group ref={groupRef}>
-      {/* Filled Occlusion Strip (Ink background color to hide rows behind) */}
+      {/* Filled Occlusion Strip (visible muted contrast against background) */}
       <mesh geometry={stripGeo}>
-        <meshBasicMaterial color="#0D0E0B" side={THREE.DoubleSide} depthWrite={true} />
+        <meshBasicMaterial color={fillColor} side={THREE.DoubleSide} depthWrite={true} />
       </mesh>
       {/* Ridge Line */}
       {/* @ts-expect-error R3F primitive line */}
       <line geometry={lineGeo}>
-        <lineBasicMaterial color={lineColor} linewidth={1} />
+        <lineBasicMaterial color={strokeColor} linewidth={1} />
       </line>
     </group>
   );

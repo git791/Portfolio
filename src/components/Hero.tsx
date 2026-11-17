@@ -63,13 +63,18 @@ function StaticSvgRidge({ rows }: { rows: ReturnType<typeof getYearlyCommitRows>
           const strokeColor = isCurrentYear
             ? "#ECE9DF"
             : row.totalCommits === 0
-            ? "#252722"
-            : "#555750";
+            ? "#3A3C36"
+            : "#8B8A80";
+          const fillColor = isCurrentYear
+            ? "#282A24"
+            : row.totalCommits === 0
+            ? "#121310"
+            : "#1B1D17";
 
           return (
             <g key={row.year}>
-              {/* Occlusion fill */}
-              <polygon points={polygonPts} fill="#0D0E0B" />
+              {/* Visible Occlusion fill */}
+              <polygon points={polygonPts} fill={fillColor} />
               {/* Ridge line */}
               <polyline
                 points={polylinePts}
