@@ -166,7 +166,7 @@ function StandMesh({
   }, []);
 
   // Card geometry: thin quad
-  const cardGeo = useMemo(() => new THREE.PlaneGeometry(0.18, 0.13), []);
+  const cardGeo = useMemo(() => new THREE.PlaneGeometry(0.18, 0.11), []);
 
   // Custom shader material (1 draw call)
   const shaderMat = useMemo(() => {
@@ -196,13 +196,13 @@ function StandMesh({
 
     const radiusBase = 16.5;
     const arcSpan = (116 * Math.PI) / 180; // +/-58 degrees
-    const rowRake = 0.16; // height step
-    const rowDepth = 0.12; // radius step
+    const rowRake = 0.12; // height step (cleanly contained in viewport)
+    const rowDepth = 0.10; // radius step
 
     let idx = 0;
     for (let r = 0; r < ROWS; r++) {
       const radius = radiusBase + r * rowDepth;
-      const y = r * rowRake - 2.8;
+      const y = r * rowRake - 2.3;
 
       for (let c = 0; c < COLS; c++) {
         const theta = -arcSpan / 2 + (c / (COLS - 1)) * arcSpan;
@@ -256,10 +256,10 @@ function StandMesh({
 
     // Camera slow parallax with pointer (wide frustum ensuring full name & crest visibility)
     const targetCamX = pointerPos.x * 0.25;
-    const targetCamY = 0.8 - pointerPos.y * 0.12;
+    const targetCamY = 0.15 - pointerPos.y * 0.10;
     camera.position.x += (targetCamX - camera.position.x) * 0.05;
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
-    camera.lookAt(0, 0.2, -6.0);
+    camera.lookAt(0, 0.15, -6.0);
 
     // Commit terrace hover check during Beat C only when pointer is actively over canvas
     if (
@@ -362,7 +362,7 @@ export default function MosaicStand({
       <Canvas
         dpr={[1, 1.5]}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-        camera={{ position: [0, 0.8, 6.2], fov: 46, near: 0.1, far: 50 }}
+        camera={{ position: [0, 0.15, 7.2], fov: 44, near: 0.1, far: 50 }}
         aria-hidden="true"
         className="w-full h-full"
       >

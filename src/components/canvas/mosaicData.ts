@@ -114,11 +114,13 @@ export async function buildMosaicDataTexture(): Promise<{
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, COLS, ROWS);
       ctx.fillStyle = "#FFFFFF";
-      // Enlarge to bold stadium-scale Kop card mosaic: 16px font spans ~50 columns and 16 rows
-      ctx.font = "900 16px sans-serif";
+      // Render "MOHAMMED AYAAN" across two centered stadium lines
+      ctx.font = "900 13px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("AYAAN", COLS / 2, ROWS / 2);
+      ctx.fillText("MOHAMMED", COLS / 2, 13);
+      ctx.font = "900 15px sans-serif";
+      ctx.fillText("AYAAN", COLS / 2, 27);
       const imgData = ctx.getImageData(0, 0, COLS, ROWS);
       for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
