@@ -103,42 +103,71 @@ export async function buildMosaicDataTexture(): Promise<{
     idleState[i] = random() < 0.06 ? 1 : 0;
   }
 
-  // 2. Beat 1: Name "AYAAN" rendered via offscreen canvas
+  // 2. Beat 1: Name "AYAAN" rendered as clean, crisp stadium card letterforms (unclogged, high contrast)
   const nameState = new Uint8Array(size);
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = COLS;
-    canvas.height = ROWS;
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, COLS, ROWS);
-      ctx.fillStyle = "#FFFFFF";
-      // Counter the 2.4x 3D terrace arc expansion so letters are bold, condensed, and naturally proportioned
-      ctx.save();
-      ctx.scale(0.44, 1.0);
-      const scaledCenter = (COLS / 2) / 0.44;
-      ctx.font = "900 13px sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("MOHAMMED", scaledCenter, 14);
-      ctx.font = "900 15px sans-serif";
-      ctx.fillText("AYAAN", scaledCenter, 27);
-      ctx.restore();
-      const imgData = ctx.getImageData(0, 0, COLS, ROWS);
-      for (let y = 0; y < ROWS; y++) {
-        for (let x = 0; x < COLS; x++) {
-          const idx = (y * COLS + x) * 4;
-          const brightness = imgData.data[idx];
-          // Flip Y: HTML canvas top (y=0) maps to WebGL top row (ROWS-1)
-          const targetRow = ROWS - 1 - y;
-          const cellIdx = targetRow * COLS + x;
-          nameState[cellIdx] = brightness > 100 ? 1 : 0;
+  {
+    const W = 7;
+    const H = 16;
+    const GAP = 4;
+    const letters = ["A", "Y", "A", "A", "N"];
+    const totalWordWidth = letters.length * W + (letters.length - 1) * GAP; // 51 cols
+    const startCol = Math.floor((COLS - totalWordWidth) / 2); // 34
+    const startRow = Math.floor((ROWS - H) / 2); // 12
+
+    const setCard = (col: number, row: number) => {
+      if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+        nameState[row * COLS + col] = 1;
+      }
+    };
+
+    letters.forEach((type, i) => {
+      const c0 = startCol + i * (W + GAP);
+      for (let r = 0; r < H; r++) {
+        const row = startRow + r;
+        if (type === "A") {
+          setCard(c0, row);
+          setCard(c0 + 1, row);
+          setCard(c0 + 5, row);
+          setCard(c0 + 6, row);
+          if (r >= 14) {
+            setCard(c0 + 2, row);
+            setCard(c0 + 3, row);
+            setCard(c0 + 4, row);
+          }
+          if (r >= 7 && r <= 8) {
+            setCard(c0 + 2, row);
+            setCard(c0 + 3, row);
+            setCard(c0 + 4, row);
+          }
+        } else if (type === "Y") {
+          if (r < 8) {
+            setCard(c0 + 2, row);
+            setCard(c0 + 3, row);
+            setCard(c0 + 4, row);
+          } else if (r >= 8 && r <= 10) {
+            setCard(c0 + 1, row);
+            setCard(c0 + 2, row);
+            setCard(c0 + 4, row);
+            setCard(c0 + 5, row);
+          } else {
+            setCard(c0, row);
+            setCard(c0 + 1, row);
+            setCard(c0 + 5, row);
+            setCard(c0 + 6, row);
+          }
+        } else if (type === "N") {
+          setCard(c0, row);
+          setCard(c0 + 1, row);
+          setCard(c0 + 5, row);
+          setCard(c0 + 6, row);
+          const diagCol = Math.floor(1 + ((H - 1 - r) / (H - 1)) * 4);
+          setCard(c0 + diagCol, row);
+          if (diagCol + 1 < 6) {
+            setCard(c0 + diagCol + 1, row);
+          }
         }
       }
-    }
-  } catch {
-    // fallback if canvas fails
+    });
   }
 
   // 3. Beat 2: Crest from crestSrc or fallback "AY"
