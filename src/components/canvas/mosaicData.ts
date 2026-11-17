@@ -114,11 +114,11 @@ export async function buildMosaicDataTexture(): Promise<{
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, COLS, ROWS);
       ctx.fillStyle = "#FFFFFF";
-      // Sized to fit comfortably within the 120x40 curved terrace frame without clipping
-      ctx.font = "900 15px sans-serif";
+      // Proportional font: ~30-34 columns wide so entire word "AYAAN" fits inside visible camera view
+      ctx.font = "bold 11px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("A Y A A N", COLS / 2, ROWS / 2);
+      ctx.fillText("AYAAN", COLS / 2, ROWS / 2);
       const imgData = ctx.getImageData(0, 0, COLS, ROWS);
       for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
@@ -156,8 +156,8 @@ export async function buildMosaicDataTexture(): Promise<{
       if (ctx) {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
-        // Draw crest centered in 26 x 26 box so it fits cleanly on terrace
-        const sizeBox = 26;
+        // Draw crest centered in 24 x 24 box so it fits cleanly within the camera frustum
+        const sizeBox = 24;
         ctx.drawImage(img, (COLS - sizeBox) / 2, (ROWS - sizeBox) / 2, sizeBox, sizeBox);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
@@ -198,10 +198,10 @@ export async function buildMosaicDataTexture(): Promise<{
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "900 18px sans-serif";
+        ctx.font = "bold 14px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("A Y", COLS / 2, ROWS / 2);
+        ctx.fillText("AY", COLS / 2, ROWS / 2);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
           for (let x = 0; x < COLS; x++) {
@@ -212,7 +212,7 @@ export async function buildMosaicDataTexture(): Promise<{
             if (brightness > 110) {
               // Red center with chalk edges
               const distFromCenter = Math.abs(x - COLS / 2);
-              crestState[cellIdx] = distFromCenter < 10 ? 2 : 1;
+              crestState[cellIdx] = distFromCenter < 8 ? 2 : 1;
             } else {
               crestState[cellIdx] = 0;
             }
