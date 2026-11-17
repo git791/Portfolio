@@ -143,8 +143,8 @@ export async function buildMosaicDataTexture(): Promise<{
       await new Promise<void>((resolve, reject) => {
         img.onload = () => resolve();
         img.onerror = () => reject();
-        // 400ms timeout
-        setTimeout(reject, 400);
+        // 3000ms timeout to ensure image decodes cleanly
+        setTimeout(reject, 3000);
       });
 
       const canvas = document.createElement("canvas");
@@ -155,7 +155,7 @@ export async function buildMosaicDataTexture(): Promise<{
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
         // Draw crest centered in 32 x 32 box
-        const sizeBox = 30;
+        const sizeBox = 32;
         ctx.drawImage(img, (COLS - sizeBox) / 2, (ROWS - sizeBox) / 2, sizeBox, sizeBox);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
@@ -166,8 +166,8 @@ export async function buildMosaicDataTexture(): Promise<{
             const b = imgData.data[idx + 2];
             const a = imgData.data[idx + 3];
             const cellIdx = y * COLS + x;
-            if (a > 60) {
-              if (r > 150 && g < 100 && b < 100) {
+            if (a > 30) {
+              if (r > 120 && (r > g * 1.15 || r > b * 1.15)) {
                 crestState[cellIdx] = 2; // red
               } else {
                 crestState[cellIdx] = 1; // chalk
