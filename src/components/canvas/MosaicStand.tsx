@@ -254,12 +254,12 @@ function StandMesh({
       shaderMat.uniforms.uStateTexture.value = dataTexture;
     }
 
-    // Camera slow parallax with pointer (max +/- 1.5 degrees, framed in lower 62% of viewport)
-    const targetCamX = pointerPos.x * 0.3;
-    const targetCamY = 1.2 - pointerPos.y * 0.18;
+    // Camera slow parallax with pointer (framed right in the center of canvas)
+    const targetCamX = pointerPos.x * 0.25;
+    const targetCamY = 1.0 - pointerPos.y * 0.12;
     camera.position.x += (targetCamX - camera.position.x) * 0.05;
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
-    camera.lookAt(0, 0.0, -6.0);
+    camera.lookAt(0, 0.4, -6.0);
 
     // Commit terrace hover check during Beat C only when pointer is actively over canvas
     if (
@@ -362,7 +362,7 @@ export default function MosaicStand({
       <Canvas
         dpr={[1, 1.5]}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-        camera={{ position: [0, 1.2, 5.0], fov: 40, near: 0.1, far: 50 }}
+        camera={{ position: [0, 1.0, 5.2], fov: 40, near: 0.1, far: 50 }}
         aria-hidden="true"
         className="w-full h-full"
       >

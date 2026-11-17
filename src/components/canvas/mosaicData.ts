@@ -114,18 +114,20 @@ export async function buildMosaicDataTexture(): Promise<{
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, COLS, ROWS);
       ctx.fillStyle = "#FFFFFF";
-      ctx.font = "bold 22px sans-serif";
+      // Sized to fit comfortably within the 120x40 curved terrace frame without clipping
+      ctx.font = "900 15px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("AYAAN", COLS / 2, ROWS / 2 + 1);
+      ctx.fillText("A Y A A N", COLS / 2, ROWS / 2);
       const imgData = ctx.getImageData(0, 0, COLS, ROWS);
       for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
           const idx = (y * COLS + x) * 4;
           const brightness = imgData.data[idx];
-          // Flip y for texture coordinates if needed
-          const cellIdx = y * COLS + x;
-          nameState[cellIdx] = brightness > 120 ? 1 : 0;
+          // Flip Y: HTML canvas top (y=0) maps to WebGL top row (ROWS-1)
+          const targetRow = ROWS - 1 - y;
+          const cellIdx = targetRow * COLS + x;
+          nameState[cellIdx] = brightness > 110 ? 1 : 0;
         }
       }
     }
@@ -154,8 +156,8 @@ export async function buildMosaicDataTexture(): Promise<{
       if (ctx) {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
-        // Draw crest centered in 32 x 32 box
-        const sizeBox = 32;
+        // Draw crest centered in 26 x 26 box so it fits cleanly on terrace
+        const sizeBox = 26;
         ctx.drawImage(img, (COLS - sizeBox) / 2, (ROWS - sizeBox) / 2, sizeBox, sizeBox);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
@@ -165,7 +167,9 @@ export async function buildMosaicDataTexture(): Promise<{
             const g = imgData.data[idx + 1];
             const b = imgData.data[idx + 2];
             const a = imgData.data[idx + 3];
-            const cellIdx = y * COLS + x;
+            // Flip Y: HTML canvas top (y=0) maps to WebGL top row (ROWS-1)
+            const targetRow = ROWS - 1 - y;
+            const cellIdx = targetRow * COLS + x;
             if (a > 30) {
               if (r > 120 && (r > g * 1.15 || r > b * 1.15)) {
                 crestState[cellIdx] = 2; // red
@@ -194,20 +198,21 @@ export async function buildMosaicDataTexture(): Promise<{
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 26px sans-serif";
+        ctx.font = "900 18px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("AY", COLS / 2, ROWS / 2 + 1);
+        ctx.fillText("A Y", COLS / 2, ROWS / 2);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
           for (let x = 0; x < COLS; x++) {
             const idx = (y * COLS + x) * 4;
             const brightness = imgData.data[idx];
-            const cellIdx = y * COLS + x;
-            if (brightness > 128) {
+            const targetRow = ROWS - 1 - y;
+            const cellIdx = targetRow * COLS + x;
+            if (brightness > 110) {
               // Red center with chalk edges
               const distFromCenter = Math.abs(x - COLS / 2);
-              crestState[cellIdx] = distFromCenter < 12 ? 2 : 1;
+              crestState[cellIdx] = distFromCenter < 10 ? 2 : 1;
             } else {
               crestState[cellIdx] = 0;
             }
