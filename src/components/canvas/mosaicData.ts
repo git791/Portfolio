@@ -114,8 +114,8 @@ export async function buildMosaicDataTexture(): Promise<{
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, COLS, ROWS);
       ctx.fillStyle = "#FFFFFF";
-      // Proportional font: ~30-34 columns wide so entire word "AYAAN" fits inside visible camera view
-      ctx.font = "bold 11px sans-serif";
+      // Enlarge to bold stadium-scale Kop card mosaic: 16px font spans ~50 columns and 16 rows
+      ctx.font = "900 16px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("AYAAN", COLS / 2, ROWS / 2);
@@ -127,7 +127,7 @@ export async function buildMosaicDataTexture(): Promise<{
           // Flip Y: HTML canvas top (y=0) maps to WebGL top row (ROWS-1)
           const targetRow = ROWS - 1 - y;
           const cellIdx = targetRow * COLS + x;
-          nameState[cellIdx] = brightness > 110 ? 1 : 0;
+          nameState[cellIdx] = brightness > 100 ? 1 : 0;
         }
       }
     }
@@ -156,8 +156,8 @@ export async function buildMosaicDataTexture(): Promise<{
       if (ctx) {
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
-        // Draw crest centered in 24 x 24 box so it fits cleanly within the camera frustum
-        const sizeBox = 24;
+        // Draw crest in 28 x 28 box for prominent stadium mosaic presence
+        const sizeBox = 28;
         ctx.drawImage(img, (COLS - sizeBox) / 2, (ROWS - sizeBox) / 2, sizeBox, sizeBox);
         const imgData = ctx.getImageData(0, 0, COLS, ROWS);
         for (let y = 0; y < ROWS; y++) {
@@ -198,7 +198,7 @@ export async function buildMosaicDataTexture(): Promise<{
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, COLS, ROWS);
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 14px sans-serif";
+        ctx.font = "900 18px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("AY", COLS / 2, ROWS / 2);
@@ -209,10 +209,10 @@ export async function buildMosaicDataTexture(): Promise<{
             const brightness = imgData.data[idx];
             const targetRow = ROWS - 1 - y;
             const cellIdx = targetRow * COLS + x;
-            if (brightness > 110) {
+            if (brightness > 100) {
               // Red center with chalk edges
               const distFromCenter = Math.abs(x - COLS / 2);
-              crestState[cellIdx] = distFromCenter < 8 ? 2 : 1;
+              crestState[cellIdx] = distFromCenter < 10 ? 2 : 1;
             } else {
               crestState[cellIdx] = 0;
             }
