@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Certifications from "@/components/Certifications";
-import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Certifications | Mohammed Ayaan",
@@ -9,9 +7,9 @@ export const metadata: Metadata = {
 
 export default function CertificationsPage() {
   return (
-    <main>
-      <Certifications />
-      <Contact />
+    <main className="p-8 font-mono">
+      <h1 className="text-3xl font-bold uppercase mb-4">Collected Editions</h1>
+      <p className="text-sm">Certifications ledger stub.</p>
     </main>
   );
 }

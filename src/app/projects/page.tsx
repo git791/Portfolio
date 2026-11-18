@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Projects from "@/components/Projects";
-import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Projects | Mohammed Ayaan",
@@ -9,9 +7,9 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main>
-      <Projects />
-      <Contact />
+    <main className="p-8 font-mono">
+      <h1 className="text-3xl font-bold uppercase mb-4">The Collection</h1>
+      <p className="text-sm">Projects ledger stub.</p>
     </main>
   );
 }

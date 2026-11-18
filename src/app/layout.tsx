@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Barlow_Condensed, IBM_Plex_Sans, IBM_Plex_Sans_Devanagari, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
-import Cursor from "@/components/ui/Cursor";
-import Rail from "@/components/Rail";
-import TopBar from "@/components/TopBar";
 
 const display = Barlow_Condensed({
   subsets: ["latin"],
@@ -86,13 +83,10 @@ export default function RootLayout({
         </a>
 
         <SmoothScrollProvider>
-          <Cursor />
-          <Rail />
-          <TopBar />
           <div
             id="main-content"
             tabIndex={-1}
-            className="pt-14 lg:pt-0 lg:pl-[var(--rail-w)] min-h-screen focus:outline-none"
+            className="min-h-screen focus:outline-none"
           >
             {children}
           </div>

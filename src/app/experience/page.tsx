@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Experience from "@/components/Experience";
-import Contact from "@/components/Contact";
 
 export const metadata: Metadata = {
   title: "Experience | Mohammed Ayaan",
@@ -9,9 +7,9 @@ export const metadata: Metadata = {
 
 export default function ExperiencePage() {
   return (
-    <main>
-      <Experience />
-      <Contact />
+    <main className="p-8 font-mono">
+      <h1 className="text-3xl font-bold uppercase mb-4">Origin Story</h1>
+      <p className="text-sm">Experience ledger stub.</p>
     </main>
   );
 }
