@@ -84,11 +84,16 @@ export default function TopBar() {
             data-cursor="COVER"
           >
             {markSrc && (
-              <div className="relative h-7 w-12 overflow-hidden border border-[var(--ink)] shadow-[1px_1px_0px_var(--ink)] bg-[var(--paper)]">
+              <div
+                style={{ width: "48px", height: "28px" }}
+                className="relative h-7 w-12 overflow-hidden border border-[var(--ink)] shadow-[1px_1px_0px_var(--ink)] bg-[var(--paper)] shrink-0"
+              >
                 <Image
                   src={markSrc}
                   alt="Franchise Mark"
-                  fill
+                  width={48}
+                  height={28}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   className="object-cover"
                 />
               </div>
