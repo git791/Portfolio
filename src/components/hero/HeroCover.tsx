@@ -244,6 +244,41 @@ export default function HeroCover({
               {progress >= 1 ? "✓ PLATES IN REGISTER" : "SCROLL TO REGISTER PLATES"}
             </div>
           </div>
+
+          {/* Accessible Visually Hidden Data Table for Screen Readers */}
+          <table className="sr-only">
+            <caption>Cover telemetry, background, and career summary</caption>
+            <tbody>
+              <tr>
+                <th scope="row">Developer</th>
+                <td>Mohammed Ayaan Adil Ahmed</td>
+              </tr>
+              <tr>
+                <th scope="row">Degree & Year</th>
+                <td>B.Tech Computer Science and Engineering, Alliance University (2024–2028)</td>
+              </tr>
+              <tr>
+                <th scope="row">Location</th>
+                <td>Bengaluru, India</td>
+              </tr>
+              <tr>
+                <th scope="row">Status</th>
+                <td>Open to Software Engineering & Cloud Internships</td>
+              </tr>
+              <tr>
+                <th scope="row">Repositories Started in 2026</th>
+                <td>{stats.reposStarted2026}</td>
+              </tr>
+              <tr>
+                <th scope="row">Editorial Sprints</th>
+                <td>6 Sprints</td>
+              </tr>
+              <tr>
+                <th scope="row">Commit Weeks Since 2019</th>
+                <td>62 Weeks Recorded</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

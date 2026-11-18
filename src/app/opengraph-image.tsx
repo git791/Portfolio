@@ -1,33 +1,25 @@
 import { ImageResponse } from "next/og";
-import commitsJson from "@/data/commits.json";
-import { projects } from "@/lib/data";
+import fs from "node:fs";
+import path from "node:path";
 
 export const runtime = "nodejs";
 
-export const alt = "Mohammed Ayaan — Agentic AI & Cloud Builder, Bengaluru";
+export const alt = "Mohammed Ayaan: agentic AI & cloud builder, Bengaluru";
 export const size = {
   width: 1200,
   height: 630,
 };
 export const contentType = "image/png";
 
-export default async function Image() {
-  const years = ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
-  const totals = commitsJson.totals.byYear as Record<string, number>;
-  const maxVal = Math.max(...Object.values(totals), 1);
-
-  // Compute SVG polyline points for the yearly commit profile
-  const width = 480;
-  const height = 90;
-  const step = width / (years.length - 1);
-  const points = years
-    .map((y, i) => {
-      const val = totals[y] || 0;
-      const x = Math.round(i * step);
-      const yPos = Math.round(height - (Math.sqrt(val / maxVal) * (height - 10) + 5));
-      return `${x},${yPos}`;
-    })
-    .join(" ");
+export default async function OGImage() {
+  let profileBase64 = "";
+  try {
+    const profilePath = path.join(process.cwd(), "public/images/profile.jpeg");
+    if (fs.existsSync(profilePath)) {
+      const buffer = fs.readFileSync(profilePath);
+      profileBase64 = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+    }
+  } catch {}
 
   return new ImageResponse(
     (
@@ -38,129 +30,230 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: "#0D0E0B",
-          color: "#ECE9DF",
-          padding: "64px 72px",
+          backgroundColor: "#FBF9F2", // Paper
+          color: "#111210", // Ink
+          padding: "48px 56px",
           fontFamily: "system-ui, sans-serif",
-          border: "2px solid #3A3C36",
+          border: "8px solid #111210",
         }}
       >
-        {/* Top Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div
-            style={{
-              fontFamily: "monospace",
-              fontSize: 14,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "#8B8A80",
-            }}
-          >
-            BENGALURU · B.TECH CSE 2028
-          </div>
-          <div
-            style={{
-              fontFamily: "monospace",
-              fontSize: 13,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              padding: "4px 12px",
-              border: "1px solid #3A3C36",
-              color: "#8B8A80",
-            }}
-          >
-            SIGNAL TO STRUCTURE
-          </div>
-        </div>
-
-        {/* Center Content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div
-            style={{
-              fontSize: 22,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "#8B8A80",
-              fontWeight: 500,
-            }}
-          >
-            MOHAMMED AYAAN ADIL AHMED
-          </div>
-
-          <div
-            style={{
-              fontSize: 64,
-              fontWeight: 800,
-              lineHeight: 1.02,
-              textTransform: "uppercase",
-              letterSpacing: "-0.02em",
-              color: "#ECE9DF",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <div style={{ display: "flex" }}>MESSY HUMAN INPUT,</div>
-            <div style={{ display: "flex", color: "#FFC400" }}>WORKING AGENTS.</div>
-          </div>
-        </div>
-
-        {/* Bottom Footer with Ridgeline Motif */}
+        {/* Top Header Bar */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "flex-end",
-            borderTop: "1px solid #3A3C36",
-            paddingTop: 24,
+            alignItems: "center",
+            borderBottom: "4px solid #111210",
+            paddingBottom: "16px",
           }}
         >
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
+              backgroundColor: "#FFD600",
+              color: "#111210",
+              padding: "6px 14px",
               fontFamily: "monospace",
-              fontSize: 13,
-              textTransform: "uppercase",
-              color: "#8B8A80",
+              fontWeight: "bold",
+              fontSize: 16,
+              border: "3px solid #111210",
+              boxShadow: "3px 3px 0px #111210",
+            }}
+          >
+            ISSUE #1 · 2026
+          </div>
+
+          <div
+            style={{
+              fontFamily: "monospace",
+              fontSize: 15,
+              fontWeight: "bold",
+              color: "#4A4D46",
               letterSpacing: "0.1em",
             }}
           >
-            <div style={{ display: "flex" }}>
-              {`${projects.length} BUILDS · 21 HACKATHONS · COMMITS BACK TO 2019`}
+            BENGALURU · B.TECH CSE 2028 · OPEN TO INTERNSHIPS
+          </div>
+        </div>
+
+        {/* Center Content: Title Plates & Portrait */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "40px",
+          }}
+        >
+          {/* Left: Offset-plate Title H1 */}
+          <div style={{ display: "flex", flexDirection: "column", position: "relative" }}>
+            {/* Plates container */}
+            <div style={{ display: "flex", position: "relative", width: "700px", height: "180px" }}>
+              {/* Cyan Plate */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  left: "-4px",
+                  top: "-4px",
+                  fontSize: "64px",
+                  fontWeight: "900",
+                  color: "#00E5FF",
+                  lineHeight: 1,
+                  textTransform: "uppercase",
+                }}
+              >
+                <span>MOHAMMED AYAAN</span>
+                <span>ADIL AHMED</span>
+              </div>
+
+              {/* Magenta Plate */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  left: "4px",
+                  top: "4px",
+                  fontSize: "64px",
+                  fontWeight: "900",
+                  color: "#FF2A85",
+                  lineHeight: 1,
+                  textTransform: "uppercase",
+                }}
+              >
+                <span>MOHAMMED AYAAN</span>
+                <span>ADIL AHMED</span>
+              </div>
+
+              {/* Yellow Plate */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  left: "-2px",
+                  top: "4px",
+                  fontSize: "64px",
+                  fontWeight: "900",
+                  color: "#FFD600",
+                  lineHeight: 1,
+                  textTransform: "uppercase",
+                }}
+              >
+                <span>MOHAMMED AYAAN</span>
+                <span>ADIL AHMED</span>
+              </div>
+
+              {/* Real Ink H1 */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  left: "0px",
+                  top: "0px",
+                  fontSize: "64px",
+                  fontWeight: "900",
+                  color: "#111210",
+                  lineHeight: 1,
+                  textTransform: "uppercase",
+                }}
+              >
+                <span>MOHAMMED AYAAN</span>
+                <span>ADIL AHMED</span>
+              </div>
             </div>
-            <div style={{ display: "flex", color: "#ECE9DF" }}>mohammedayaan.me</div>
+
+            {/* Subline */}
+            <div
+              style={{
+                display: "flex",
+                marginTop: "20px",
+                fontFamily: "monospace",
+                fontSize: 18,
+                fontWeight: "bold",
+                color: "#111210",
+                backgroundColor: "#FFD600",
+                padding: "8px 16px",
+                border: "3px solid #111210",
+                boxShadow: "3px 3px 0px #111210",
+                maxWidth: "680px",
+              }}
+            >
+              AGENTIC AI · CLOUD ARCHITECTURE · DISTRIBUTED BACKEND
+            </div>
           </div>
 
-          {/* SVG Ridgeline Motif */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-            <svg width={width} height={height} style={{ overflow: "visible" }}>
-              <polyline
-                fill="none"
-                stroke="#FFC400"
-                strokeWidth="2.5"
-                points={points}
+          {/* Right: Owner's portrait small in a panel */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              backgroundColor: "#FBF9F2",
+              border: "4px solid #111210",
+              boxShadow: "6px 6px 0px #111210",
+              padding: "10px",
+            }}
+          >
+            {profileBase64 ? (
+              <img
+                src={profileBase64}
+                alt=""
+                style={{
+                  width: "180px",
+                  height: "220px",
+                  objectFit: "cover",
+                  border: "2px solid #111210",
+                }}
               />
-              <line
-                x1="0"
-                y1={height}
-                x2={width}
-                y2={height}
-                stroke="#3A3C36"
-                strokeWidth="1"
-              />
-            </svg>
+            ) : (
+              <div
+                style={{
+                  width: "180px",
+                  height: "220px",
+                  backgroundColor: "#FFD600",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 48,
+                  fontWeight: "bold",
+                }}
+              >
+                AY
+              </div>
+            )}
             <div
               style={{
                 fontFamily: "monospace",
                 fontSize: 10,
-                color: "#8B8A80",
-                letterSpacing: "0.15em",
+                fontWeight: "bold",
+                marginTop: "8px",
+                color: "#111210",
               }}
             >
-              2019 — 2026 COMMIT PROFILE
+              MOHAMMED AYAAN
             </div>
           </div>
+        </div>
+
+        {/* Footer Subline */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderTop: "3px solid #111210",
+            paddingTop: "12px",
+            fontFamily: "monospace",
+            fontSize: 14,
+            fontWeight: "bold",
+            color: "#4A4D46",
+          }}
+        >
+          <span>MESSY HUMAN INPUT, WORKING SOFTWARE OUT.</span>
+          <span>mohammedayaan.me</span>
         </div>
       </div>
     ),
