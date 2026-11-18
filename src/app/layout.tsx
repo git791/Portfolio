@@ -9,6 +9,10 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
+import TopBar from "@/components/shell/TopBar";
+import Footer from "@/components/shell/Footer";
+import Cursor from "@/components/ui/Cursor";
+import SfxTrigger from "@/components/ui/SfxTrigger";
 
 const display = Bowlby_One({
   subsets: ["latin"],
@@ -94,7 +98,7 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${letter.variable} ${deva.variable} ${sfx.variable} ${body.variable} ${mono.variable}`}
     >
-      <body>
+      <body className="flex flex-col min-h-screen">
         {/* Accessible Skip Link */}
         <a
           href="#main-content"
@@ -104,13 +108,17 @@ export default function RootLayout({
         </a>
 
         <SmoothScrollProvider>
-          <div
+          <Cursor />
+          <SfxTrigger />
+          <TopBar />
+          <main
             id="main-content"
             tabIndex={-1}
-            className="min-h-screen focus:outline-none"
+            className="flex-1 focus:outline-none"
           >
             {children}
-          </div>
+          </main>
+          <Footer />
         </SmoothScrollProvider>
       </body>
     </html>
