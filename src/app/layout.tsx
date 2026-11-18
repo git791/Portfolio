@@ -1,32 +1,53 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, IBM_Plex_Sans, IBM_Plex_Sans_Devanagari, IBM_Plex_Mono } from "next/font/google";
+import {
+  Bowlby_One,
+  Patrick_Hand,
+  Kalam,
+  Bangers,
+  Atkinson_Hyperlegible,
+  Space_Mono,
+} from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/context/SmoothScrollContext";
 
-const display = Barlow_Condensed({
+const display = Bowlby_One({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "400",
   variable: "--ff-display",
   display: "swap",
 });
 
-const body = IBM_Plex_Sans({
+const letter = Patrick_Hand({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--ff-body",
+  weight: "400",
+  variable: "--ff-letter",
   display: "swap",
 });
 
-const deva = IBM_Plex_Sans_Devanagari({
+const deva = Kalam({
   subsets: ["devanagari", "latin"],
-  weight: ["400", "500"],
+  weight: ["400", "700"],
   variable: "--ff-deva",
   display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
+const sfx = Bangers({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "400",
+  variable: "--ff-sfx",
+  display: "swap",
+});
+
+const body = Atkinson_Hyperlegible({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--ff-body",
+  display: "swap",
+});
+
+const mono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
   variable: "--ff-mono",
   display: "swap",
 });
@@ -71,13 +92,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${deva.variable} ${mono.variable}`}
+      className={`${display.variable} ${letter.variable} ${deva.variable} ${sfx.variable} ${body.variable} ${mono.variable}`}
     >
       <body>
         {/* Accessible Skip Link */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--fg)] focus:text-[var(--bg)] focus:font-mono focus:text-xs focus:uppercase focus:outline-2 focus:outline-[var(--signal)]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--ink)] focus:text-[var(--paper)] focus:font-mono focus:text-xs focus:uppercase focus:outline-2 focus:outline-[var(--yellow)]"
         >
           Skip to content
         </a>

@@ -1,24 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --bg: #0D0E0B;
-  --fg: #ECE9DF;
-  --muted: #8B8A80;
-  --rule: #3A3C36;
-  --signal: #FFC400;
-  --radius: 2px;
-  --rail-w: 72px;
+  color-scheme: light;
+  --paper: #F3EAD3;
+  --ink: #14110F;
+  --cyan: #00A3DD;
+  --magenta: #E5007D;
+  --yellow: #FFD100;
+  --ink-muted: #4A443C;
+  --rule: #CFC4A6;
+  --radius: 0px;
 }
 
 @theme {
-  --color-bg: var(--bg);
-  --color-fg: var(--fg);
-  --color-muted: var(--muted);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-cyan: var(--cyan);
+  --color-magenta: var(--magenta);
+  --color-yellow: var(--yellow);
+  --color-ink-muted: var(--ink-muted);
   --color-rule: var(--rule);
-  --color-signal: var(--signal);
-  --font-display: var(--ff-display), "Arial Narrow", sans-serif;
-  --font-body: var(--ff-body), var(--ff-deva), system-ui, sans-serif;
+
+  --font-display: var(--ff-display), sans-serif;
+  --font-letter: var(--ff-letter), cursive, sans-serif;
+  --font-deva: var(--ff-deva), cursive, sans-serif;
+  --font-sfx: var(--ff-sfx), Impact, sans-serif;
+  --font-body: var(--ff-body), system-ui, sans-serif;
   --font-mono: var(--ff-mono), ui-monospace, monospace;
 }
 
@@ -30,8 +37,8 @@
   }
 
   html {
-    background: var(--bg);
-    color: var(--fg);
+    background-color: var(--paper);
+    color: var(--ink);
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.6;
@@ -43,32 +50,19 @@
   body {
     min-height: 100vh;
     overflow-x: hidden;
-    background: var(--bg);
-    color: var(--fg);
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
   }
 
   ::selection {
-    background: var(--fg);
-    color: var(--bg);
-  }
-
-  html.has-custom-cursor,
-  html.has-custom-cursor body,
-  html.has-custom-cursor a,
-  html.has-custom-cursor button,
-  html.has-custom-cursor [role="button"] {
-    cursor: none !important;
-  }
-
-  html.has-custom-cursor input,
-  html.has-custom-cursor textarea,
-  html.has-custom-cursor select {
-    cursor: auto !important;
+    background: var(--yellow);
+    color: var(--ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 3px;
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -80,45 +74,21 @@
     }
   }
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--bg);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--rule);
-    border-radius: var(--radius);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--muted);
-  }
-
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     text-transform: uppercase;
-    letter-spacing: 0.01em;
-    line-height: 0.95;
-    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    font-weight: 400;
   }
 
   p {
     line-height: 1.6;
-    color: var(--fg);
-  }
-
-  label, .label, [data-label] {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    color: var(--ink);
   }
 
   :lang(hi), [lang="hi"], span[lang="hi"] {
-    font-family: var(--ff-deva), var(--font-body);
+    font-family: var(--font-deva), var(--font-letter), sans-serif;
   }
 
   a {
@@ -133,52 +103,16 @@
 }
 
 @layer utilities {
-  .container-main {
-    width: 100%;
-    max-width: 1400px;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
+  .shadow-comic {
+    box-shadow: 4px 4px 0px var(--ink);
   }
-
-  .section-padding {
-    padding-block: 6rem;
+  .shadow-comic-sm {
+    box-shadow: 2px 2px 0px var(--ink);
   }
-
-  .text-balance {
-    text-wrap: balance;
+  .shadow-comic-lg {
+    box-shadow: 6px 6px 0px var(--ink);
   }
-
-  .will-change-transform {
-    will-change: transform;
-  }
-}
-
-@media (max-width: 768px) {
-  .desktop-nav {
-    display: none;
-  }
-  .about-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
-  }
-  .projects-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-  .skills-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
-  }
-  .education-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-  .certs-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem !important;
-  }
-  .contact-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
+  .border-ink {
+    border-color: var(--ink);
   }
 }
