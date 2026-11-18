@@ -524,7 +524,7 @@ export const projects: Project[] = [
     description: "A browser-based recreation of the Google Chrome offline T-Rex game built with p5.js. Features a persistent score system and collision detection.",
     problem: "Browser recreation of the offline Chrome runner game built with p5.js.", // draft
     tags: ["p5.js", "JavaScript", "HTML Canvas", "Game Dev"],
-    image: "",
+    image: undefined,
     githubUrl: "https://github.com/git791/trex_runner_actual",
     tier: "playground",
     stage: "mvp",
