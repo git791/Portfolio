@@ -6,6 +6,8 @@ import { Panel } from "@/components/comic/Panel";
 import { CaptionBox } from "@/components/comic/CaptionBox";
 import { Chip } from "@/components/comic/Chip";
 import { SectionCut } from "@/components/ui/SectionCut";
+import { guestStars } from "@/data/comic";
+import { GuestStarFigure } from "@/components/comic/GuestStarFigure";
 
 export const metadata: Metadata = {
   title: "Hackathons & Sprints | Mohammed Ayaan",
@@ -20,6 +22,7 @@ export default function HackathonsPage() {
 
   // Highlights: entries with placement
   const highlights = sorted.filter((h) => Boolean(h.placement));
+  const crossoverStars = guestStars.filter((s) => s.section === "hackathons");
 
   return (
     <main className="min-h-screen py-16 bg-[var(--paper)] text-[var(--ink)]">
@@ -88,6 +91,11 @@ export default function HackathonsPage() {
                       )}
                     </div>
                   </Panel>
+                ))}
+
+                {/* Crossover Guest Stars */}
+                {crossoverStars.map((star) => (
+                  <GuestStarFigure key={star.key} star={star} className="w-full" />
                 ))}
               </div>
             </div>
