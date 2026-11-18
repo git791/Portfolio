@@ -1,39 +1,11 @@
+import HeroCover from "@/components/hero/HeroCover";
 import { SectionCut } from "@/components/ui/SectionCut";
-import { CaptionBox } from "@/components/comic/CaptionBox";
 
 export default function Home() {
   return (
     <div className="font-mono">
-      {/* Hero section */}
-      <section id="hero" className="p-8 max-w-7xl mx-auto">
-        <CaptionBox variant="label" className="mb-4">
-          ISSUE #1 · COVER
-        </CaptionBox>
-        <h1 className="text-4xl sm:text-6xl font-display uppercase tracking-tight mb-4">
-          MESSY HUMAN INPUT, WORKING AGENTS.
-        </h1>
-        <p className="font-[family-name:var(--font-body)] text-base max-w-xl text-[var(--ink-muted)] mb-6">
-          Third-year CSE student in Bengaluru building agentic AI and cloud apps.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <button
-            type="button"
-            data-cursor="OPEN ISSUE"
-            data-sfx="POW!"
-            className="px-4 py-2 border-[3px] border-[var(--ink)] bg-[var(--yellow)] font-mono font-bold text-xs uppercase shadow-comic"
-          >
-            OPEN ISSUE
-          </button>
-          <button
-            type="button"
-            data-cursor="COPY EMAIL"
-            data-sfx="COPIED!"
-            className="px-4 py-2 border-[3px] border-[var(--ink)] bg-[var(--paper)] font-mono font-bold text-xs uppercase shadow-comic"
-          >
-            COPY EMAIL
-          </button>
-        </div>
-      </section>
+      {/* Hero Cover (Pinned 250vh on desktop, registers on scroll) */}
+      <HeroCover />
 
       {/* Slanted Section Cut: About */}
       <SectionCut id="about" slope="down-right" bg="paper" className="px-8 max-w-7xl mx-auto">
