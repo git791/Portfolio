@@ -15,8 +15,8 @@ export const guestStars: GuestStar[] = [
     src: "/assets/comic/sprites/spiderman-run.png",
     section: "hackathons",
     tag: "SPIDER-MAN // 9-FRAME SPRINT",
-    caption: "Stepped pixel run cycle playing on twos at 12fps.",
-    sprite: { frames: 9, frameWidth: 55, frameHeight: 75 },
+    caption: "Stepped pixel run cycle playing on twos at 12fps. Hover or click to run.",
+    sprite: { frames: 9, frameWidth: 52, frameHeight: 72 },
   },
 ];
 

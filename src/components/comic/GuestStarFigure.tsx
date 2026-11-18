@@ -11,47 +11,32 @@ export interface GuestStarFigureProps {
 
 export function GuestStarFigure({ star, className = "" }: GuestStarFigureProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [frame, setFrame] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
 
   useEffect(() => {
     const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mql.matches);
+    if (mql.matches) {
+      setIsPlaying(false);
+    }
   }, []);
 
-  // Play once when scrolled into view
+  // Sprite Kind
+  const sprite = star.sprite || { frames: 9, frameWidth: 52, frameHeight: 72 };
+
+  // Step through frames at 12fps (83.33ms per frame = classic twos rhythm)
   useEffect(() => {
-    if (reducedMotion || star.kind !== "sprite" || hasPlayedOnce || !containerRef.current) return;
+    if (star.kind !== "sprite" || reducedMotion || (!isPlaying && !isHovered)) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasPlayedOnce) {
-            setIsPlaying(true);
-            setHasPlayedOnce(true);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const interval = setInterval(() => {
+      setFrame((prev) => (prev + 1) % sprite.frames);
+    }, 1000 / 12);
 
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, [reducedMotion, star.kind, hasPlayedOnce]);
-
-  const handleMouseEnter = () => {
-    if (reducedMotion || star.kind !== "sprite") return;
-    // Replay once on hover
-    setIsPlaying(false);
-    requestAnimationFrame(() => {
-      setIsPlaying(true);
-    });
-  };
-
-  const handleAnimationEnd = () => {
-    setIsPlaying(false);
-  };
+    return () => clearInterval(interval);
+  }, [star.kind, isPlaying, isHovered, reducedMotion, sprite.frames]);
 
   if (star.kind === "static") {
     return (
@@ -80,58 +65,57 @@ export function GuestStarFigure({ star, className = "" }: GuestStarFigureProps) 
     );
   }
 
-  // Sprite Kind
-  const sprite = star.sprite || { frames: 8, frameWidth: 64, frameHeight: 64 };
-  const durationSec = sprite.frames / 12; // 12fps on twos
-
   return (
     <figure
       ref={containerRef}
-      onMouseEnter={handleMouseEnter}
-      className={`border-2 border-[var(--ink)] bg-[var(--paper)] p-3 shadow-comic-sm select-none ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => setIsPlaying((p) => !p)}
+      data-cursor={isPlaying ? "PAUSE" : "SPRINT"}
+      title="Click or hover to toggle sprint"
+      className={`border-2 border-[var(--ink)] bg-[var(--paper)] p-4 shadow-comic-sm select-none cursor-pointer group transition-transform hover:-translate-y-0.5 ${className}`}
     >
+      <div className="flex justify-between items-center mb-2 font-mono text-[10px] font-bold text-[var(--ink-muted)]">
+        <span>SPRITE VIEWER</span>
+        <span
+          className={`px-1.5 py-0.5 border border-[var(--ink)] ${
+            isPlaying || isHovered
+              ? "bg-[var(--yellow)] text-[var(--ink)]"
+              : "bg-transparent text-[var(--ink-muted)]"
+          }`}
+        >
+          {isPlaying || isHovered ? "RUNNING · 12 FPS" : "PAUSED"}
+        </span>
+      </div>
+
+      {/* Frame Viewer with Transparent Background */}
       <div
-        className="mx-auto overflow-hidden border border-[var(--ink)] bg-[var(--cyan)]/20 flex items-center justify-center"
+        className="mx-auto overflow-hidden border-2 border-[var(--ink)] bg-[var(--yellow)]/10 flex items-center justify-center shadow-comic-sm"
         style={{
-          width: `${sprite.frameWidth}px`,
-          height: `${sprite.frameHeight}px`,
+          width: `${sprite.frameWidth + 16}px`,
+          height: `${sprite.frameHeight + 12}px`,
         }}
       >
         <div
-          onAnimationEnd={handleAnimationEnd}
           style={{
-            width: `${sprite.frameWidth * sprite.frames}px`,
+            width: `${sprite.frameWidth}px`,
             height: `${sprite.frameHeight}px`,
             backgroundImage: `url(${star.src})`,
             backgroundRepeat: "no-repeat",
-            backgroundPosition: "0 0",
-            animation:
-              isPlaying && !reducedMotion
-                ? `spriteStep ${durationSec}s steps(${sprite.frames - 1}) 1 forwards`
-                : "none",
+            backgroundPosition: `-${frame * sprite.frameWidth}px 0`,
+            imageRendering: "pixelated",
           }}
         />
       </div>
 
-      <figcaption className="mt-2 space-y-1 text-center">
-        <div className="font-mono text-[10px] uppercase font-bold text-[var(--ink-muted)]">
+      <figcaption className="mt-3 space-y-1 text-center">
+        <div className="font-mono text-xs uppercase font-bold text-[var(--ink)]">
           {star.tag}
         </div>
-        <div className="font-[family-name:var(--font-letter)] text-xs text-[var(--ink)] leading-snug">
+        <div className="font-[family-name:var(--font-letter)] text-xs text-[var(--ink-muted)] leading-snug">
           {star.caption}
         </div>
       </figcaption>
-
-      <style jsx>{`
-        @keyframes spriteStep {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-${sprite.frameWidth * (sprite.frames - 1)}px);
-          }
-        }
-      `}</style>
     </figure>
   );
 }
