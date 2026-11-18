@@ -10,14 +10,6 @@ export interface GuestStar {
 
 export const guestStars: GuestStar[] = [
   {
-    key: "spiderman",
-    kind: "static",
-    src: "/assets/comic/stars/spiderman.png",
-    section: "hackathons",
-    tag: "MARVEL // SPIDER-MAN",
-    caption: "Friendly neighborhood hackathon sprint crossover.",
-  },
-  {
     key: "spiderman-runner",
     kind: "sprite",
     src: "/assets/comic/sprites/spiderman-run.png",

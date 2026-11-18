@@ -25,9 +25,23 @@ export default function HackathonsPage() {
   const crossoverStars = guestStars.filter((s) => s.section === "hackathons");
 
   return (
-    <main className="min-h-screen py-16 bg-[var(--paper)] text-[var(--ink)]">
-      <SectionCut id="crossovers" slope="down-right" bg="paper" className="px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto space-y-12">
+    <main className="min-h-screen py-16 bg-[var(--paper)] text-[var(--ink)] overflow-hidden">
+      <SectionCut id="crossovers" slope="down-right" bg="paper" className="px-4 sm:px-6 lg:px-8 relative">
+        {/* Enlarged Spider-Verse Background Watermark (Send-to-back) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -right-12 sm:right-0 lg:right-6 top-24 w-[340px] sm:w-[520px] lg:w-[660px] opacity-20 mix-blend-multiply z-0"
+        >
+          <img
+            src="/assets/comic/spider-crossover.png"
+            alt=""
+            width={816}
+            height={1104}
+            className="w-full h-auto object-contain filter contrast-125"
+          />
+        </div>
+
+        <div className="max-w-6xl mx-auto space-y-12 relative z-10">
           {/* Header */}
           <div className="border-b-[3px] border-[var(--ink)] pb-4 flex flex-wrap items-end justify-between gap-4">
             <div>
