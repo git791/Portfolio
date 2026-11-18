@@ -7,10 +7,13 @@ import { statsRow } from "@/lib/derive";
 import { Panel } from "@/components/comic/Panel";
 import { CaptionBox } from "@/components/comic/CaptionBox";
 import { SectionCut } from "@/components/ui/SectionCut";
+import { guestStars } from "@/data/comic";
+import { GuestStarFigure } from "@/components/comic/GuestStarFigure";
 
 export default function AboutSection() {
   const [imageError, setImageError] = useState(false);
   const stats = statsRow();
+  const originStar = guestStars.find((s) => s.section === "origin");
 
   // Group experience roles into Building / Leading / Earlier
   const buildingRoles = experience.filter((e) => e.group === "Building");
@@ -65,6 +68,13 @@ export default function AboutSection() {
                 MOHAMMED AYAAN ADIL AHMED · B.TECH CSE 2028
               </div>
             </Panel>
+
+            {/* Optional Guest Star in Reserved Slot */}
+            {originStar && (
+              <div className="mt-6 w-full max-w-sm">
+                <GuestStarFigure star={originStar} />
+              </div>
+            )}
           </div>
 
           {/* Right: Exact About Text in Large Caption Box */}

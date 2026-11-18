@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSmoothScroll } from "@/context/SmoothScrollContext";
+import { markSrc } from "@/data/comic";
 
 export default function TopBar() {
   const pathname = usePathname();
@@ -12,9 +14,14 @@ export default function TopBar() {
 
   const [timeStr, setTimeStr] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeHash, setActiveHash] = useState<string>("");
 
   // Bengaluru clock in Asia/Kolkata timezone (HH:MM, no blinking colon)
   useEffect(() => {
+    setActiveHash(window.location.hash);
+    const handleHash = () => setActiveHash(window.location.hash);
+    window.addEventListener("hashchange", handleHash);
+
     const updateTime = () => {
       try {
         const formatter = new Intl.DateTimeFormat("en-GB", {
@@ -31,12 +38,16 @@ export default function TopBar() {
 
     updateTime();
     const interval = setInterval(updateTime, 10000); // Check every 10s for accuracy
-    return () => clearInterval(interval);
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, hashId?: string) => {
     if (hashId) {
       e.preventDefault();
+      setActiveHash(`#${hashId}`);
       setMobileMenuOpen(false);
       if (pathname === "/") {
         if (lenis) {
@@ -66,13 +77,23 @@ export default function TopBar() {
     <>
       <header className="sticky top-0 left-0 right-0 z-40 bg-[var(--paper)] border-b-[3px] border-[var(--ink)] select-none">
         <div className="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between">
-          {/* Left: ISSUE #1 */}
+          {/* Left: Franchise Mark + ISSUE #1 */}
           <Link
             href="/"
-            className="font-display text-lg uppercase tracking-wider text-[var(--ink)] hover:text-[var(--cyan)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--ink)]"
+            className="flex items-center gap-2.5 font-display text-lg uppercase tracking-wider text-[var(--ink)] hover:text-[var(--cyan)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--ink)]"
             data-cursor="COVER"
           >
-            ISSUE #1
+            {markSrc && (
+              <div className="relative h-7 w-12 overflow-hidden border border-[var(--ink)] shadow-[1px_1px_0px_var(--ink)] bg-[var(--paper)]">
+                <Image
+                  src={markSrc}
+                  alt="Franchise Mark"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
+            <span>ISSUE #1</span>
           </Link>
 
           {/* Desktop Center: Comic Tabs */}
@@ -80,7 +101,7 @@ export default function TopBar() {
             {navItems.map((item) => {
               const isCurrent =
                 item.href === pathname ||
-                (item.hash && pathname === "/" && typeof window !== "undefined" && window.location.hash === `#${item.hash}`);
+                (Boolean(item.hash) && pathname === "/" && activeHash === `#${item.hash}`);
 
               return (
                 <Link

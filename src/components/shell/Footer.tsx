@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { guestStars, fanNote } from "@/data/comic";
+import { guestStars, markSrc, fanNote } from "@/data/comic";
 
 export default function Footer() {
   const pathname = usePathname();
@@ -20,7 +20,7 @@ export default function Footer() {
   const pageNum = pageMap[pathname] || (pathname.startsWith("/projects/") ? "CASE SPREAD" : "PAGE 01");
 
   // Render fanNote ONLY if any franchise asset exists
-  const hasFranchiseAsset = guestStars.length > 0;
+  const hasFranchiseAsset = guestStars.length > 0 || Boolean(markSrc);
 
   return (
     <footer className="border-t-[3px] border-[var(--ink)] bg-[var(--paper)] text-[var(--ink)] py-8 px-4 mt-auto">

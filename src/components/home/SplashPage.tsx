@@ -10,10 +10,13 @@ import { Balloon } from "@/components/comic/Balloon";
 import { CreditsBox } from "@/components/comic/CreditsBox";
 import { DotField } from "@/components/comic/DotField";
 import { Chip } from "@/components/comic/Chip";
+import { guestStars } from "@/data/comic";
+import { GuestStarFigure } from "@/components/comic/GuestStarFigure";
 
 export default function SplashPage() {
   const editorialProjects = projects.filter((p) => p.tier === "editorial").slice(0, 6);
   const containerRef = useRef<HTMLDivElement>(null);
+  const workStar = guestStars.find((s) => s.section === "work");
 
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -233,6 +236,13 @@ export default function SplashPage() {
               </div>
             );
           })}
+
+          {/* Optional Guest Star / Sprite in Reserved Grid Slot */}
+          {workStar && (
+            <div className="col-span-12 lg:col-span-6 flex items-center justify-center">
+              <GuestStarFigure star={workStar} className="w-full max-w-sm" />
+            </div>
+          )}
         </div>
       </div>
     </section>
