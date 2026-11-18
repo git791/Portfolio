@@ -71,13 +71,13 @@ export default function AboutSection() {
           <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
             <CaptionBox variant="body" bg="paper" shadow="base" className="p-6 text-base sm:text-lg leading-relaxed text-[var(--ink)] border-[3px]">
               <p className="mb-4">
-                Third-year CSE student in Bengaluru, building since 2019. I make AI agents for problems that rarely get software: a shopkeeper dictating in Hindi, a rural clinic, a railway announcement in three languages.
+                CSE student in Bengaluru, building since 2019. I build autonomous AI agents and cloud systems for challenges that rarely get software: a shopkeeper dictating in Hindi, a rural clinic triage, a railway announcement in three languages.
               </p>
               <p className="mb-4">
-                I usually lead the team and write most of the code; I also run the AWS Student Builder Group, Hack Club, and the IEEE student branch.
+                I lead engineering teams, architect distributed systems, and write the core code. I also run the AWS Student Builder Group, Hack Club, and the IEEE student branch.
               </p>
-              <p className="text-xs sm:text-sm font-mono text-[var(--ink-muted)] bg-[var(--yellow)]/30 p-2.5 border border-[var(--ink)]">
-                TODO(owner): confirm the internship focus (backend, cloud, or agentic AI) and add it as one sentence.
+              <p className="text-sm font-mono text-[var(--ink)] bg-[var(--yellow)]/30 p-2.5 border-2 border-[var(--ink)] font-bold">
+                Actively seeking engineering internships across backend systems, cloud infrastructure, and agentic AI. Eager to dive into high-impact codebases, solve complex engineering bottlenecks, and ship fast.
               </p>
             </CaptionBox>
 

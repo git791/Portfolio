@@ -3,6 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { projects } from "@/lib/data";
+import { Panel } from "@/components/comic/Panel";
+import { CaptionBox } from "@/components/comic/CaptionBox";
+import { Chip } from "@/components/comic/Chip";
+import { CreditsBox } from "@/components/comic/CreditsBox";
+import { DotField } from "@/components/comic/DotField";
+import { Balloon } from "@/components/comic/Balloon";
 
 export function generateStaticParams() {
   return projects.map((p) => ({
@@ -25,7 +31,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectCasePage({
+export default async function ProjectSpreadPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -41,232 +47,263 @@ export default async function ProjectCasePage({
   const prevProject = index > 0 ? projects[index - 1] : null;
   const nextProject = index < projects.length - 1 ? projects[index + 1] : null;
 
-  const hasLive = Boolean(project.liveUrl && project.liveUrl.trim().length > 0);
-  const hasImage = Boolean(project.image && project.image.trim().length > 0);
+  const isBizBoost = project.slug === "bizboost-ai";
+  const hasImage = Boolean(project.image);
+  const repoFacts = project.repoFacts;
 
   return (
-    <main className="min-h-screen py-24 border-t border-[var(--rule)]">
-      <div className="container-main max-w-4xl mx-auto">
-        {/* Navigation Breadcrumb */}
-        <div className="mb-12">
+    <main className="min-h-screen py-16 bg-[var(--paper)] text-[var(--ink)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        {/* Top Breadcrumb & Issue Nav */}
+        <div className="border-b-[3px] border-[var(--ink)] pb-4 flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/projects"
-            className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] hover:text-[var(--fg)] inline-flex items-center gap-2 transition-colors"
-            data-cursor="Open"
+            data-cursor="BACK"
+            data-sfx="PAGE!"
+            className="font-mono text-xs uppercase font-bold px-3 py-1.5 border-2 border-[var(--ink)] bg-[var(--paper)] hover:bg-[var(--yellow)] shadow-comic-sm transition-colors"
           >
-            <span>←</span>
-            <span>ALL PROJECTS LEDGER</span>
+            ← THE COLLECTION
           </Link>
+
+          <div className="flex items-center gap-2">
+            <CaptionBox variant="label" bg="yellow" shadow="sm">
+              SPREAD #{String(index + 1).padStart(2, "0")} · {project.tier.toUpperCase()}
+            </CaptionBox>
+            <span className="font-mono text-xs font-bold text-[var(--ink-muted)]">
+              {project.year}
+            </span>
+          </div>
         </div>
 
-        {/* Chips Row */}
-        <div className="flex flex-wrap items-center gap-2 mb-6">
-          <span
-            className={`font-mono text-xs uppercase tracking-wider px-2 py-0.5 border ${
-              hasLive
-                ? "bg-[var(--signal)] text-[var(--bg)] border-[var(--signal)] font-semibold"
-                : "border-[var(--rule)] text-[var(--muted)]"
-            }`}
+        {/* Large Splash Panel: Image Plate or Typographic Plate */}
+        <div className="relative">
+          <Panel
+            field="cyan"
+            shadow="lg"
+            className="w-full aspect-[16/9] sm:aspect-[21/9] p-2 relative overflow-hidden border-[3px]"
           >
-            {hasLive ? "LIVE" : project.stage.toUpperCase()}
-          </span>
-
-          <span className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)]">
-            {project.year}
-          </span>
-
-          <span className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)]">
-            {project.role}
-          </span>
-
-          <span className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)]">
-            {project.category}
-          </span>
-
-          <span className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-[var(--rule)] text-[var(--muted)]">
-            TIER: {project.tier.toUpperCase()}
-          </span>
+            {hasImage ? (
+              <div className="relative w-full h-full bg-[var(--cyan)] border-2 border-[var(--ink)] overflow-hidden">
+                <Image
+                  src={project.image!}
+                  alt={project.title}
+                  fill
+                  priority
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                  className="object-cover grayscale contrast-125 mix-blend-multiply"
+                />
+                <DotField opacity={0.18} color="var(--ink)" cellSize={8} />
+              </div>
+            ) : (
+              <div className="w-full h-full p-6 sm:p-12 border-2 border-[var(--ink)] bg-[var(--yellow)] flex flex-col justify-between relative overflow-hidden">
+                <DotField opacity={0.12} color="var(--ink)" cellSize={8} />
+                <div className="relative z-10 font-mono text-xs sm:text-sm uppercase tracking-widest font-bold text-[var(--ink-muted)]">
+                  TYPOGRAPHIC PLATE · {project.category}
+                </div>
+                <div className="relative z-10 font-display text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight text-[var(--ink)] leading-none my-auto">
+                  {project.title}
+                </div>
+                <div className="relative z-10 font-mono text-xs sm:text-sm text-[var(--ink-muted)] font-bold">
+                  GIT791 // {project.slug.toUpperCase()}
+                </div>
+              </div>
+            )}
+          </Panel>
         </div>
 
-        {/* Title */}
-        <h1 className="font-display font-bold text-4xl sm:text-6xl uppercase tracking-tight text-[var(--fg)] mb-6">
-          {project.title}
-        </h1>
+        {/* BizBoost AI Speech Balloon (if BizBoost) */}
+        {isBizBoost && (
+          <div className="flex flex-wrap items-center gap-4">
+            <Balloon tailPosition="bottom-left">
+              <span
+                lang="hi"
+                className="font-[family-name:var(--font-deva)] text-2xl font-bold text-[var(--ink)] block"
+              >
+                बोल के बेचो
+              </span>
+            </Balloon>
+            <CaptionBox variant="body" shadow="sm" bg="yellow" className="text-sm font-bold py-2 px-4">
+              Speak it. Sell it.
+            </CaptionBox>
+          </div>
+        )}
 
-        {/* Problem Statement */}
-        {project.problem && (
-          <div className="border-l-2 border-[var(--rule)] pl-4 py-1 mb-12">
-            <p className="font-mono text-sm sm:text-base text-[var(--fg)] leading-relaxed">
+        {/* Title, Chips, and Problem Statement */}
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Chip variant="mvp" />
+            {project.liveUrl && <Chip variant="live" />}
+            <span className="font-mono text-xs font-bold px-2 py-0.5 border-2 border-[var(--ink)] bg-[var(--paper)] text-[var(--ink)]">
+              {project.role}
+            </span>
+            <span className="font-mono text-xs font-bold px-2 py-0.5 border-2 border-[var(--ink)] bg-[var(--paper)] text-[var(--ink)]">
+              {project.year}
+            </span>
+          </div>
+
+          <h1 className="font-display text-4xl sm:text-6xl uppercase tracking-tight text-[var(--ink)] leading-tight">
+            {project.title}
+          </h1>
+
+          <div className="border-2 border-[var(--ink)] bg-[var(--paper)] p-4 shadow-comic-sm">
+            <div className="font-mono text-[10px] uppercase font-bold text-[var(--ink-muted)] mb-1">
+              MISSION / PROBLEM STATEMENT
+            </div>
+            <p className="font-[family-name:var(--font-body)] text-base sm:text-lg text-[var(--ink)] leading-relaxed">
               {project.problem}
             </p>
           </div>
-        )}
+        </div>
 
-        {/* Optional Image (Only if present, never placeholder) */}
-        {hasImage && (
-          <div className="mb-12 border border-[var(--rule)] overflow-hidden bg-[#141512]/60">
-            <Image
-              src={project.image}
-              alt={project.title}
-              width={1200}
-              height={675}
-              className="w-full h-auto object-cover"
-              priority
-            />
-          </div>
-        )}
+        {/* Credits Box */}
+        <div className="max-w-md">
+          <CreditsBox
+            project={{ role: project.role, team: project.team }}
+            leadName="Ayaan"
+          />
+        </div>
 
-        {/* Overview Section */}
-        {project.description && (
-          <div className="py-8 border-t border-[var(--rule)]">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-4">
-              OVERVIEW
-            </h2>
-            <p className="text-base sm:text-lg text-[var(--fg)] leading-relaxed max-w-3xl">
-              {project.description}
-            </p>
-          </div>
-        )}
-
-        {/* Stack Section */}
-        {project.tags && project.tags.length > 0 && (
-          <div className="py-8 border-t border-[var(--rule)]">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-4">
-              STACK
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="font-mono text-xs px-2.5 py-1 border border-[var(--rule)] text-[var(--muted)]"
-                >
-                  {tag}
-                </span>
-              ))}
+        {/* Overview & Stack Sections */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Overview */}
+          {project.description && (
+            <div className="lg:col-span-7 space-y-3">
+              <CaptionBox variant="label" bg="yellow" shadow="sm">
+                PROJECT OVERVIEW
+              </CaptionBox>
+              <CaptionBox variant="body" bg="paper" shadow="base" className="p-5 text-sm sm:text-base leading-relaxed border-2">
+                {project.description}
+              </CaptionBox>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Team and Role Section */}
-        {(project.role || (project.team && project.team.length > 0)) && (
-          <div className="py-8 border-t border-[var(--rule)]">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-4">
-              TEAM &amp; ROLE
-            </h2>
-            <div className="flex flex-col gap-2 font-mono text-xs uppercase tracking-wider text-[var(--fg)]">
-              <div>
-                <span className="text-[var(--muted)]">Role: </span>
-                <span>{project.role}</span>
-              </div>
-              {project.team && project.team.length > 0 && (
-                <div>
-                  <span className="text-[var(--muted)]">Collaborators: </span>
-                  <span>{project.team.join(", ")}</span>
+          {/* Stack & Links */}
+          <div className={`space-y-6 ${project.description ? "lg:col-span-5" : "lg:col-span-12"}`}>
+            {project.tags && project.tags.length > 0 && (
+              <div className="space-y-3">
+                <CaptionBox variant="label" bg="paper" shadow="sm">
+                  STACK & TOOLING
+                </CaptionBox>
+                <div className="border-2 border-[var(--ink)] bg-[var(--paper)] p-4 shadow-comic-sm flex flex-wrap gap-1.5">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-xs font-bold px-2.5 py-1 border border-[var(--ink)] bg-[var(--yellow)]/30 text-[var(--ink)]"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Repo Facts Section (Only if verified data exists) */}
-        {project.repoFacts && (
-          <div className="py-8 border-t border-[var(--rule)]">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-4">
-              REPO FACTS (VERIFIED GIT HISTORY)
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 p-4 border border-[var(--rule)] bg-[#141512]/40 font-mono text-xs">
-              <div>
-                <span className="text-[var(--muted)] block mb-1">COMMITS</span>
-                <span className="text-[var(--fg)] text-lg font-bold">
-                  {project.repoFacts.commits}
-                </span>
               </div>
-              <div>
-                <span className="text-[var(--muted)] block mb-1">FIRST COMMIT</span>
-                <span className="text-[var(--fg)]">{project.repoFacts.first}</span>
-              </div>
-              <div>
-                <span className="text-[var(--muted)] block mb-1">LAST COMMIT</span>
-                <span className="text-[var(--fg)]">{project.repoFacts.last}</span>
-              </div>
-              <div>
-                <span className="text-[var(--muted)] block mb-1">~LOC</span>
-                <span className="text-[var(--fg)] text-lg font-bold">
-                  {project.repoFacts.approxLoc.toLocaleString()}
-                </span>
-              </div>
-              <div>
-                <span className="text-[var(--muted)] block mb-1">TESTS</span>
-                <span className="text-[var(--fg)] text-lg font-bold">
-                  {project.repoFacts.tests}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Links Section */}
-        <div className="py-8 border-t border-[var(--rule)]">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-[var(--muted)] mb-4">
-            LINKS
-          </h2>
-          <div className="flex flex-wrap items-center gap-4">
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="Visit"
-              className="font-mono text-xs uppercase tracking-wider px-4 py-2 border border-[var(--rule)] text-[var(--fg)] hover:border-[var(--fg)] transition-colors inline-flex items-center gap-2"
-            >
-              <span>Source Code (GitHub)</span>
-              <span>↗</span>
-            </a>
-
-            {hasLive && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="Visit"
-                className="font-mono text-xs uppercase tracking-wider px-4 py-2 bg-[var(--signal)] text-[var(--bg)] font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-2"
-              >
-                <span>Live Demo</span>
-                <span>↗</span>
-              </a>
             )}
+
+            {/* External Links */}
+            <div className="space-y-3">
+              <CaptionBox variant="label" bg="paper" shadow="sm">
+                ACCESS REPOSITORY
+              </CaptionBox>
+              <div className="flex flex-wrap gap-3">
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="VISIT"
+                    data-sfx="ZIP!"
+                    className="font-mono text-xs uppercase font-bold px-4 py-2 border-2 border-[var(--ink)] bg-[var(--paper)] hover:bg-[var(--yellow)] shadow-comic-sm transition-colors"
+                  >
+                    GITHUB REPOSITORY ↗
+                  </a>
+                )}
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="LAUNCH"
+                    data-sfx="POP!"
+                    className="font-mono text-xs uppercase font-bold px-4 py-2 border-2 border-[var(--ink)] bg-[var(--cyan)] hover:bg-[var(--cyan)]/80 shadow-comic-sm transition-colors"
+                  >
+                    LIVE APPLICATION ↗
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Previous / Next Project Navigation */}
-        <div className="mt-12 pt-8 border-t border-[var(--rule)] flex items-center justify-between font-mono text-xs uppercase tracking-wider">
+        {/* Repo Facts (renders only if data exists) */}
+        {repoFacts && (
+          <div className="space-y-3">
+            <CaptionBox variant="label" bg="yellow" shadow="sm">
+              REPOSITORY TELEMETRY & FACTS
+            </CaptionBox>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="border-2 border-[var(--ink)] bg-[var(--paper)] p-3 text-center shadow-comic-sm">
+                <div className="font-display text-2xl sm:text-3xl text-[var(--ink)]">
+                  {repoFacts.commits}
+                </div>
+                <div className="font-mono text-[10px] uppercase font-bold text-[var(--ink-muted)] mt-1">
+                  COMMITS
+                </div>
+              </div>
+
+              <div className="border-2 border-[var(--ink)] bg-[var(--paper)] p-3 text-center shadow-comic-sm">
+                <div className="font-mono text-xs sm:text-sm font-bold text-[var(--ink)] truncate">
+                  {repoFacts.first} → {repoFacts.last}
+                </div>
+                <div className="font-mono text-[10px] uppercase font-bold text-[var(--ink-muted)] mt-1">
+                  TIMELINE
+                </div>
+              </div>
+
+              <div className="border-2 border-[var(--ink)] bg-[var(--paper)] p-3 text-center shadow-comic-sm">
+                <div className="font-display text-2xl sm:text-3xl text-[var(--ink)]">
+                  ~{repoFacts.approxLoc}
+                </div>
+                <div className="font-mono text-[10px] uppercase font-bold text-[var(--ink-muted)] mt-1">
+                  LINES OF CODE
+                </div>
+              </div>
+
+              <div className="border-2 border-[var(--ink)] bg-[var(--paper)] p-3 text-center shadow-comic-sm">
+                <div className="font-display text-2xl sm:text-3xl text-[var(--ink)]">
+                  {repoFacts.tests}
+                </div>
+                <div className="font-mono text-[10px] uppercase font-bold text-[var(--ink-muted)] mt-1">
+                  AUTOMATED TESTS
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Next / Prev Navigation */}
+        <div className="border-t-[3px] border-[var(--ink)] pt-6 flex flex-wrap items-center justify-between gap-4 font-mono text-xs uppercase font-bold">
           {prevProject ? (
             <Link
               href={`/projects/${prevProject.slug}`}
-              data-cursor="Open"
-              className="group flex flex-col items-start gap-1 text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
+              data-cursor="PREV"
+              data-sfx="PAGE!"
+              className="px-4 py-2 border-2 border-[var(--ink)] bg-[var(--paper)] hover:bg-[var(--yellow)] shadow-comic-sm transition-colors"
             >
-              <span className="text-[10px] text-[var(--muted)]">← PREVIOUS</span>
-              <span className="font-display text-sm sm:text-base text-[var(--fg)] group-hover:underline">
-                {prevProject.title}
-              </span>
+              ← PREV: {prevProject.title}
             </Link>
           ) : (
-            <div />
+            <span className="text-[var(--ink-muted)]">FIRST ISSUE IN ARCHIVE</span>
           )}
 
           {nextProject ? (
             <Link
               href={`/projects/${nextProject.slug}`}
-              data-cursor="Open"
-              className="group flex flex-col items-end gap-1 text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
+              data-cursor="NEXT"
+              data-sfx="PAGE!"
+              className="px-4 py-2 border-2 border-[var(--ink)] bg-[var(--paper)] hover:bg-[var(--yellow)] shadow-comic-sm transition-colors"
             >
-              <span className="text-[10px] text-[var(--muted)]">NEXT →</span>
-              <span className="font-display text-sm sm:text-base text-[var(--fg)] group-hover:underline">
-                {nextProject.title}
-              </span>
+              NEXT ISSUE: {nextProject.title} →
             </Link>
           ) : (
-            <div />
+            <span className="text-[var(--ink-muted)]">LATEST ISSUE IN ARCHIVE</span>
           )}
         </div>
       </div>
