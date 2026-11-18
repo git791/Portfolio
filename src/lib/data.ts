@@ -11,7 +11,7 @@ export const personalInfo = {
   availability: "Open to opportunities",
   social: {
     github: "https://github.com/git791",
-    linkedin: "https://www.linkedin.com/in/mohammed-ayaan-adil-ahmed-540868311/",
+    linkedin: "https://www.linkedin.com/in/mohammed-ayaan-adil-ahmed/",
     instagram: "https://www.instagram.com/mohammed_ayaan_adil/",
     x: "https://x.com/AdDeLoOp",
   },

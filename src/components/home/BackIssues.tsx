@@ -115,8 +115,11 @@ export default function BackIssues() {
                         onMouseLeave={handleMouseLeave}
                         onFocus={(e) => handleMouseEnter(e, week)}
                         onBlur={handleMouseLeave}
-                        style={{ width: `${widthPx}px` }}
-                        className={`h-6 border border-[var(--ink)] ${bgClass} cursor-pointer transition-transform hover:scale-125 focus:scale-125 focus:outline-none`}
+                        style={{
+                          width: `${widthPx}px`,
+                          transition: "transform 0.08s steps(2)",
+                        }}
+                        className={`h-6 border border-[var(--ink)] ${bgClass} cursor-pointer hover:scale-125 focus:scale-125 focus:outline-none`}
                         aria-label={`Week of ${week.week}: ${week.count} commits`}
                       />
                     );
